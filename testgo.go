@@ -72,6 +72,7 @@ func test_fileread() {
 			break
 		}
 		fmt.Print(buf)
+		fmt.Println("\nRead:INFO:", len(buf))
 	}
 }
 
