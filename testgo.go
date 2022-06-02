@@ -4,8 +4,11 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"io/fs"
 	"os"
 )
+
+const FILE2READ = "/etc/passwd"
 
 func test_data() {
 	var anIntSlice []int = []int{1, 2, 3}
@@ -50,8 +53,9 @@ func test_flag() {
 	fmt.Printf("piTest: %v\n", piTest)
 }
 
-func test_fileread() {
-	oF, err := os.Open("/etc/passwd")
+func test_fileread_low(sFilePath string) {
+	fmt.Println("TestFileRead:Low")
+	oF, err := os.Open(sFilePath)
 	if err != nil {
 		fmt.Printf("Open:err: %v\n", err)
 		return
@@ -78,8 +82,20 @@ func test_fileread() {
 	}
 }
 
+func test_fileread_simple(sFilePath string) {
+	fmt.Println("TestFileRead:Simple")
+	oFS := os.DirFS("/")
+	bData, err := fs.ReadFile(oFS, sFilePath)
+	if err != nil {
+		fmt.Printf("err: %v\n", err)
+		return
+	}
+	fmt.Printf("bData: %v\n", bData)
+}
+
 func test_go() {
 	fmt.Printf("%v:INFO: TestGo\n", PRG_TAG)
 	test_data()
-	test_fileread()
+	test_fileread_low(FILE2READ)
+	test_fileread_simple(FILE2READ[1:])
 }
