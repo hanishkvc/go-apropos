@@ -23,16 +23,22 @@ func handle_args() {
 
 func test_walkdir(sPath string) {
 	oFS := os.DirFS(sPath)
-	fs.WalkDir(oFS, ".", func(path string, d fs.DirEntry, err error) error {
+	fs.WalkDir(oFS, ".", func(path string, de fs.DirEntry, err error) error {
 		if err != nil {
-			fmt.Printf("GOAP:ERRR: path: %v\n", path)
+			fmt.Printf("GOAP:ERRR: path: %v, Err:%v\n", path, err)
 			return err
 		}
-		fmt.Printf("GOAP:INFO: path: %v, err: %v\n", path, err)
-		if d.Type().IsDir() {
-			fmt.Println("GOAP:INFO: dir")
+		var sPType string
+		deT := de.Type()
+		if deT.IsDir() {
+			sPType = "Dir"
+		} else if deT.IsRegular() {
+			sPType = "File"
+		} else {
+			sPType = "???"
 		}
-		return err
+		fmt.Printf("GOAP:INFO: %v:path: %v\n", sPType, path)
+		return nil
 	})
 }
 
