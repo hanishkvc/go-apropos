@@ -71,8 +71,10 @@ func test_fileread() {
 			fmt.Println("\nRead:Done:0Read")
 			break
 		}
-		fmt.Print(buf)
-		fmt.Println("\nRead:INFO:", len(buf))
+		fmt.Print(string(buf[:]))
+		if gbDEBUG {
+			fmt.Println("\nRead:INFO:", len(buf))
+		}
 	}
 }
 
