@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"flag"
+	"fmt"
+)
 
 func test_go() {
 	fmt.Printf("%v:INFO: TestGo\n", PRG_TAG)
@@ -39,4 +42,9 @@ func test_go() {
 	fmt.Println("After assigning the map and modifying assigned map")
 	fmt.Printf("anotherMap: %v\n", anotherMap)
 	fmt.Printf("aMap: %v\n", aMap)
+}
+
+func test_flag() {
+	piTest := flag.Int("int", 123, "Test a int flag")
+	fmt.Printf("piTest: %v\n", piTest)
 }

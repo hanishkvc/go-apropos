@@ -15,14 +15,14 @@ var gFind string
 var gBasePath string = "/usr/lib/go-1.18/"
 
 func handle_args() {
-	piTest := flag.Int("int", 123, "Test a int flag")
-	fmt.Printf("piTest: %v\n", piTest)
 	flag.StringVar(&gFind, "find", "", "Specify the word to find")
 	flag.StringVar(&gBasePath, "basepath", gBasePath, "Specify the dir containing files to search")
 	flag.Parse()
 	fmt.Printf("gFind: %v\n", gFind)
 	fmt.Printf("gBasePath: %v\n", gBasePath)
-	fmt.Printf("%v:WARN: Unknown args: %v\n", PRG_TAG, flag.Args())
+	if len(flag.Args()) > 0 {
+		fmt.Printf("%v:WARN: Unknown args: %v\n", PRG_TAG, flag.Args())
+	}
 }
 
 func test_walkdir(sPath string) {
@@ -48,6 +48,7 @@ func test_walkdir(sPath string) {
 
 func main() {
 	fmt.Println(PRG_NAME, PRG_VERSION)
+	test_flag()
 	handle_args()
 	test_go()
 	test_walkdir(gBasePath)
