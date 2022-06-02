@@ -27,4 +27,16 @@ func test_go() {
 	fmt.Println("After assigning array and modifying assigned array")
 	fmt.Printf("aArray: %v\n", aArray)
 	fmt.Printf("assignedArray: %v\n", assignedArray)
+	// Maps
+	var aMap map[string]int = map[string]int{"1": 1, "2": 2}
+	fmt.Printf("aMap: %v\n", aMap)
+	var bMap = map[string]int{"1": 1, "2": 2}
+	fmt.Printf("bMap: %v\n", bMap)
+	cMap := map[string]int{"1": 1, "2": 2}
+	fmt.Printf("cMap: %v\n", cMap)
+	var anotherMap = aMap
+	anotherMap["2"] = 22
+	fmt.Println("After assigning the map and modifying assigned map")
+	fmt.Printf("anotherMap: %v\n", anotherMap)
+	fmt.Printf("aMap: %v\n", aMap)
 }
