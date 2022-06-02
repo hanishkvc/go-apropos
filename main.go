@@ -7,6 +7,7 @@ import (
 	"os"
 )
 
+const PRG_TAG = "GOAPRO"
 const PRG_NAME = "GoApropos"
 const PRG_VERSION = "v0-20220602IST0954"
 
@@ -19,13 +20,14 @@ func handle_args() {
 	flag.Parse()
 	fmt.Printf("gFind: %v\n", gFind)
 	fmt.Printf("gBasePath: %v\n", gBasePath)
+	fmt.Printf("%v:WARN: Unknown args: %v\n", PRG_TAG, flag.Args())
 }
 
 func test_walkdir(sPath string) {
 	oFS := os.DirFS(sPath)
 	fs.WalkDir(oFS, ".", func(path string, de fs.DirEntry, err error) error {
 		if err != nil {
-			fmt.Printf("GOAP:ERRR: path: %v, Err:%v\n", path, err)
+			fmt.Printf("%v:ERRR: path: %v, Err:%v\n", PRG_TAG, path, err)
 			return err
 		}
 		var sPType string
@@ -37,7 +39,7 @@ func test_walkdir(sPath string) {
 		} else {
 			sPType = "???"
 		}
-		fmt.Printf("GOAP:INFO: %v:path: %v\n", sPType, path)
+		fmt.Printf("%v:INFO: %v:path: %v\n", PRG_TAG, sPType, path)
 		return nil
 	})
 }
