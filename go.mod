@@ -1,3 +1,3 @@
-module main
+module goapropos
 
 go 1.18
