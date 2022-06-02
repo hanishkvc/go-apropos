@@ -3,10 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 )
 
-func test_go() {
-	fmt.Printf("%v:INFO: TestGo\n", PRG_TAG)
+func test_data() {
 	var anIntSlice []int = []int{1, 2, 3}
 	var assignedSlice []int
 	anIntSlice = append(anIntSlice, 4, 5, 6)
@@ -47,4 +47,30 @@ func test_go() {
 func test_flag() {
 	piTest := flag.Int("int", 123, "Test a int flag")
 	fmt.Printf("piTest: %v\n", piTest)
+}
+
+func test_fileread() {
+	oF, err := os.Open("/etc/passwd")
+	if err != nil {
+		fmt.Printf("Open:err: %v\n", err)
+		return
+	}
+	var buf [512]byte
+	for {
+		iCnt, err := oF.Read(buf[:])
+		if err != nil {
+			fmt.Printf("Read:err: %v\n", err)
+			return
+		}
+		if iCnt == 0 {
+			break
+		}
+		fmt.Print(buf)
+	}
+}
+
+func test_go() {
+	fmt.Printf("%v:INFO: TestGo\n", PRG_TAG)
+	test_data()
+	test_fileread()
 }
