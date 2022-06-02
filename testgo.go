@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 	"os"
 )
 
@@ -59,10 +60,15 @@ func test_fileread() {
 	for {
 		iCnt, err := oF.Read(buf[:])
 		if err != nil {
-			fmt.Printf("Read:err: %v\n", err)
+			if err == io.EOF {
+				fmt.Println("\nRead:Done:EOFRead")
+			} else {
+				fmt.Printf("\nRead:err: %v\n", err)
+			}
 			return
 		}
 		if iCnt == 0 {
+			fmt.Println("\nRead:Done:0Read")
 			break
 		}
 		fmt.Print(buf)
