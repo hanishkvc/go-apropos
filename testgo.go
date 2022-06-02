@@ -75,9 +75,9 @@ func test_fileread_low(sFilePath string) {
 			fmt.Println("\nRead:Done:0Read")
 			break
 		}
-		fmt.Print(string(buf[:]))
+		fmt.Print(string(buf[:iCnt]))
 		if gbDEBUG {
-			fmt.Println("\nRead:INFO:", len(buf))
+			fmt.Println("\nRead:INFO:", len(buf), iCnt)
 		}
 	}
 }
@@ -90,7 +90,7 @@ func test_fileread_simple(sFilePath string) {
 		fmt.Printf("err: %v\n", err)
 		return
 	}
-	fmt.Printf("bData: %v\n", bData)
+	fmt.Printf("bData: %v\n", string(bData))
 }
 
 func test_go() {
