@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
+	"strings"
 )
 
 const PRG_TAG = "GOAPRO"
@@ -30,7 +31,17 @@ func handle_args() {
 	}
 }
 
-func test_walkdir(sPath string) {
+func handle_file(sFile string) {
+	if !strings.HasSuffix(sFile, "go") {
+		return
+	}
+	if strings.HasSuffix(sFile, "_test.go") {
+		return
+	}
+	gosrc_info(sFile)
+}
+
+func do_walkdir(sPath string) {
 	oFS := os.DirFS(sPath)
 	fmt.Printf("oFS: %v\n", oFS)
 	fs.WalkDir(oFS, ".", func(path string, de fs.DirEntry, err error) error {
@@ -44,12 +55,14 @@ func test_walkdir(sPath string) {
 			sPType = "Dir"
 		} else if deT.IsRegular() {
 			sPType = "File"
-			theGoFile := sPath + "/" + path
-			gosrc_info(theGoFile)
 		} else {
 			sPType = "???"
 		}
 		fmt.Printf("%v:INFO: %v:path: %v\n", PRG_TAG, sPType, path)
+		if sPType == "File" {
+			theFile := sPath + "/" + path
+			handle_file(theFile)
+		}
 		return nil
 	})
 }
@@ -59,5 +72,5 @@ func main() {
 	test_flag()
 	handle_args()
 	test_go()
-	test_walkdir(gBasePath)
+	do_walkdir(gBasePath)
 }
