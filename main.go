@@ -30,6 +30,7 @@ func handle_args() {
 
 func test_walkdir(sPath string) {
 	oFS := os.DirFS(sPath)
+	fmt.Printf("oFS: %v\n", oFS)
 	fs.WalkDir(oFS, ".", func(path string, de fs.DirEntry, err error) error {
 		if err != nil {
 			fmt.Printf("%v:ERRR: path: %v, Err:%v\n", PRG_TAG, path, err)
@@ -41,6 +42,8 @@ func test_walkdir(sPath string) {
 			sPType = "Dir"
 		} else if deT.IsRegular() {
 			sPType = "File"
+			theGoFile := sPath + "/" + path
+			gosrc_info(theGoFile)
 		} else {
 			sPType = "???"
 		}
