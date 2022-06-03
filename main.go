@@ -39,7 +39,10 @@ func handle_file(sFile string) {
 		return
 	}
 	name, idents := gosrc_info(sFile)
-	fmt.Printf("%v:INFO: GoPkg:%v:%v\n", PRG_TAG, name, idents)
+	db_add(name, idents)
+	if gbDEBUG {
+		fmt.Printf("%v:INFO: GoPkg:%v:%v\n", PRG_TAG, name, idents)
+	}
 }
 
 func do_walkdir(sPath string) {
@@ -74,4 +77,5 @@ func main() {
 	handle_args()
 	test_go()
 	do_walkdir(gBasePath)
+	db_print()
 }
