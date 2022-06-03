@@ -7,17 +7,42 @@ import (
 	"go/token"
 )
 
-func gosrc_info(sFile string) map[string]string {
+func gosrc_info(sFile string) (string, map[string]int) {
 	tfs := token.NewFileSet()
 	astF, err := parser.ParseFile(tfs, sFile, nil, 0)
 	if err != nil {
 		fmt.Printf("err: %v\n", err)
-		return nil
+		return "", nil
 	}
-	theMap := map[string]string{}
+	pkgName := ""
+	theIdents := map[string]int{}
 	ast.Inspect(astF, func(n ast.Node) bool {
-		fmt.Printf("n: %v\n", n)
+		sType := "???"
+		sExtra := ""
+		switch t := n.(type) {
+		case *ast.CommentGroup: // Dont seem to encounter this
+			sExtra = t.Text()
+		case *ast.Ident: // This gives names of vars, consts and funcs also
+			sType = "Identifier"
+			sExtra = t.Name
+			theIdents[t.Name] += 1
+		case *ast.FuncDecl:
+			sType = "Function"
+			sExtra = t.Name.Name
+		case *ast.Package: // Dont seem to encounter this type
+			sType = "Package"
+			sExtra = t.Name
+			pkgName = t.Name
+		case *ast.File: // This could give useful info
+			sType = "File"
+			sExtra = t.Name.Name
+			fmt.Printf("t.Decls: %v\n", t.Decls)
+		default:
+			//t1 := reflect.TypeOf(t)
+			//sExtra = t1.Name()
+		}
+		fmt.Printf("n:%v:%v: %v\n", sType, sExtra, n)
 		return true
 	})
-	return theMap
+	return pkgName, theIdents
 }

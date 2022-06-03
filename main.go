@@ -38,7 +38,8 @@ func handle_file(sFile string) {
 	if strings.HasSuffix(sFile, "_test.go") {
 		return
 	}
-	gosrc_info(sFile)
+	name, idents := gosrc_info(sFile)
+	fmt.Printf("%v:INFO: GoPkg:%v:%v\n", PRG_TAG, name, idents)
 }
 
 func do_walkdir(sPath string) {
