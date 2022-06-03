@@ -36,12 +36,14 @@ func gosrc_info(sFile string) (string, map[string]int) {
 		case *ast.File: // This could give useful info
 			sType = "File"
 			sExtra = t.Name.Name
-			fmt.Printf("t.Decls: %v\n", t.Decls)
+			pkgName = t.Name.Name
 		default:
 			//t1 := reflect.TypeOf(t)
 			//sExtra = t1.Name()
 		}
-		fmt.Printf("n:%v:%v: %v\n", sType, sExtra, n)
+		if gbDEBUG {
+			fmt.Printf("n:%v:%v: %v\n", sType, sExtra, n)
+		}
 		return true
 	})
 	return pkgName, theIdents
