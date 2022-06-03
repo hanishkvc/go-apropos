@@ -16,12 +16,14 @@ var gFind string
 var gBasePath string = "/usr/lib/go-1.18/"
 var giDEBUG int
 var gbTEST bool
+var gbALL bool
 
 func handle_args() {
 	flag.StringVar(&gFind, "find", "", "Specify the word to find")
 	flag.StringVar(&gBasePath, "basepath", gBasePath, "Specify the dir containing files to search")
 	flag.IntVar(&giDEBUG, "debug", 0, "Set debug level to control debug prints")
 	flag.BoolVar(&gbTEST, "test", false, "Enable test logics")
+	flag.BoolVar(&gbALL, "all", false, "Match all symbols and not just exported")
 	flag.Parse()
 	fmt.Printf("gFind: %v\n", gFind)
 	fmt.Printf("gBasePath: %v\n", gBasePath)

@@ -25,7 +25,9 @@ func gosrc_info(sFile string) (string, map[string]int) {
 		case *ast.Ident: // This gives names of vars, consts and funcs also
 			sType = "Identifier"
 			sExtra = t.Name
-			theIdents[t.Name] += 1
+			if t.IsExported() || gbALL {
+				theIdents[t.Name] += 1
+			}
 		case *ast.FuncDecl:
 			sType = "Function"
 			sExtra = t.Name.Name
@@ -37,6 +39,7 @@ func gosrc_info(sFile string) (string, map[string]int) {
 			sType = "File"
 			sExtra = t.Name.Name
 			pkgName = t.Name.Name
+			//fmt.Printf("t.Scope: %v\n", t.Scope)
 		default:
 			//t1 := reflect.TypeOf(t)
 			//sExtra = t1.Name()
