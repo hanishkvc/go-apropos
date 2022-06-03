@@ -14,18 +14,18 @@ const PRG_VERSION = "v0-20220602IST0954"
 
 var gFind string
 var gBasePath string = "/usr/lib/go-1.18/"
-var gbDEBUG bool
+var giDEBUG int
 var gbTEST bool
 
 func handle_args() {
 	flag.StringVar(&gFind, "find", "", "Specify the word to find")
 	flag.StringVar(&gBasePath, "basepath", gBasePath, "Specify the dir containing files to search")
-	flag.BoolVar(&gbDEBUG, "debug", false, "Enable debug prints")
+	flag.IntVar(&giDEBUG, "debug", 0, "Set debug level to control debug prints")
 	flag.BoolVar(&gbTEST, "test", false, "Enable test logics")
 	flag.Parse()
 	fmt.Printf("gFind: %v\n", gFind)
 	fmt.Printf("gBasePath: %v\n", gBasePath)
-	fmt.Printf("gbDEBUG: %v\n", gbDEBUG)
+	fmt.Printf("giDEBUG: %v\n", giDEBUG)
 	if len(flag.Args()) > 0 {
 		fmt.Printf("%v:WARN: Unknown args: %v\n", PRG_TAG, flag.Args())
 	}
@@ -40,14 +40,16 @@ func handle_file(sFile string) {
 	}
 	name, idents := gosrc_info(sFile)
 	db_add(name, idents)
-	if gbDEBUG {
+	if giDEBUG > 5 {
 		fmt.Printf("%v:INFO: GoPkg:%v:%v\n", PRG_TAG, name, idents)
 	}
 }
 
 func do_walkdir(sPath string) {
 	oFS := os.DirFS(sPath)
-	fmt.Printf("oFS: %v\n", oFS)
+	if giDEBUG > 10 {
+		fmt.Printf("oFS: %v\n", oFS)
+	}
 	fs.WalkDir(oFS, ".", func(path string, de fs.DirEntry, err error) error {
 		if err != nil {
 			fmt.Printf("%v:ERRR: path: %v, Err:%v\n", PRG_TAG, path, err)
@@ -62,7 +64,9 @@ func do_walkdir(sPath string) {
 		} else {
 			sPType = "???"
 		}
-		fmt.Printf("%v:INFO: %v:path: %v\n", PRG_TAG, sPType, path)
+		if giDEBUG > 1 {
+			fmt.Printf("%v:INFO: %v:path: %v\n", PRG_TAG, sPType, path)
+		}
 		if sPType == "File" {
 			theFile := sPath + "/" + path
 			handle_file(theFile)
@@ -77,6 +81,8 @@ func main() {
 	handle_args()
 	test_go()
 	do_walkdir(gBasePath)
-	db_print()
+	if giDEBUG > 2 {
+		db_print()
+	}
 	db_find(gFind)
 }

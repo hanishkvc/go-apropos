@@ -79,7 +79,7 @@ func test_fileread_low(sFilePath string) {
 			break
 		}
 		fmt.Print(string(buf[:iCnt]))
-		if gbDEBUG {
+		if giDEBUG > 10 {
 			fmt.Println("\nRead:INFO:", len(buf), iCnt)
 		}
 	}

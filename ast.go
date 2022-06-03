@@ -41,7 +41,7 @@ func gosrc_info(sFile string) (string, map[string]int) {
 			//t1 := reflect.TypeOf(t)
 			//sExtra = t1.Name()
 		}
-		if gbDEBUG {
+		if giDEBUG > 6 {
 			fmt.Printf("n:%v:%v: %v\n", sType, sExtra, n)
 		}
 		return true
