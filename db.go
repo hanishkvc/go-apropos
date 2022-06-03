@@ -25,17 +25,21 @@ func db_print() {
 }
 
 func db_find(sFind string) {
-	pkgs := []string{}
+	pkgs := map[string][]string{}
 	sFU := strings.ToUpper(sFind)
 	for k, v := range gDB {
 		for id, _ := range v {
 			idU := strings.ToUpper(id)
 			if strings.Contains(idU, sFU) {
-				pkgs = append(pkgs, k)
+				_, ok := pkgs[k]
+				if !ok {
+					pkgs[k] = make([]string, 0)
+				}
+				pkgs[k] = append(pkgs[k], id)
 			}
 		}
 	}
-	for _, pkg := range pkgs {
-		fmt.Println(pkg)
+	for pkg, ids := range pkgs {
+		fmt.Println(pkg, ids)
 	}
 }
