@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 var gDB = make(map[string]map[string]int)
 
@@ -18,5 +21,21 @@ func db_add(name string, idents map[string]int) {
 func db_print() {
 	for k, v := range gDB {
 		fmt.Println(k, v)
+	}
+}
+
+func db_find(sFind string) {
+	pkgs := []string{}
+	sFU := strings.ToUpper(sFind)
+	for k, v := range gDB {
+		for id, _ := range v {
+			idU := strings.ToUpper(id)
+			if strings.Contains(idU, sFU) {
+				pkgs = append(pkgs, k)
+			}
+		}
+	}
+	for pkg := range pkgs {
+		fmt.Println(pkg)
 	}
 }

@@ -78,4 +78,5 @@ func main() {
 	test_go()
 	do_walkdir(gBasePath)
 	db_print()
+	db_find(gFind)
 }
