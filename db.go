@@ -35,7 +35,7 @@ func db_find(sFind string) {
 			}
 		}
 	}
-	for pkg := range pkgs {
+	for _, pkg := range pkgs {
 		fmt.Println(pkg)
 	}
 }
