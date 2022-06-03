@@ -14,11 +14,13 @@ const PRG_VERSION = "v0-20220602IST0954"
 var gFind string
 var gBasePath string = "/usr/lib/go-1.18/"
 var gbDEBUG bool
+var gbTEST bool
 
 func handle_args() {
 	flag.StringVar(&gFind, "find", "", "Specify the word to find")
 	flag.StringVar(&gBasePath, "basepath", gBasePath, "Specify the dir containing files to search")
 	flag.BoolVar(&gbDEBUG, "debug", false, "Enable debug prints")
+	flag.BoolVar(&gbTEST, "test", false, "Enable test logics")
 	flag.Parse()
 	fmt.Printf("gFind: %v\n", gFind)
 	fmt.Printf("gBasePath: %v\n", gBasePath)
