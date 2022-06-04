@@ -21,6 +21,8 @@ var gBasePath string = "/usr/share/go-dummy/"
 var giDEBUG int = 0
 var gbTEST bool
 var gbALL bool
+var gbSkipSrcInternal bool
+var gbSkipSrcCmd bool
 
 func find_srcpaths(basePath string, srcPaths []string) []string {
 	const namePrefix = "go-"
@@ -67,6 +69,8 @@ func handle_args() {
 	flag.IntVar(&giDEBUG, "debug", 0, "Set debug level to control debug prints")
 	flag.BoolVar(&gbTEST, "test", false, "Enable test logics")
 	flag.BoolVar(&gbALL, "all", false, "Match all symbols and not just exported")
+	flag.BoolVar(&gbSkipSrcInternal, "skipsrcinternal", false, "Whether package files matching /src/internal/ are skipped or not")
+	flag.BoolVar(&gbSkipSrcCmd, "skipsrccmd", false, "Whether package files matching /src/cmd/ are skipped or not")
 	flag.Parse()
 	if len(flag.Args()) > 0 {
 		if gFind != FIND_DUMMY {
@@ -95,6 +99,12 @@ func handle_file(sFile string) {
 		return
 	}
 	if strings.HasSuffix(sFile, "_test.go") {
+		return
+	}
+	if strings.Contains(sFile, "/src/internal/") && gbSkipSrcInternal {
+		return
+	}
+	if strings.Contains(sFile, "/src/cmd/") && gbSkipSrcCmd {
 		return
 	}
 	name, idents := gosrc_info(sFile)
