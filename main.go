@@ -18,15 +18,13 @@ var giDEBUG int
 var gbTEST bool
 var gbALL bool
 
-func find_srcpaths() []string {
-	const basePath = "/usr/share"
+func find_srcpaths(basePath string, srcPaths []string) []string {
 	const namePrefix = "go-"
 	const srcDir = "src"
 	aDE, err := os.ReadDir(basePath)
 	if err != nil {
 		return nil
 	}
-	thePaths := []string{}
 	for _, de := range aDE {
 		if !de.IsDir() {
 			continue
@@ -36,18 +34,21 @@ func find_srcpaths() []string {
 			continue
 		}
 		sPath := strings.Join([]string{basePath, sDirName, srcDir}, string(os.PathSeparator))
-		thePaths = append(thePaths, sPath)
+		srcPaths = append(srcPaths, sPath)
 	}
 	if giDEBUG > 1 { // Needs to be enabled by setting giDEBUG in source
-		fmt.Printf("%v:INFO:SrcPaths: thePaths: %v\n", PRG_TAG, thePaths)
+		fmt.Printf("%v:INFO:FindSrcPaths: basePath: %v, srcPaths: %v\n", PRG_TAG, basePath, srcPaths)
 	}
-	return thePaths
+	return srcPaths
 }
 
 func set_gbasepath() {
-	basePaths := find_srcpaths()
-	if basePaths != nil {
-		gBasePath = basePaths[0]
+	srcPaths := []string{}
+	for _, lookAt := range []string{"/usr/share", "/usr/local/share"} {
+		srcPaths = find_srcpaths(lookAt, srcPaths)
+	}
+	if srcPaths != nil {
+		gBasePath = srcPaths[0]
 	}
 }
 
