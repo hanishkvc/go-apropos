@@ -25,7 +25,7 @@ func db_print() {
 }
 
 func db_find(sFind string) {
-	fmt.Printf("\n%v:INFO: Possible matches for: %v\n", PRG_TAG, gFind)
+	fmt.Printf("\n%v:INFO: Possible matches for [%v] at [%v]\n", PRG_TAG, gFind, gBasePath)
 	pkgs := map[string][]string{}
 	sFU := strings.ToUpper(sFind)
 	for k, v := range gDB {
