@@ -6,16 +6,19 @@ import (
 )
 
 var gDB = make(map[string]map[string]int)
+var gDBPaths = make(map[string][]string)
 
-func db_add(name string, idents map[string]int) {
+func db_add(name string, path string, idents map[string]int) {
 	_, ok := gDB[name]
 	if !ok {
 		gDB[name] = idents
-		return
+		gDBPaths[name] = make([]string, 0)
+	} else {
+		for k, v := range idents {
+			gDB[name][k] += v
+		}
 	}
-	for k, v := range idents {
-		gDB[name][k] += v
-	}
+	gDBPaths[name] = append(gDBPaths[name], path)
 }
 
 func db_print() {
@@ -26,7 +29,7 @@ func db_print() {
 
 func db_print_pkgs() {
 	for k := range gDB {
-		fmt.Printf("Package: %v\n", k)
+		fmt.Printf("Package: %v, %v\n", k, gDBPaths[k])
 	}
 }
 

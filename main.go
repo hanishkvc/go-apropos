@@ -103,7 +103,7 @@ func handle_file(sFile string) {
 			return
 		}
 	}
-	db_add(name, idents)
+	db_add(name, sFile, idents)
 }
 
 func do_walkdir(sPath string) {
