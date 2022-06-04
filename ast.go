@@ -21,8 +21,10 @@ func gosrc_info(sFile string) (string, map[string]int) {
 		sExtra := ""
 		switch t := n.(type) {
 		case *ast.Comment:
-			fmt.Printf("%v:INFO:AST: Comment:%v\n", PRG_TAG, t.Text)
+			sType = "Comment"
+			sExtra = t.Text
 		case *ast.CommentGroup: // Dont seem to encounter this
+			sType = "CommentGroup"
 			sExtra = t.Text()
 		case *ast.Ident: // This gives names of vars, consts and funcs also
 			sType = "Identifier"
