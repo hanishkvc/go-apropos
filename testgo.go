@@ -49,9 +49,6 @@ func test_data() {
 }
 
 func test_flag() {
-	if !gbTEST {
-		return
-	}
 	piTest := flag.Int("int", 123, "Test a int flag")
 	fmt.Printf("%v:INFO:T FLAG: piTest: %v\n", PRG_TAG, piTest)
 }
@@ -101,6 +98,7 @@ func test_go() {
 		return
 	}
 	fmt.Printf("%v:INFO: TestGo\n", PRG_TAG)
+	test_flag()
 	test_data()
 	test_fileread_low(FILE2READ)
 	test_fileread_simple(FILE2READ[1:])
