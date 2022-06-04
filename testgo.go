@@ -98,6 +98,13 @@ func test_fileread_simple(sFilePath string) {
 	fmt.Printf("%v:INFO:T FREADSIMP: Read:\n%v\n", PRG_TAG, string(bData))
 }
 
+func test_env() {
+	//fmt.Printf("%v:INFO:T ENVIRON: os.Environ(): %v\n", PRG_TAG, os.Environ())
+	for _, env := range os.Environ() {
+		fmt.Printf("%v:INFO:T ENVIRON: %v\n", PRG_TAG, env)
+	}
+}
+
 func test_go() {
 	if !gbTEST {
 		return
@@ -105,6 +112,7 @@ func test_go() {
 	fmt.Printf("%v:INFO: TestGo\n", PRG_TAG)
 	test_flag()
 	test_data()
+	test_env()
 	test_fileread_low(FILE2READ)
 	test_fileread_simple(FILE2READ[1:])
 }
