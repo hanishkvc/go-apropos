@@ -11,7 +11,7 @@ func gosrc_info(sFile string) (string, map[string]int) {
 	tfs := token.NewFileSet()
 	astF, err := parser.ParseFile(tfs, sFile, nil, 0)
 	if err != nil {
-		fmt.Printf("AST:ERRR: %v\n", err)
+		fmt.Printf("%v:ERRR:AST: %v\n", PRG_TAG, err)
 		return "", nil
 	}
 	pkgName := ""
@@ -21,7 +21,7 @@ func gosrc_info(sFile string) (string, map[string]int) {
 		sExtra := ""
 		switch t := n.(type) {
 		case *ast.Comment:
-			fmt.Printf("AST:INFO: Comment %v\n", t)
+			fmt.Printf("%v:INFO:AST: Comment:%v\n", PRG_TAG, t.Text)
 		case *ast.CommentGroup: // Dont seem to encounter this
 			sExtra = t.Text()
 		case *ast.Ident: // This gives names of vars, consts and funcs also
@@ -41,15 +41,18 @@ func gosrc_info(sFile string) (string, map[string]int) {
 			sType = "File"
 			sExtra = t.Name.Name
 			pkgName = t.Name.Name
-			//fmt.Printf("t.Scope: %v\n", t.Scope)
+			//fmt.Printf("%v:INFO:AST: File.Scope: %v\n", PRG_TAG, t.Scope)
 		default:
 			//t1 := reflect.TypeOf(t)
 			//sExtra = t1.Name()
 		}
 		if giDEBUG > 6 {
-			fmt.Printf("AST:INFO: n:%v:%v: %v\n", sType, sExtra, n)
+			fmt.Printf("%v:INFO:AST: n:%v:%v: %v\n", PRG_TAG, sType, sExtra, n)
 		}
 		return true
 	})
+	if giDEBUG > 5 {
+		fmt.Printf("%v:INFO:AST: GoFile:%v:%v\n", PRG_TAG, pkgName, theIdents)
+	}
 	return pkgName, theIdents
 }

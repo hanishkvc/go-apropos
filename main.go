@@ -26,14 +26,14 @@ func handle_args() {
 	flag.BoolVar(&gbALL, "all", false, "Match all symbols and not just exported")
 	flag.Parse()
 	if giDEBUG > 0 {
-		fmt.Printf("gFind: %v\n", gFind)
-		fmt.Printf("gBasePath: %v\n", gBasePath)
-		fmt.Printf("giDEBUG: %v\n", giDEBUG)
-		fmt.Printf("gbALL: %v\n", gbALL)
-		fmt.Printf("gbTEST: %v\n", gbTEST)
+		fmt.Printf("%v:INFO:ARG: gFind: %v\n", PRG_TAG, gFind)
+		fmt.Printf("%v:INFO:ARG: gBasePath: %v\n", PRG_TAG, gBasePath)
+		fmt.Printf("%v:INFO:ARG: giDEBUG: %v\n", PRG_TAG, giDEBUG)
+		fmt.Printf("%v:INFO:ARG: gbALL: %v\n", PRG_TAG, gbALL)
+		fmt.Printf("%v:INFO:ARG: gbTEST: %v\n", PRG_TAG, gbTEST)
 	}
 	if len(flag.Args()) > 0 {
-		fmt.Printf("%v:WARN: Unknown args: %v\n", PRG_TAG, flag.Args())
+		fmt.Printf("%v:WARN:ARG: Unknown args: %v\n", PRG_TAG, flag.Args())
 	}
 }
 
@@ -46,19 +46,16 @@ func handle_file(sFile string) {
 	}
 	name, idents := gosrc_info(sFile)
 	db_add(name, idents)
-	if giDEBUG > 5 {
-		fmt.Printf("%v:INFO: GoPkg:%v:%v\n", PRG_TAG, name, idents)
-	}
 }
 
 func do_walkdir(sPath string) {
 	oFS := os.DirFS(sPath)
 	if giDEBUG > 10 {
-		fmt.Printf("oFS: %v\n", oFS)
+		fmt.Printf("%v:INFO:WALKDIR: oFS: %v\n", PRG_TAG, oFS)
 	}
 	fs.WalkDir(oFS, ".", func(path string, de fs.DirEntry, err error) error {
 		if err != nil {
-			fmt.Printf("%v:ERRR: path: %v, Err:%v\n", PRG_TAG, path, err)
+			fmt.Printf("%v:ERRR:WALKDIR: path: %v, Err: %v\n", PRG_TAG, path, err)
 			return err
 		}
 		var sPType string
@@ -71,7 +68,7 @@ func do_walkdir(sPath string) {
 			sPType = "???"
 		}
 		if giDEBUG > 1 {
-			fmt.Printf("%v:INFO: %v:path: %v\n", PRG_TAG, sPType, path)
+			fmt.Printf("%v:INFO:WALKDIR: %v:path: %v\n", PRG_TAG, sPType, path)
 		}
 		if sPType == "File" {
 			theFile := sPath + "/" + path
