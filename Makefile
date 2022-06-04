@@ -15,5 +15,5 @@ gofmt:
 	go fmt
 
 gorun:
-	go run goapropos
+	go run goapropos --test=true
 
