@@ -63,7 +63,7 @@ func handle_args() {
 	flag.BoolVar(&gbTEST, "test", false, "Enable test logics")
 	flag.BoolVar(&gbALL, "all", false, "Match all symbols and not just exported")
 	flag.Parse()
-	if giDEBUG > 0 {
+	if giDEBUG > 1 {
 		fmt.Printf("%v:INFO:ARG: gFind: %v\n", PRG_TAG, gFind)
 		fmt.Printf("%v:INFO:ARG: gBasePath: %v\n", PRG_TAG, gBasePath)
 		fmt.Printf("%v:INFO:ARG: giDEBUG: %v\n", PRG_TAG, giDEBUG)
@@ -105,7 +105,7 @@ func do_walkdir(sPath string) {
 		} else {
 			sPType = "???"
 		}
-		if giDEBUG > 1 {
+		if giDEBUG > 2 {
 			fmt.Printf("%v:INFO:WALKDIR: %v:path: %v\n", PRG_TAG, sPType, path)
 		}
 		if sPType == "File" {
@@ -118,12 +118,12 @@ func do_walkdir(sPath string) {
 
 func main() {
 	handle_args()
-	if giDEBUG > 0 {
+	if giDEBUG > 1 {
 		fmt.Println(PRG_TAG, PRG_NAME, PRG_VERSION)
 	}
 	test_go()
 	do_walkdir(gBasePath)
-	if giDEBUG > 2 {
+	if giDEBUG > 3 {
 		db_print()
 	}
 	db_find(gFind)
