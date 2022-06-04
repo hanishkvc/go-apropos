@@ -23,7 +23,7 @@ func find_srcpaths(basePath string, srcPaths []string) []string {
 	const srcDir = "src"
 	aDE, err := os.ReadDir(basePath)
 	if err != nil {
-		return nil
+		return srcPaths
 	}
 	for _, de := range aDE {
 		if !de.IsDir() {
@@ -47,7 +47,7 @@ func set_gbasepath() {
 	for _, lookAt := range []string{"/usr/share", "/usr/local/share"} {
 		srcPaths = find_srcpaths(lookAt, srcPaths)
 	}
-	if srcPaths != nil {
+	if len(srcPaths) > 0 {
 		gBasePath = srcPaths[0]
 	}
 }
