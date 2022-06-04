@@ -3,8 +3,8 @@ Go Apropos
 #############
 HanishKVC, 2022
 
-Notes
-#######
+Overview
+#########
 
 go doc requires one to already know the standard package to look for,
 to get info about the same. However if one doesnt know which package
@@ -12,9 +12,11 @@ may contain what they want, they will have to grep the src directory
 or do a web search.
 
 This provides something like the apropos command wrt man pages, but
-here it searchs for exported symbols from among all the packages in
-the go source directory, which contains the specified token as part
-of itself.
+here it searchs for matching symbols from among the packages in the
+go source directory.
+
+Usage
+######
 
 By default it uses 1st directory under /usr/share or /usr/local/share
 which matchs the pattern "go-*" as the go source directory wrt packages
@@ -33,13 +35,42 @@ it in the cmdline ie.
 
 	goapropos search_token
 
-If one wants the logic to use both internal and exported symbols of the
-packages when trying to find a match, one needs to specify the cmdline
-argument --all, else the logic will try to match only exported symbols
+By default it tries to find matching exported symbols only from available
+packages. However If one wants the logic to use both internal and exported
+symbols of the packages when trying to find a match, one needs to specify
+the cmdline argument --all.
 
 	goapropos --all search_token
+
+By default it tries to search through all the packages in the identified
+go source directory. However if required one can filter the packages that
+will be searched by using --findpkg argument. The  token given through
+findpkg argument will be used to filter the package names for a match.
+
+	goapropos --findpkg packagename_token search_token
+
+If one wants to get a list of package names, which match a given token, one
+can run goapropos with only the findpkg argument and no find argument.
+
+	goapropos --findpkg packagename_token
 
 To get all the exported symbols of all the packages, use
 
 	goapropos --find ""
+
+The tokens specified are used to match the package name or the symbols as
+the case maybe by using a case insensitive search. As long as the package
+name or symbol contains the given token, it will be treated as a match.
+
+
+TODO
+######
+
+Maybe change to regular expression wrt the tokens.
+
+Add a option for case sensitive search.
+
+Allow searching through package / identifier comments, if possible.
+
+Maybe add support to cache the package+identifiers map.
 

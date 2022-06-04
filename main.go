@@ -10,7 +10,7 @@ import (
 
 const PRG_TAG = "GOAPRO"
 const PRG_NAME = "GoApropos"
-const PRG_VERSION = "v1-20220604IST0942"
+const PRG_VERSION = "v1-20220604IST1419"
 
 const FIND_DUMMY = "__FIND_DUMMY__"
 const FINDPKG_DEFAULT = ""
@@ -61,7 +61,7 @@ func set_gbasepath() {
 
 func handle_args() {
 	set_gbasepath()
-	flag.StringVar(&gFind, "find", gFind, "Specify the token/substring to match")
+	flag.StringVar(&gFind, "find", gFind, "Specify the token/substring to match. The token to match can also be specified as a standalone arg on its own")
 	flag.StringVar(&gFindPkg, "findpkg", gFindPkg, "Specify the token/substring to match wrt package name")
 	flag.StringVar(&gBasePath, "basepath", gBasePath, "Specify the dir containing files to search")
 	flag.IntVar(&giDEBUG, "debug", 0, "Set debug level to control debug prints")
