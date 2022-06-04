@@ -1,3 +1,6 @@
+// Some code to understand Go
+// HanishKVC, 2022
+
 package main
 
 import (

@@ -1,3 +1,6 @@
+// Parse the go source files to extract info about them
+// HanishKVC, 2022
+
 package main
 
 import (

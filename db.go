@@ -1,3 +1,6 @@
+// Maintain Maps wrt info about the Packages and their symbols
+// HanishKVC, 2022
+
 package main
 
 import (

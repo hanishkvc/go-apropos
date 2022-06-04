@@ -1,3 +1,6 @@
+// Provide equivalent of apropos wrt go packages
+// HanishKVC, 2022
+
 package main
 
 import (
