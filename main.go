@@ -14,7 +14,7 @@ const PRG_VERSION = "v1-20220604IST0942"
 
 var gFind string
 var gBasePath string = "/usr/share/go-dummy/"
-var giDEBUG int = 1
+var giDEBUG int = 0
 var gbTEST bool
 var gbALL bool
 
@@ -47,7 +47,7 @@ func find_srcpaths(basePath string, srcPaths []string) []string {
 
 func set_gbasepath() {
 	srcPaths := []string{}
-	for _, lookAt := range []string{"/var/share", "/usr/share", "/usr/local/share", "/opt/share"} {
+	for _, lookAt := range []string{"/usr/share", "/usr/local/share"} {
 		srcPaths = find_srcpaths(lookAt, srcPaths)
 	}
 	if len(srcPaths) > 0 {
