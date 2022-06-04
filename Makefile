@@ -1,5 +1,5 @@
 
-build:
+gobuild:
 	go build
 
 run:
@@ -8,9 +8,12 @@ run:
 rundebugtest:
 	./goapropos --basepath /usr/share/go-1.18/src --find args --all=false --debug 12 --test=true
 
-clean:
+goclean:
 	go clean
 
-fmt:
+gofmt:
 	go fmt
+
+gorun:
+	go run goapropos
 
