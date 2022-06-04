@@ -62,6 +62,15 @@ The tokens specified are used to match the package name or the symbols as
 the case maybe by using a case insensitive search. As long as the package
 name or symbol contains the given token, it will be treated as a match.
 
+One can skip files matching certain predefined substrings by using one of
+the following arguments
+
+	--skipsrccmd=true (skip files containing /src/cmd/ in their path)
+
+	--skipsrcinternal=true (skip files containing /src/internal/ in them)
+
+	--skipfiles "substring" (skip files containing substring in their path)
+
 
 TODO
 ######

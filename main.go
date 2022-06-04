@@ -23,6 +23,7 @@ var gbTEST bool
 var gbALL bool
 var gbSkipSrcInternal bool
 var gbSkipSrcCmd bool
+var gSkipFiles = []string{}
 
 func find_srcpaths(basePath string, srcPaths []string) []string {
 	const namePrefix = "go-"
@@ -71,6 +72,10 @@ func handle_args() {
 	flag.BoolVar(&gbALL, "all", false, "Match all symbols and not just exported")
 	flag.BoolVar(&gbSkipSrcInternal, "skipsrcinternal", false, "Whether package files matching /src/internal/ are skipped or not")
 	flag.BoolVar(&gbSkipSrcCmd, "skipsrccmd", false, "Whether package files matching /src/cmd/ are skipped or not")
+	flag.Func("skipfiles", "Specify token to match for skipping package files. More than one can be specified", func(s string) error {
+		gSkipFiles = append(gSkipFiles, s)
+		return nil
+	})
 	flag.Parse()
 	if len(flag.Args()) > 0 {
 		if gFind != FIND_DUMMY {
@@ -91,6 +96,9 @@ func handle_args() {
 		fmt.Printf("%v:INFO:ARG: giDEBUG: %v\n", PRG_TAG, giDEBUG)
 		fmt.Printf("%v:INFO:ARG: gbALL: %v\n", PRG_TAG, gbALL)
 		fmt.Printf("%v:INFO:ARG: gbTEST: %v\n", PRG_TAG, gbTEST)
+		fmt.Printf("%v:INFO:ARG: gbSkipSrcInternal: %v\n", PRG_TAG, gbSkipSrcInternal)
+		fmt.Printf("%v:INFO:ARG: gbSkipSrcCmd: %v\n", PRG_TAG, gbSkipSrcCmd)
+		fmt.Printf("%v:INFO:ARG: gSkipFiles: %v\n", PRG_TAG, gSkipFiles)
 	}
 }
 
@@ -106,6 +114,11 @@ func handle_file(sFile string) {
 	}
 	if strings.Contains(sFile, "/src/cmd/") && gbSkipSrcCmd {
 		return
+	}
+	for _, mpath := range gSkipFiles {
+		if strings.Contains(sFile, mpath) {
+			return
+		}
 	}
 	name, idents := gosrc_info(sFile)
 	if gFindPkg != FINDPKG_DEFAULT {
