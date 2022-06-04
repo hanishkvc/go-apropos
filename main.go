@@ -79,11 +79,11 @@ func do_walkdir(sPath string) {
 }
 
 func main() {
+	test_flag()
+	handle_args()
 	if giDEBUG > 0 {
 		fmt.Println(PRG_TAG, PRG_NAME, PRG_VERSION)
 	}
-	test_flag()
-	handle_args()
 	test_go()
 	do_walkdir(gBasePath)
 	if giDEBUG > 2 {
