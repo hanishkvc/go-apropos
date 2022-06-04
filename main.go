@@ -10,7 +10,7 @@ import (
 
 const PRG_TAG = "GOAPRO"
 const PRG_NAME = "GoApropos"
-const PRG_VERSION = "v0-20220602IST0954"
+const PRG_VERSION = "v1-20220604IST0942"
 
 var gFind string
 var gBasePath string = "/usr/lib/go-1.18/"
@@ -25,9 +25,13 @@ func handle_args() {
 	flag.BoolVar(&gbTEST, "test", false, "Enable test logics")
 	flag.BoolVar(&gbALL, "all", false, "Match all symbols and not just exported")
 	flag.Parse()
-	fmt.Printf("gFind: %v\n", gFind)
-	fmt.Printf("gBasePath: %v\n", gBasePath)
-	fmt.Printf("giDEBUG: %v\n", giDEBUG)
+	if giDEBUG > 0 {
+		fmt.Printf("gFind: %v\n", gFind)
+		fmt.Printf("gBasePath: %v\n", gBasePath)
+		fmt.Printf("giDEBUG: %v\n", giDEBUG)
+		fmt.Printf("gbALL: %v\n", gbALL)
+		fmt.Printf("gbTEST: %v\n", gbTEST)
+	}
 	if len(flag.Args()) > 0 {
 		fmt.Printf("%v:WARN: Unknown args: %v\n", PRG_TAG, flag.Args())
 	}
@@ -78,7 +82,9 @@ func do_walkdir(sPath string) {
 }
 
 func main() {
-	fmt.Println(PRG_NAME, PRG_VERSION)
+	if giDEBUG > 0 {
+		fmt.Println(PRG_TAG, PRG_NAME, PRG_VERSION)
+	}
 	test_flag()
 	handle_args()
 	test_go()

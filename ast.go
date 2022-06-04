@@ -11,7 +11,7 @@ func gosrc_info(sFile string) (string, map[string]int) {
 	tfs := token.NewFileSet()
 	astF, err := parser.ParseFile(tfs, sFile, nil, 0)
 	if err != nil {
-		fmt.Printf("err: %v\n", err)
+		fmt.Printf("AST:ERRR: %v\n", err)
 		return "", nil
 	}
 	pkgName := ""
@@ -20,6 +20,8 @@ func gosrc_info(sFile string) (string, map[string]int) {
 		sType := "???"
 		sExtra := ""
 		switch t := n.(type) {
+		case *ast.Comment:
+			fmt.Printf("AST:INFO: Comment %v\n", t)
 		case *ast.CommentGroup: // Dont seem to encounter this
 			sExtra = t.Text()
 		case *ast.Ident: // This gives names of vars, consts and funcs also
@@ -45,7 +47,7 @@ func gosrc_info(sFile string) (string, map[string]int) {
 			//sExtra = t1.Name()
 		}
 		if giDEBUG > 6 {
-			fmt.Printf("n:%v:%v: %v\n", sType, sExtra, n)
+			fmt.Printf("AST:INFO: n:%v:%v: %v\n", sType, sExtra, n)
 		}
 		return true
 	})
