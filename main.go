@@ -13,12 +13,46 @@ const PRG_NAME = "GoApropos"
 const PRG_VERSION = "v1-20220604IST0942"
 
 var gFind string
-var gBasePath string = "/usr/lib/go-1.18/"
+var gBasePath string = "/usr/share/go-dummy/"
 var giDEBUG int
 var gbTEST bool
 var gbALL bool
 
+func find_srcpaths() []string {
+	const basePath = "/usr/share"
+	const namePrefix = "go-"
+	const srcDir = "src"
+	aDE, err := os.ReadDir(basePath)
+	if err != nil {
+		return nil
+	}
+	thePaths := []string{}
+	for _, de := range aDE {
+		if !de.IsDir() {
+			continue
+		}
+		sDirName := de.Name()
+		if !strings.HasPrefix(sDirName, namePrefix) {
+			continue
+		}
+		sPath := strings.Join([]string{basePath, sDirName, srcDir}, string(os.PathSeparator))
+		thePaths = append(thePaths, sPath)
+	}
+	if giDEBUG > 1 { // Needs to be enabled by setting giDEBUG in source
+		fmt.Printf("%v:INFO:SrcPaths: thePaths: %v\n", PRG_TAG, thePaths)
+	}
+	return thePaths
+}
+
+func set_gbasepath() {
+	basePaths := find_srcpaths()
+	if basePaths != nil {
+		gBasePath = basePaths[0]
+	}
+}
+
 func handle_args() {
+	set_gbasepath()
 	flag.StringVar(&gFind, "find", "", "Specify the word to find")
 	flag.StringVar(&gBasePath, "basepath", gBasePath, "Specify the dir containing files to search")
 	flag.IntVar(&giDEBUG, "debug", 0, "Set debug level to control debug prints")
@@ -71,7 +105,7 @@ func do_walkdir(sPath string) {
 			fmt.Printf("%v:INFO:WALKDIR: %v:path: %v\n", PRG_TAG, sPType, path)
 		}
 		if sPType == "File" {
-			theFile := sPath + "/" + path
+			theFile := sPath + string(os.PathSeparator) + path
 			handle_file(theFile)
 		}
 		return nil
