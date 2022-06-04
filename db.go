@@ -24,6 +24,12 @@ func db_print() {
 	}
 }
 
+func db_print_pkgs() {
+	for k := range gDB {
+		fmt.Printf("Package: %v\n", k)
+	}
+}
+
 func db_find(sFind string) {
 	if giDEBUG > 0 {
 		fmt.Printf("\n%v:INFO: Possible matches for [%v] at [%v]\n", PRG_TAG, gFind, gBasePath)
