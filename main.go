@@ -12,7 +12,9 @@ const PRG_TAG = "GOAPRO"
 const PRG_NAME = "GoApropos"
 const PRG_VERSION = "v1-20220604IST0942"
 
-var gFind string
+const FIND_DUMMY = "__FIND_DUMMY__"
+
+var gFind string = FIND_DUMMY
 var gBasePath string = "/usr/share/go-dummy/"
 var giDEBUG int = 0
 var gbTEST bool
@@ -57,21 +59,30 @@ func set_gbasepath() {
 
 func handle_args() {
 	set_gbasepath()
-	flag.StringVar(&gFind, "find", "", "Specify the word to find")
+	flag.StringVar(&gFind, "find", gFind, "Specify the word to find")
 	flag.StringVar(&gBasePath, "basepath", gBasePath, "Specify the dir containing files to search")
 	flag.IntVar(&giDEBUG, "debug", 0, "Set debug level to control debug prints")
 	flag.BoolVar(&gbTEST, "test", false, "Enable test logics")
 	flag.BoolVar(&gbALL, "all", false, "Match all symbols and not just exported")
 	flag.Parse()
+	if len(flag.Args()) > 0 {
+		if gFind != FIND_DUMMY {
+			fmt.Printf("%v:WARN:ARG: Unknown args: %v\n", PRG_TAG, flag.Args())
+			flag.Usage()
+			os.Exit(1)
+		}
+		gFind = flag.Arg(0)
+	}
+	if gFind == FIND_DUMMY {
+		flag.Usage()
+		os.Exit(1)
+	}
 	if giDEBUG > 1 {
 		fmt.Printf("%v:INFO:ARG: gFind: %v\n", PRG_TAG, gFind)
 		fmt.Printf("%v:INFO:ARG: gBasePath: %v\n", PRG_TAG, gBasePath)
 		fmt.Printf("%v:INFO:ARG: giDEBUG: %v\n", PRG_TAG, giDEBUG)
 		fmt.Printf("%v:INFO:ARG: gbALL: %v\n", PRG_TAG, gbALL)
 		fmt.Printf("%v:INFO:ARG: gbTEST: %v\n", PRG_TAG, gbTEST)
-	}
-	if len(flag.Args()) > 0 {
-		fmt.Printf("%v:WARN:ARG: Unknown args: %v\n", PRG_TAG, flag.Args())
 	}
 }
 
