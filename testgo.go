@@ -49,8 +49,13 @@ func test_data() {
 }
 
 func test_flag() {
+	var lInt int
 	piTest := flag.Int("int", 123, "Test a int flag")
+	flag.IntVar(&lInt, "localint", 999, "test a local to function int flag")
 	fmt.Printf("%v:INFO:T FLAG: piTest: %v\n", PRG_TAG, piTest)
+	fmt.Printf("%v:INFO:T FLAG: &lInt: %v\n", PRG_TAG, &lInt)
+	fmt.Printf("%v:INFO:T FLAG: &gbTEST: %v\n", PRG_TAG, &gbTEST)
+	fmt.Printf("%v:INFO:T FLAG: &gFind: %v\n", PRG_TAG, &gFind)
 }
 
 func test_fileread_low(sFilePath string) {
