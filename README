@@ -15,6 +15,12 @@ This provides something like the apropos command wrt man pages, but
 here it searchs for matching symbols from among the packages in the
 go source directory.
 
+As I wanted to look at Go lang a bit, so found this need and thus this.
+However I havent really looked at Go or read through Go documentation,
+so this code could be as far away from the conventions and concepts in
+Go land. This is based on some quick random scanning of docs and go src
+followed by compilation errors and potentially flawed logical guess work.
+
 Usage
 ######
 
@@ -85,13 +91,20 @@ the following arguments
 	--skipfiles "substring" (skip files containing substring in their path)
 
 
+Remember to pass the named arguments/flags before any unnamed args to the
+program.
+
 TODO
 ######
 
 DONE: A optional simple regular expression based token matching option has
 been added.
 
-Allow searching through package / identifier comments, if possible.
+Allow searching through package / identifier comments, if possible. A quick
+stab at this hasnt given any results as the Comment/CommentGroup seem to be
+empty, be it direct trapping or through File/FuncDecl/GenDecl nodes. Either
+I am missing something basic or ???, Maybe I need to call some additional
+helper func or ???
 
 Maybe add support to cache the package+identifiers map. This will inturn
 require a cmdline argument to force rebuilding of this cache, when required.

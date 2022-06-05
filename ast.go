@@ -35,9 +35,19 @@ func gosrc_info(sFile string) (string, map[string]int) {
 			if t.IsExported() || gbALL {
 				theIdents[t.Name] += 1
 			}
+		case *ast.GenDecl:
+			sType = "ImpTypeConstVar"
+			sExtra = t.Doc.Text()
+			if (len(sExtra) > 0) && (giDEBUG > 10) {
+				fmt.Printf("%v:DBUG:AST GenDecl:cmt: %v:%v\n", PRG_TAG, t.Specs, sExtra)
+			}
 		case *ast.FuncDecl:
 			sType = "Function"
 			sExtra = t.Name.Name
+			sComment := t.Doc.Text()
+			if (len(sComment) > 0) && (giDEBUG > 10) {
+				fmt.Printf("%v:DBUG:AST FuncDecl:cmt: %v:%v\n", PRG_TAG, sExtra, sComment)
+			}
 		case *ast.Package: // Dont seem to encounter this type
 			sType = "Package"
 			sExtra = t.Name
@@ -47,6 +57,11 @@ func gosrc_info(sFile string) (string, map[string]int) {
 			sExtra = t.Name.Name
 			pkgName = t.Name.Name
 			//fmt.Printf("%v:INFO:AST: File.Scope: %v\n", PRG_TAG, t.Scope)
+			if giDEBUG > 10 {
+				for _, cmtG := range t.Comments {
+					fmt.Printf("%v:DBUG:AST File:cmt: %v\n", PRG_TAG, cmtG.Text())
+				}
+			}
 		default:
 			//t1 := reflect.TypeOf(t)
 			//sExtra = t1.Name()
