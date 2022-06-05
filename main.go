@@ -20,6 +20,7 @@ const FINDPKG_DEFAULT = ""
 
 var gFind string = FIND_DUMMY
 var gFindPkg string = FINDPKG_DEFAULT
+var gFindPkgP string = match_prepare(gFindPkg) // the explicit initialising can be avoided, but still
 var gBasePath string = "/usr/share/go-dummy/"
 var giDEBUG int = 0
 var gbTEST bool
@@ -92,6 +93,7 @@ func handle_args() {
 		flag.Usage()
 		os.Exit(1)
 	}
+	gFindPkgP = match_prepare(gFindPkg)
 	if giDEBUG > 1 {
 		fmt.Printf("%v:INFO:ARG: gFind: %v\n", PRG_TAG, gFind)
 		fmt.Printf("%v:INFO:ARG: gFindPkg: %v\n", PRG_TAG, gFindPkg)
@@ -125,7 +127,7 @@ func handle_file(sFile string) {
 	}
 	name, idents := gosrc_info(sFile)
 	if gFindPkg != FINDPKG_DEFAULT {
-		if !strings.Contains(name, gFindPkg) {
+		if !match_ok(name, gFindPkgP) {
 			return
 		}
 	}
