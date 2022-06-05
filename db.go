@@ -5,7 +5,6 @@ package main
 
 import (
 	"fmt"
-	"strings"
 )
 
 var gDB = make(map[string]map[string]int)
@@ -41,11 +40,10 @@ func db_find(sFind string) {
 		fmt.Printf("\n%v:INFO: Possible matches for [%v] at [%v]\n", PRG_TAG, gFind, gBasePath)
 	}
 	pkgs := map[string][]string{}
-	sFU := strings.ToUpper(sFind)
+	sFindP := match_prepare(sFind)
 	for k, v := range gDB {
 		for id, _ := range v {
-			idU := strings.ToUpper(id)
-			if strings.Contains(idU, sFU) {
+			if match_ok(id, sFindP) {
 				_, ok := pkgs[k]
 				if !ok {
 					pkgs[k] = make([]string, 0)
