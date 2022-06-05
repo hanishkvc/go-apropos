@@ -62,8 +62,18 @@ The tokens specified are used to match the package name or the symbols as
 the case maybe by using a case insensitive search, by default. If one wants
 to use case sensitive matching, pass --casesensitive.
 
-By default as long as the package name or symbol contains the given token,
-it will be treated as a match.
+By default if the package name or symbol contains the given token, as a
+substring within itself, it will be treated as a match. This is called
+the contains matchmode. However if required one can use regular expression
+based matching by specifying --matchmode regexp. If the specified mode is
+unknown, then contains matchmode will be used as the fallback.
+
+NOTE: by default the match tokens as well as the pkg names and symbols
+will be converted to upper case if casesensitive search is disabled (which
+is the default). Any implications of this wrt regexp if any needs to be
+kept in mind. Inturn enablign casesensitive searching will disable this
+automatic upper case conversion and inturn will leave the match token,
+as well as the pkg names and symbols as it is.
 
 One can skip files matching certain predefined substrings by using one of
 the following arguments
@@ -78,7 +88,8 @@ the following arguments
 TODO
 ######
 
-Maybe change to regular expression wrt the tokens.
+DONE: A optional simple regular expression based token matching option has
+been added.
 
 Allow searching through package / identifier comments, if possible.
 

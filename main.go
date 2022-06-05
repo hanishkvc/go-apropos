@@ -13,7 +13,7 @@ import (
 
 const PRG_TAG = "GOAPRO"
 const PRG_NAME = "GoApropos"
-const PRG_VERSION = "v1-20220604IST1419"
+const PRG_VERSION = "v2-20220605IST1554"
 
 const FIND_DUMMY = "__FIND_DUMMY__"
 const FINDPKG_DEFAULT = ""
@@ -29,6 +29,7 @@ var gbSkipSrcInternal bool
 var gbSkipSrcCmd bool
 var gSkipFiles = []string{}
 var gbCaseSensitive bool
+var gsMatchMode string = "contains"
 
 func find_srcpaths(basePath string, srcPaths []string) []string {
 	const namePrefix = "go-"
@@ -82,6 +83,7 @@ func handle_args() {
 		return nil
 	})
 	flag.BoolVar(&gbCaseSensitive, "casesensitive", false, "Whether pkg name and symbol matching is case sensitive or not")
+	flag.StringVar(&gsMatchMode, "matchmode", gsMatchMode, "Specify the strategy used for matching wrt pkg names and symbols. Supported modes contains regexp")
 	flag.Parse()
 	if len(flag.Args()) > 0 {
 		if gFind != FIND_DUMMY {
@@ -106,6 +108,8 @@ func handle_args() {
 		fmt.Printf("%v:INFO:ARG: gbSkipSrcInternal: %v\n", PRG_TAG, gbSkipSrcInternal)
 		fmt.Printf("%v:INFO:ARG: gbSkipSrcCmd: %v\n", PRG_TAG, gbSkipSrcCmd)
 		fmt.Printf("%v:INFO:ARG: gSkipFiles: %v\n", PRG_TAG, gSkipFiles)
+		fmt.Printf("%v:INFO:ARG: gbCaseSensitive: %v\n", PRG_TAG, gbCaseSensitive)
+		fmt.Printf("%v:INFO:ARG: gsMatchMode: %v\n", PRG_TAG, gsMatchMode)
 	}
 }
 
