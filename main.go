@@ -28,6 +28,7 @@ var gbALL bool
 var gbSkipSrcInternal bool
 var gbSkipSrcCmd bool
 var gSkipFiles = []string{}
+var gbCaseSensitive bool
 
 func find_srcpaths(basePath string, srcPaths []string) []string {
 	const namePrefix = "go-"
@@ -80,6 +81,7 @@ func handle_args() {
 		gSkipFiles = append(gSkipFiles, s)
 		return nil
 	})
+	flag.BoolVar(&gbCaseSensitive, "casesensitive", false, "Whether pkg name and symbol matching is case sensitive or not")
 	flag.Parse()
 	if len(flag.Args()) > 0 {
 		if gFind != FIND_DUMMY {

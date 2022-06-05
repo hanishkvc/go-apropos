@@ -59,8 +59,11 @@ To get all the exported symbols of all the packages, use
 	goapropos --find ""
 
 The tokens specified are used to match the package name or the symbols as
-the case maybe by using a case insensitive search. As long as the package
-name or symbol contains the given token, it will be treated as a match.
+the case maybe by using a case insensitive search, by default. If one wants
+to use case sensitive matching, pass --casesensitive.
+
+By default as long as the package name or symbol contains the given token,
+it will be treated as a match.
 
 One can skip files matching certain predefined substrings by using one of
 the following arguments
@@ -77,9 +80,8 @@ TODO
 
 Maybe change to regular expression wrt the tokens.
 
-Add a option for case sensitive search.
-
 Allow searching through package / identifier comments, if possible.
 
-Maybe add support to cache the package+identifiers map.
+Maybe add support to cache the package+identifiers map. This will inturn
+require a cmdline argument to force rebuilding of this cache, when required.
 
