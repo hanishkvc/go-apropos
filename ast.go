@@ -12,7 +12,7 @@ import (
 
 func gosrc_info(sFile string) (string, map[string]int) {
 	tfs := token.NewFileSet()
-	astF, err := parser.ParseFile(tfs, sFile, nil, 0)
+	astF, err := parser.ParseFile(tfs, sFile, nil, parser.ParseComments)
 	if err != nil {
 		fmt.Printf("%v:ERRR:AST: %v\n", PRG_TAG, err)
 		return "", nil

@@ -106,6 +106,33 @@ empty, be it direct trapping or through File/FuncDecl/GenDecl nodes. Either
 I am missing something basic or ???, Maybe I need to call some additional
 helper func or ???
 
+Maybe simplify by using parseDir on dirs and no need to look at the src files
+individually seperately. However this may not skip test go source files in
+them, parsing of which can be avoided by walking through files and calling
+parseFile on them, like current flow. THink of this later.
+
 Maybe add support to cache the package+identifiers map. This will inturn
 require a cmdline argument to force rebuilding of this cache, when required.
+
+
+Note
+######
+
+AST and Parsing
+=================
+
+From a initial quick glance at golang source found go/ast and its Inspect
+function. Inturn to feed Inspect found parser.parseFile to parse go source
+files.
+
+However on using them found that no package ast node or comment related nodes
+(comment/commentgroup) was getting found at any level, by looking at the call
+back function of Inspect. Then there was also that mode argument to parseFile
+which I had not yet looked at.
+
+From another quick glance at source files in go/ast, go/doc and go/parser,
+as also looking at go doc parser I can see a parser.parseDir, which seems to
+return package nodes (as a given source directory could have multiple pkgs).
+Also found bits about the Mode type and inturn ParseComments.
+
 
