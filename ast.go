@@ -8,6 +8,7 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"strings"
 )
 
 func gosrc_info(sFile string) (string, map[string]int) {
@@ -23,31 +24,44 @@ func gosrc_info(sFile string) (string, map[string]int) {
 		sType := "???"
 		sExtra := ""
 		switch t := n.(type) {
-		case *ast.Comment:
-			sType = "Comment"
-			sExtra = t.Text
-		case *ast.CommentGroup: // Dont seem to encounter this
-			sType = "CommentGroup"
-			sExtra = t.Text()
 		case *ast.Ident: // This gives names of vars, consts and funcs also
 			sType = "Identifier"
 			sExtra = t.Name
 			if t.IsExported() || gbALL {
 				theIdents[t.Name] += 1
 			}
+		case *ast.ValueSpec:
+			sType = "ConstOrVar"
+			saExtra := []string{}
+			for _, ident := range t.Names {
+				saExtra = append(saExtra, ident.Name)
+				//fmt.Printf("%v:DBUG:AST ValueSpec:%v:%v\n", PRG_TAG, ident.Name, ident.String())
+			}
+			sExtra = "<" + strings.Join(saExtra, ",") + "> :Cmt:" + t.Comment.Text() + "__AND__" + t.Doc.Text()
+		case *ast.TypeSpec:
+			sType = "Type"
+			sExtra = "<" + t.Name.Name + "> :Cmt:" + t.Comment.Text() + "__AND__" + t.Doc.Text()
 		case *ast.GenDecl:
 			sType = "ImpTypeConstVar"
-			sExtra = t.Doc.Text()
-			if (len(sExtra) > 0) && (giDEBUG > 10) {
-				fmt.Printf("%v:DBUG:AST GenDecl:cmt: %v:%v\n", PRG_TAG, t.Specs, sExtra)
+			switch t.Tok {
+			case token.IMPORT:
+				sType = "GenDecl:Import"
+			case token.CONST:
+				sType = "GenDecl:Const"
+			case token.TYPE:
+				sType = "GenDecl:Type"
+			case token.VAR:
+				sType = "GenDecl:Var"
 			}
+			/*
+				for _, spec := range t.Specs {
+					fmt.Printf("%v:DBUG:AST GenDecl:%v\n", PRG_TAG, spec.Doc.Text())
+				}
+			*/
+			sExtra = t.Doc.Text()
 		case *ast.FuncDecl:
 			sType = "Function"
-			sExtra = t.Name.Name
-			sComment := t.Doc.Text()
-			if (len(sComment) > 0) && (giDEBUG > 10) {
-				fmt.Printf("%v:DBUG:AST FuncDecl:cmt: %v:%v\n", PRG_TAG, sExtra, sComment)
-			}
+			sExtra = t.Name.Name + ", :Cmt:" + t.Doc.Text()
 		case *ast.Package: // Dont seem to encounter this type
 			sType = "Package"
 			sExtra = t.Name
@@ -57,7 +71,7 @@ func gosrc_info(sFile string) (string, map[string]int) {
 			sExtra = t.Name.Name
 			pkgName = t.Name.Name
 			//fmt.Printf("%v:INFO:AST: File.Scope: %v\n", PRG_TAG, t.Scope)
-			if giDEBUG > 10 {
+			if giDEBUG > 20 {
 				for _, cmtG := range t.Comments {
 					fmt.Printf("%v:DBUG:AST File:cmt: %v\n", PRG_TAG, cmtG.Text())
 				}
