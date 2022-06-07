@@ -21,6 +21,10 @@ func gosrc_info(sFile string) (string, map[string]int) {
 	pkgName := ""
 	theIdents := map[string]int{}
 	ast.Inspect(astF, func(n ast.Node) bool {
+		bDigDeeper := true
+		if n == nil {
+			return bDigDeeper // true or false maynot matter here
+		}
 		sType := "???"
 		sExtra := ""
 		switch t := n.(type) {
@@ -35,17 +39,17 @@ func gosrc_info(sFile string) (string, map[string]int) {
 			saExtra := []string{}
 			for _, ident := range t.Names {
 				saExtra = append(saExtra, ident.Name)
-				//fmt.Printf("%v:DBUG:AST ValueSpec:%v:%v\n", PRG_TAG, ident.Name, ident.String())
 			}
-			sExtra = "<" + strings.Join(saExtra, ",") + "> :Cmt:" + t.Comment.Text() + "__AND__" + t.Doc.Text()
+			sExtra = "<" + strings.Join(saExtra, ",") + "> :Cmt:" + t.Comment.Text() + ":Doc:" + t.Doc.Text()
 		case *ast.TypeSpec:
 			sType = "Type"
-			sExtra = "<" + t.Name.Name + "> :Cmt:" + t.Comment.Text() + "__AND__" + t.Doc.Text()
+			sExtra = "<" + t.Name.Name + "> :Cmt:" + t.Comment.Text() + ":Doc:" + t.Doc.Text()
 		case *ast.GenDecl:
 			sType = "ImpTypeConstVar"
 			switch t.Tok {
 			case token.IMPORT:
 				sType = "GenDecl:Import"
+				bDigDeeper = false
 			case token.CONST:
 				sType = "GenDecl:Const"
 			case token.TYPE:
@@ -61,7 +65,7 @@ func gosrc_info(sFile string) (string, map[string]int) {
 			sExtra = t.Doc.Text()
 		case *ast.FuncDecl:
 			sType = "Function"
-			sExtra = t.Name.Name + ", :Cmt:" + t.Doc.Text()
+			sExtra = t.Name.Name + ", :Doc:" + t.Doc.Text()
 		case *ast.Package: // Dont seem to encounter this type
 			sType = "Package"
 			sExtra = t.Name
@@ -83,7 +87,7 @@ func gosrc_info(sFile string) (string, map[string]int) {
 		if giDEBUG > 6 {
 			fmt.Printf("%v:INFO:AST: n:%v:%v: %v\n", PRG_TAG, sType, sExtra, n)
 		}
-		return true
+		return bDigDeeper
 	})
 	if giDEBUG > 5 {
 		fmt.Printf("%v:INFO:AST: GoFile:%v:%v\n", PRG_TAG, pkgName, theIdents)
