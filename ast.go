@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func gosrc_info(sFile string) (string, map[string]int) {
+func gosrc_info(sFile string) (string, map[string]Ident) {
 	tfs := token.NewFileSet()
 	astF, err := parser.ParseFile(tfs, sFile, nil, parser.ParseComments)
 	if err != nil {
@@ -19,7 +19,7 @@ func gosrc_info(sFile string) (string, map[string]int) {
 		return "", nil
 	}
 	pkgName := ""
-	theIdents := map[string]int{}
+	theIdents := map[string]Ident{}
 	ast.Inspect(astF, func(n ast.Node) bool {
 		bDigDeeper := true
 		if n == nil {
@@ -32,7 +32,7 @@ func gosrc_info(sFile string) (string, map[string]int) {
 			sType = "Identifier"
 			sExtra = t.Name
 			if t.IsExported() || gbALL {
-				theIdents[t.Name] += 1
+				theIdents[t.Name] = Ident{1, ""}
 			}
 		case *ast.ValueSpec:
 			sType = "ConstOrVar"

@@ -7,17 +7,30 @@ import (
 	"fmt"
 )
 
-var gDB = make(map[string]map[string]int)
+type Ident struct {
+	cnt int
+	doc string
+	// name string
+}
+
+var gDB = make(map[string]map[string]Ident)
 var gDBPaths = make(map[string][]string)
 
-func db_add(name string, path string, idents map[string]int) {
+func db_add(name string, path string, idents map[string]Ident) {
 	_, ok := gDB[name]
 	if !ok {
 		gDB[name] = idents
 		gDBPaths[name] = make([]string, 0)
 	} else {
 		for k, v := range idents {
-			gDB[name][k] += v
+			ident, ok := gDB[name][k]
+			if !ok {
+				gDB[name][k] = Ident{v.cnt, v.doc}
+			} else {
+				ident.cnt += v.cnt
+				ident.doc += (";" + v.doc)
+				gDB[name][k] = ident // Do I need this? Need to check ie is ident a reference or a copy
+			}
 		}
 	}
 	gDBPaths[name] = append(gDBPaths[name], path)
