@@ -12,8 +12,10 @@ may contain what they want, they will have to grep the src directory
 or do a web search.
 
 This provides something like the apropos command wrt man pages, but
-here it searchs for matching symbols from among the packages in the
-go source directory.
+here it searchs for matching symbols/comments/packagenames from among
+the packages in the go source directory.
+
+NOTE: Symbol refers to const or var or type or func name.
 
 As I wanted to look at Go lang a bit, so found this need and thus this.
 However I havent really looked at Go or read through Go documentation,
@@ -64,25 +66,32 @@ To get all the exported symbols of all the packages, use
 
 	goapropos --find ""
 
-The tokens specified are used to match the package name or the symbols as
-the case maybe by using a case insensitive search, by default. If one wants
-to use case sensitive matching, pass --casesensitive.
+If one wants to find symbols based on their comments if any, then they can
+use --findcmt to specify a match token wrt comment. Any symbols which contain
+comments that match the specified token will be shown to the user.
 
-By default if the package name or symbol contains the given token, as a
-substring within itself, it will be treated as a match. This is called
+	goapropos --findcmt a_search_token
+	ex: goapropos --findcmt "device"
+
+The tokens specified are used to match package name or the symbols or their
+comments as the case maybe by using a case insensitive search, by default.
+If one wants to use case sensitive matching, pass --casesensitive.
+
+By default if the package name or symbol or comment contains the given token,
+as a substring within itself, it will be treated as a match. This is called
 the contains matchmode. However if required one can use regular expression
 based matching by specifying --matchmode regexp. If the specified mode is
 unknown, then contains matchmode will be used as the fallback.
 
-NOTE: by default the match tokens as well as the pkg names and symbols
+NOTE: by default the match tokens as well as the pkg names/symbols/comments
 will be converted to upper case if casesensitive search is disabled (which
 is the default). Any implications of this wrt regexp if any needs to be
 kept in mind. Inturn enablign casesensitive searching will disable this
 automatic upper case conversion and inturn will leave the match token,
-as well as the pkg names and symbols as it is.
+as well as the pkg names and symbols and comments as it is.
 
-One can skip files matching certain predefined substrings by using one of
-the following arguments
+One can skip files matching certain predefined substrings in their name or
+path  by using one of the following arguments
 
 	--skipsrccmd=true (skip files containing /src/cmd/ in their path)
 
@@ -100,8 +109,9 @@ TODO
 DONE: A optional simple regular expression based token matching option has
 been added.
 
-Allow searching through package / identifier comments, if possible. Have
-added logic to extract comments at a basic level.
+DONE: Allow searching through package / identifier comments, if possible. Have
+added logic to extract comments at a basic level. TODO: Comments at the block
+level wrt const or var containing multiple definitions needs to be accounted.
 
 Maybe simplify by using parseDir on dirs and no need to look at the src files
 individually seperately. However this may not skip test go source files in
