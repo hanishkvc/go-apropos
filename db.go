@@ -29,28 +29,28 @@ func identsmap_update(theMap map[string]Ident, identName string, identCnt int, i
 	}
 }
 
-func db_add(name string, path string, idents map[string]Ident) {
-	_, ok := gDB[name]
+func db_add(pkgName string, path string, idents map[string]Ident) {
+	_, ok := gDB[pkgName]
 	if !ok {
-		gDB[name] = idents
-		gDBPaths[name] = make([]string, 0)
+		gDB[pkgName] = idents
+		gDBPaths[pkgName] = make([]string, 0)
 	} else {
-		for k, v := range idents {
-			identsmap_update(gDB[name], k, v.cnt, v.doc, true)
+		for identName, identInfo := range idents {
+			identsmap_update(gDB[pkgName], identName, identInfo.cnt, identInfo.doc, true)
 		}
 	}
-	gDBPaths[name] = append(gDBPaths[name], path)
+	gDBPaths[pkgName] = append(gDBPaths[pkgName], path)
 }
 
 func db_print() {
-	for k, v := range gDB {
-		fmt.Println(k, v)
+	for pkgName, identsMap := range gDB {
+		fmt.Println(pkgName, identsMap)
 	}
 }
 
 func db_print_pkgs() {
-	for k := range gDB {
-		fmt.Printf("Package: %v, %v\n", k, gDBPaths[k])
+	for pkgName := range gDB {
+		fmt.Printf("Package:%v:%v\n", pkgName, gDBPaths[pkgName])
 	}
 }
 
@@ -60,14 +60,14 @@ func db_find(sFind string) {
 	}
 	pkgs := map[string][]string{}
 	sFindP := match_prepare(sFind)
-	for k, v := range gDB {
-		for id, _ := range v {
+	for pkgName, identsMap := range gDB {
+		for id, _ := range identsMap {
 			if match_ok(id, sFindP) {
-				_, ok := pkgs[k]
+				_, ok := pkgs[pkgName]
 				if !ok {
-					pkgs[k] = make([]string, 0)
+					pkgs[pkgName] = make([]string, 0)
 				}
-				pkgs[k] = append(pkgs[k], id)
+				pkgs[pkgName] = append(pkgs[pkgName], id)
 			}
 		}
 	}
