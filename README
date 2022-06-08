@@ -121,6 +121,9 @@ parseFile on them, like current flow. THink of this later.
 Maybe add support to cache the package+identifiers map. This will inturn
 require a cmdline argument to force rebuilding of this cache, when required.
 
+Maybe later add support for searching multiple different comment tokens and
+or symbol tokens. Currently one can search for either a single symbol or
+single comment or one symbolORcomment match tokens together.
 
 Note
 ######

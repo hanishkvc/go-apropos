@@ -13,7 +13,7 @@ import (
 
 const PRG_TAG = "GOAPRO"
 const PRG_NAME = "GoApropos"
-const PRG_VERSION = "v2-20220605IST1554"
+const PRG_VERSION = "v3-20220608IST2015"
 
 const FIND_DUMMY = "__FIND_DUMMY__"
 const FINDPKG_DEFAULT = ""
@@ -98,6 +98,13 @@ func handle_args() {
 	}
 	if (gFind == FIND_DUMMY) && (gFindPkg == FINDPKG_DEFAULT) && (gFindCmt == FINDCMT_DUMMY) {
 		flag.Usage()
+		fmt.Fprintf(os.Stderr, "Sample usage:\n")
+		fmt.Fprintln(os.Stderr, "\tgoapropos searchToken")
+		fmt.Fprintln(os.Stderr, "\tgoapropos --find searchToken")
+		fmt.Fprintln(os.Stderr, "\tgoapropos --findcmt searchToken")
+		fmt.Fprintln(os.Stderr, "\tgoapropos --findpkg searchToken")
+		fmt.Fprintln(os.Stderr, "\tgoapropos --matchmode regexp searchToken")
+		fmt.Fprintln(os.Stderr, "Look at the README for more info about the program and its usage")
 		os.Exit(1)
 	}
 	gFindPkgP = match_prepare(gFindPkg)
