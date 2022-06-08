@@ -19,6 +19,7 @@ func identsmap_update(theMap map[string]Ident, identName, identDoc string, ident
 		} else {
 			ident.cnt += 1
 			ident.doc = ident.doc + "; " + identDoc
+			theMap[identName] = ident
 		}
 	}
 }
