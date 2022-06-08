@@ -68,6 +68,20 @@ func test_data() {
 	fmt.Printf("%v:INFO:T MAP: After assigning the map and modifying assigned map; orig map part update also\n", PRG_TAG)
 	fmt.Printf("%v:INFO:T MAP: assignedMap: %v\n", PRG_TAG, assignedMap)
 	fmt.Printf("%v:INFO:T MAP: aMap: %v\n", PRG_TAG, aMap)
+	// Map with Struct Value
+	var aMapS = map[string]TestStruct{}
+	// aMapS["t1"] = Ident{0, "test1"} // Not allowed as Named Structs ie Type names are different even though internal structure same
+	aMapS["t1"] = TestStruct{0, "test1"}
+	fmt.Printf("%v:INFO:T MAPSTRUCT: aMapS: %v\n", PRG_TAG, aMapS)
+	fmt.Printf("%v:INFO:T MAPSTRUCT: aMapS[\"t1\"].cnt: %v\n", PRG_TAG, aMapS["t1"].cnt)
+	//aMapS["t1"].cnt = 99
+	//aMapS["t1"].cnt += 1
+	tVS, _ := aMapS["t1"]
+	//tVS.cnt += 1
+	tVS.cnt = 99
+	fmt.Printf("%v:INFO:T MAPSTRUCT: After assigning struct value of map and modifying assigned struct\n", PRG_TAG)
+	fmt.Printf("%v:INFO:T MAPSTRUCT: aMapS: %v\n", PRG_TAG, aMapS)
+	fmt.Printf("%v:INFO:T MAPSTRUCT: tVS: %v\n", PRG_TAG, tVS)
 }
 
 func test_flag() {
