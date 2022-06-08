@@ -57,7 +57,7 @@ func gosrc_info(sFile string) (string, map[string]Ident) {
 			sType = "Type"
 			sCmt := ":Cmt:" + t.Comment.Text() + ":Doc:" + t.Doc.Text()
 			sExtra = "<" + t.Name.Name + "> " + sCmt
-			identsmap_update(theIdents, t.Name.Name, sCmt, ast.IsExported(t.Name.Name)) // TypeSpec doesnt include a ast.Ident entity, so check exported wrt name
+			identsmap_update(theIdents, t.Name.Name, sCmt, t.Name.IsExported())
 		case *ast.GenDecl:
 			sType = "ImpTypeConstVar"
 			switch t.Tok {
