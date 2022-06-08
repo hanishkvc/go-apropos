@@ -54,15 +54,17 @@ func db_print_pkgs() {
 	}
 }
 
-func db_find(sFind string) {
+func db_find(sFind string, sFindCmt string) {
 	if giDEBUG > 0 {
 		fmt.Printf("\n%v:INFO: Possible matches for [%v] at [%v]\n", PRG_TAG, gFind, gBasePath)
 	}
 	pkgs := map[string][]string{}
 	sFindP := match_prepare(sFind)
+	sFindCmtP := match_prepare(sFindCmt)
 	for pkgName, identsMap := range gDB {
-		for id, _ := range identsMap {
-			if match_ok(id, sFindP) {
+		for id, idInfo := range identsMap {
+			bFound := match_ok(id, sFindP) || match_ok(idInfo.doc, sFindCmtP)
+			if bFound {
 				_, ok := pkgs[pkgName]
 				if !ok {
 					pkgs[pkgName] = make([]string, 0)
