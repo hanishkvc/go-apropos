@@ -18,11 +18,11 @@ func string_sort(theSlice []string) []string {
 func map_print(theMap any, sSep, sEnd string) {
 	switch m := theMap.(type) {
 	case map[string][]string:
-		keys := []string{}
+		keys := sort.StringSlice{}
 		for k, _ := range m {
 			keys = append(keys, k)
 		}
-		keys = string_sort(keys)
+		keys.Sort()
 		for _, k := range keys {
 			fmt.Printf("%v%v%v%v", k, sSep, m[k], sEnd)
 		}
