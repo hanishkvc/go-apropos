@@ -100,11 +100,8 @@ TODO
 DONE: A optional simple regular expression based token matching option has
 been added.
 
-Allow searching through package / identifier comments, if possible. A quick
-stab at this hasnt given any results as the Comment/CommentGroup seem to be
-empty, be it direct trapping or through File/FuncDecl/GenDecl nodes. Either
-I am missing something basic or ???, Maybe I need to call some additional
-helper func or ???
+Allow searching through package / identifier comments, if possible. Have
+added logic to extract comments at a basic level.
 
 Maybe simplify by using parseDir on dirs and no need to look at the src files
 individually seperately. However this may not skip test go source files in

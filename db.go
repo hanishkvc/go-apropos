@@ -71,8 +71,5 @@ func db_find(sFind string) {
 			}
 		}
 	}
-	for pkg, ids := range pkgs {
-		fmt.Println(pkg, ids)
-	}
 	map_print(pkgs, " ", "\n")
 }

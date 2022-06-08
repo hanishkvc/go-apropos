@@ -15,13 +15,16 @@ func string_sort(theSlice []string) []string {
 	return theSlice
 }
 
-func map_print(theMap map[string]any, sSep, sEnd string) {
-	keys := []string{}
-	for k, _ := range theMap {
-		keys = append(keys, k)
-	}
-	keys = string_sort(keys)
-	for _, k := range keys {
-		fmt.Printf("%v%v%v%v", k, sSep, theMap[k], sEnd)
+func map_print(theMap any, sSep, sEnd string) {
+	switch m := theMap.(type) {
+	case map[string][]string:
+		keys := []string{}
+		for k, _ := range m {
+			keys = append(keys, k)
+		}
+		keys = string_sort(keys)
+		for _, k := range keys {
+			fmt.Printf("%v%v%v%v", k, sSep, m[k], sEnd)
+		}
 	}
 }
