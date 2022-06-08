@@ -82,6 +82,8 @@ func test_data() {
 	fmt.Printf("%v:INFO:T MAPSTRUCT: After assigning struct value of map and modifying assigned struct\n", PRG_TAG)
 	fmt.Printf("%v:INFO:T MAPSTRUCT: aMapS: %v\n", PRG_TAG, aMapS)
 	fmt.Printf("%v:INFO:T MAPSTRUCT: tVS: %v\n", PRG_TAG, tVS)
+	// Map with Struct Value Test2
+	test_identsmap_update()
 }
 
 func test_flag() {

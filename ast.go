@@ -23,6 +23,15 @@ func identsmap_update(theMap map[string]Ident, identName, identDoc string, ident
 	}
 }
 
+func test_identsmap_update() {
+	aMap := map[string]Ident{}
+	identsmap_update(aMap, "t1", "doc for t1", true)
+	fmt.Printf("%v:INFO:T MAPSTRUCT2: aMap:%v\n", PRG_TAG, aMap)
+	identsmap_update(aMap, "t1", "doc for t1", true)
+	identsmap_update(aMap, "t2", "doc for t2", true)
+	fmt.Printf("%v:INFO:T MAPSTRUCT2: aMap after updates:%v\n", PRG_TAG, aMap)
+}
+
 func gosrc_info(sFile string) (string, map[string]Ident) {
 	tfs := token.NewFileSet()
 	astF, err := parser.ParseFile(tfs, sFile, nil, parser.ParseComments)
