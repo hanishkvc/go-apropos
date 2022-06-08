@@ -16,13 +16,13 @@ type Ident struct {
 var gDB = make(map[string]map[string]Ident)
 var gDBPaths = make(map[string][]string)
 
-func identsmap_update(theMap map[string]Ident, identName, identDoc string, identIsExported bool) {
+func identsmap_update(theMap map[string]Ident, identName string, identCnt int, identDoc string, identIsExported bool) {
 	if identIsExported || gbALL {
 		ident, ok := theMap[identName]
 		if !ok {
-			theMap[identName] = Ident{1, identDoc}
+			theMap[identName] = Ident{identCnt, identDoc}
 		} else {
-			ident.cnt += 1
+			ident.cnt += identCnt
 			ident.doc = ident.doc + "; " + identDoc
 			theMap[identName] = ident
 		}

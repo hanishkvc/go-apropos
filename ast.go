@@ -13,10 +13,10 @@ import (
 
 func test_identsmap_update() {
 	aMap := map[string]Ident{}
-	identsmap_update(aMap, "t1", "doc for t1", true)
+	identsmap_update(aMap, "t1", 1, "doc for t1", true)
 	fmt.Printf("%v:INFO:T MAPSTRUCT2: aMap:%v\n", PRG_TAG, aMap)
-	identsmap_update(aMap, "t1", "doc for t1", true)
-	identsmap_update(aMap, "t2", "doc for t2", true)
+	identsmap_update(aMap, "t1", 1, "doc for t1", true)
+	identsmap_update(aMap, "t2", 1, "doc for t2", true)
 	fmt.Printf("%v:INFO:T MAPSTRUCT2: aMap after updates:%v\n", PRG_TAG, aMap)
 }
 
@@ -40,21 +40,21 @@ func gosrc_info(sFile string) (string, map[string]Ident) {
 		case *ast.Ident: // This gives names of vars, consts and funcs also
 			sType = "Identifier"
 			sExtra = t.Name
-			identsmap_update(theIdents, t.Name, "", t.IsExported())
+			identsmap_update(theIdents, t.Name, 1, "", t.IsExported())
 		case *ast.ValueSpec:
 			sType = "ConstOrVar"
 			sCmt := ":Cmt:" + t.Comment.Text() + ":Doc:" + t.Doc.Text()
 			saExtra := []string{}
 			for _, ident := range t.Names {
 				saExtra = append(saExtra, ident.Name)
-				identsmap_update(theIdents, ident.Name, sCmt, ident.IsExported())
+				identsmap_update(theIdents, ident.Name, 1, sCmt, ident.IsExported())
 			}
 			sExtra = "<" + strings.Join(saExtra, ",") + "> " + sCmt
 		case *ast.TypeSpec:
 			sType = "Type"
 			sCmt := ":Cmt:" + t.Comment.Text() + ":Doc:" + t.Doc.Text()
 			sExtra = "<" + t.Name.Name + "> " + sCmt
-			identsmap_update(theIdents, t.Name.Name, sCmt, t.Name.IsExported())
+			identsmap_update(theIdents, t.Name.Name, 1, sCmt, t.Name.IsExported())
 		case *ast.GenDecl:
 			sType = "ImpTypeConstVar"
 			switch t.Tok {
@@ -77,7 +77,7 @@ func gosrc_info(sFile string) (string, map[string]Ident) {
 		case *ast.FuncDecl:
 			sType = "Function"
 			sExtra = t.Name.Name + ", :Doc:" + t.Doc.Text()
-			identsmap_update(theIdents, t.Name.Name, t.Doc.Text(), t.Name.IsExported())
+			identsmap_update(theIdents, t.Name.Name, 1, t.Doc.Text(), t.Name.IsExported())
 		case *ast.Package: // Dont seem to encounter this type
 			sType = "Package"
 			sExtra = t.Name
