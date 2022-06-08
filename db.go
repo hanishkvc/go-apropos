@@ -36,14 +36,7 @@ func db_add(name string, path string, idents map[string]Ident) {
 		gDBPaths[name] = make([]string, 0)
 	} else {
 		for k, v := range idents {
-			ident, ok := gDB[name][k]
-			if !ok {
-				gDB[name][k] = Ident{v.cnt, v.doc}
-			} else {
-				ident.cnt += v.cnt
-				ident.doc += (";" + v.doc)
-				gDB[name][k] = ident // Do I need this? Need to check ie is ident a reference or a copy
-			}
+			identsmap_update(gDB[name], k, v.cnt, v.doc, true)
 		}
 	}
 	gDBPaths[name] = append(gDBPaths[name], path)
