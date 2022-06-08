@@ -37,6 +37,24 @@ func test_data() {
 	fmt.Printf("%v:INFO:T ARRAY: After assigning array and modifying assigned array\n", PRG_TAG)
 	fmt.Printf("%v:INFO:T ARRAY: aArray: %v\n", PRG_TAG, aArray)
 	fmt.Printf("%v:INFO:T ARRAY: assignedArray: %v\n", PRG_TAG, assignedArray)
+	// struct
+	var aStruct struct {
+		cnt int
+		doc string
+	}
+	type TestStruct struct {
+		cnt int
+		doc string
+	}
+	aStruct.doc = "test doc value"
+	var assignedStruct TestStruct // Initialisation below kept seperate from var declaration
+	assignedStruct = aStruct
+	fmt.Printf("%v:INFO:T STRUCT: aStruct: %v\n", PRG_TAG, aStruct)
+	aStruct.cnt += 1
+	assignedStruct.cnt = 99
+	fmt.Printf("%v:INFO:T STRUCT: After assigning struct and modifying assigned struct; orig struct part update also\n", PRG_TAG)
+	fmt.Printf("%v:INFO:T STRUCT: aStruct: %v\n", PRG_TAG, aStruct)
+	fmt.Printf("%v:INFO:T STRUCT: assignedStruct: %v\n", PRG_TAG, assignedStruct)
 	// Maps
 	var aMap map[string]int = map[string]int{"1": 1, "2": 2}
 	fmt.Printf("%v:INFO:T MAP: aMap: %v\n", PRG_TAG, aMap)
@@ -44,10 +62,11 @@ func test_data() {
 	fmt.Printf("%v:INFO:T MAP: bMap: %v\n", PRG_TAG, bMap)
 	cMap := map[string]int{"1": 1, "2": 2}
 	fmt.Printf("%v:INFO:T MAP: cMap: %v\n", PRG_TAG, cMap)
-	var anotherMap = aMap
-	anotherMap["2"] = 22
-	fmt.Printf("%v:INFO:T MAP: After assigning the map and modifying assigned map\n", PRG_TAG)
-	fmt.Printf("%v:INFO:T MAP: anotherMap: %v\n", PRG_TAG, anotherMap)
+	var assignedMap = aMap
+	aMap["1"] += 1
+	assignedMap["2"] = 22
+	fmt.Printf("%v:INFO:T MAP: After assigning the map and modifying assigned map; orig map part update also\n", PRG_TAG)
+	fmt.Printf("%v:INFO:T MAP: assignedMap: %v\n", PRG_TAG, assignedMap)
 	fmt.Printf("%v:INFO:T MAP: aMap: %v\n", PRG_TAG, aMap)
 }
 
