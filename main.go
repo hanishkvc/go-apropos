@@ -26,7 +26,7 @@ var gFindCmt string = FINDCMT_DUMMY
 var gBasePath string = "/usr/share/go-dummy/"
 var giDEBUG int = 0
 var gbTEST bool
-var gbALL bool
+var gbAllSymbols bool
 var gbSkipSrcInternal bool
 var gbSkipSrcCmd bool
 var gSkipFiles = []string{}
@@ -78,7 +78,7 @@ func handle_args() {
 	flag.StringVar(&gBasePath, "basepath", gBasePath, "Specify the dir containing files to search")
 	flag.IntVar(&giDEBUG, "debug", 0, "Set debug level to control debug prints")
 	flag.BoolVar(&gbTEST, "test", false, "Enable test logics")
-	flag.BoolVar(&gbALL, "all", false, "Match all symbols and not just exported")
+	flag.BoolVar(&gbAllSymbols, "allsymbols", false, "Match all symbols and not just exported")
 	flag.BoolVar(&gbSkipSrcInternal, "skipsrcinternal", false, "Whether package files matching /src/internal/ are skipped or not")
 	flag.BoolVar(&gbSkipSrcCmd, "skipsrccmd", false, "Whether package files matching /src/cmd/ are skipped or not")
 	flag.Func("skipfiles", "Specify token to match for skipping package files. More than one can be specified", func(s string) error {
@@ -107,7 +107,7 @@ func handle_args() {
 		fmt.Printf("%v:INFO:ARG: gFindCmt: %v\n", PRG_TAG, gFindCmt)
 		fmt.Printf("%v:INFO:ARG: gBasePath: %v\n", PRG_TAG, gBasePath)
 		fmt.Printf("%v:INFO:ARG: giDEBUG: %v\n", PRG_TAG, giDEBUG)
-		fmt.Printf("%v:INFO:ARG: gbALL: %v\n", PRG_TAG, gbALL)
+		fmt.Printf("%v:INFO:ARG: gbAllSymbols: %v\n", PRG_TAG, gbAllSymbols)
 		fmt.Printf("%v:INFO:ARG: gbTEST: %v\n", PRG_TAG, gbTEST)
 		fmt.Printf("%v:INFO:ARG: gbSkipSrcInternal: %v\n", PRG_TAG, gbSkipSrcInternal)
 		fmt.Printf("%v:INFO:ARG: gbSkipSrcCmd: %v\n", PRG_TAG, gbSkipSrcCmd)

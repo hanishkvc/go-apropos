@@ -17,7 +17,7 @@ var gDB = make(map[string]map[string]Ident)
 var gDBPaths = make(map[string][]string)
 
 func identsmap_update(theMap map[string]Ident, identName string, identCnt int, identDoc string, identIsExported bool) {
-	if identIsExported || gbALL {
+	if identIsExported || gbAllSymbols {
 		ident, ok := theMap[identName]
 		if !ok {
 			theMap[identName] = Ident{identCnt, identDoc}

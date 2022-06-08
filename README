@@ -46,9 +46,9 @@ it in the cmdline ie.
 By default it tries to find matching exported symbols only from available
 packages. However If one wants the logic to use both internal and exported
 symbols of the packages when trying to find a match, one needs to specify
-the cmdline argument --all.
+the cmdline argument --allsymbols.
 
-	goapropos --all search_token
+	goapropos --allsymbols search_token
 
 By default it tries to search through all the packages in the identified
 go source directory. However if required one can filter the packages that
