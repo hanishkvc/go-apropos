@@ -11,19 +11,6 @@ import (
 	"strings"
 )
 
-func identsmap_update(theMap map[string]Ident, identName, identDoc string, identIsExported bool) {
-	if identIsExported || gbALL {
-		ident, ok := theMap[identName]
-		if !ok {
-			theMap[identName] = Ident{1, identDoc}
-		} else {
-			ident.cnt += 1
-			ident.doc = ident.doc + "; " + identDoc
-			theMap[identName] = ident
-		}
-	}
-}
-
 func test_identsmap_update() {
 	aMap := map[string]Ident{}
 	identsmap_update(aMap, "t1", "doc for t1", true)

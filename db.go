@@ -16,6 +16,19 @@ type Ident struct {
 var gDB = make(map[string]map[string]Ident)
 var gDBPaths = make(map[string][]string)
 
+func identsmap_update(theMap map[string]Ident, identName, identDoc string, identIsExported bool) {
+	if identIsExported || gbALL {
+		ident, ok := theMap[identName]
+		if !ok {
+			theMap[identName] = Ident{1, identDoc}
+		} else {
+			ident.cnt += 1
+			ident.doc = ident.doc + "; " + identDoc
+			theMap[identName] = ident
+		}
+	}
+}
+
 func db_add(name string, path string, idents map[string]Ident) {
 	_, ok := gDB[name]
 	if !ok {
