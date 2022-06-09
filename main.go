@@ -29,6 +29,8 @@ var gbTEST bool
 var gbAllSymbols bool
 var gSkipFiles = []string{}
 var gbCaseSensitive bool
+
+var giMatchMode = MatchMode_Contains
 var gsMatchMode string = "contains"
 
 func find_srcpaths(basePath string, srcPaths []string) []string {
@@ -104,6 +106,7 @@ func handle_args() {
 		os.Exit(1)
 	}
 	gFindPkgP = match_prepare(gFindPkg)
+	giMatchMode = matchmode_fromstr(gsMatchMode)
 	if giDEBUG > 1 {
 		fmt.Printf("%v:INFO:ARG: gFind: %v\n", PRG_TAG, gFind)
 		fmt.Printf("%v:INFO:ARG: gFindPkg: %v\n", PRG_TAG, gFindPkg)

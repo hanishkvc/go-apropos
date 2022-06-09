@@ -85,6 +85,16 @@ the contains matchmode. However if required one can use regular expression
 based matching by specifying --matchmode regexp. If the specified mode is
 unknown, then contains matchmode will be used as the fallback.
 
+	goapropos matchtoken_substring
+	ex: goapropos fmt
+
+	goapropos --matchmode contains matchtoken_substring
+	ex: goapropos --matchmode contains fmt
+
+	goapropos --matchmode regexp matchtoken_regexp
+	ex: goapropos --matchmode regexp "fm.*t"
+	ex: goapropos --matchmode regexp "fm+t"
+
 NOTE: by default the match tokens as well as the pkg names/symbols/comments
 will be converted to upper case if casesensitive search is disabled (which
 is the default). Any implications of this wrt regexp if any needs to be
