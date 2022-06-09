@@ -27,11 +27,13 @@ Usage
 ######
 
 By default it uses 1st directory under /usr/share or /usr/local/share
-which matchs the pattern "go-*" as the go source directory wrt packages
-to search for. If required one can explicitly set the source directory
-by using the cmdline arg
+or /usr/lib which matchs the pattern "go-*" or "golang*" as the go source
+directory wrt packages to search for. If required one can explicitly set
+the go source directory by using the cmdline arg
 
 	goapropos --basepath <base_path> search_token
+
+NOTE: Logic doesnt follow symbolic links under the go source directory
 
 One can specify the token to use to match / search for symbols in
 packages by using either the cmdline arg --find or by just specifing

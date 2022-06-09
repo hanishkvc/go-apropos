@@ -6,7 +6,35 @@ package main
 import (
 	"fmt"
 	"sort"
+	"strings"
 )
+
+func substring_inthere(theStrings []string, subString string) bool {
+	for _, curString := range theStrings {
+		if strings.Contains(curString, subString) {
+			return true
+		}
+	}
+	return false
+}
+
+func string_contains_anysubstring(theString string, subStrings []string) bool {
+	for _, curSubString := range subStrings {
+		if strings.Contains(theString, curSubString) {
+			return true
+		}
+	}
+	return false
+}
+
+func string_hasprefix_anysubstring(theString string, subStrings []string) bool {
+	for _, curSubString := range subStrings {
+		if strings.HasPrefix(theString, curSubString) {
+			return true
+		}
+	}
+	return false
+}
 
 func string_sort(theSlice []string) []string {
 	sort.SliceStable(theSlice, func(i, j int) bool {

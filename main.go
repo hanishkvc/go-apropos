@@ -13,7 +13,7 @@ import (
 
 const PRG_TAG = "GOAPRO"
 const PRG_NAME = "GoApropos"
-const PRG_VERSION = "v3-20220608IST2015"
+const PRG_VERSION = "v3-20220609IST2136"
 
 const FIND_DUMMY = "__FIND_DUMMY__"
 const FINDPKG_DEFAULT = ""
@@ -32,7 +32,7 @@ var gbCaseSensitive bool
 var gsMatchMode string = "contains"
 
 func find_srcpaths(basePath string, srcPaths []string) []string {
-	const namePrefix = "go-"
+	namePrefixs := []string{"go-", "golang"}
 	const srcDir = "src"
 	aDE, err := os.ReadDir(basePath)
 	if err != nil {
@@ -46,7 +46,7 @@ func find_srcpaths(basePath string, srcPaths []string) []string {
 			continue
 		}
 		sDirName := de.Name()
-		if !strings.HasPrefix(sDirName, namePrefix) {
+		if !string_hasprefix_anysubstring(sDirName, namePrefixs) {
 			continue
 		}
 		sPath := strings.Join([]string{basePath, sDirName, srcDir}, string(os.PathSeparator))
@@ -60,7 +60,7 @@ func find_srcpaths(basePath string, srcPaths []string) []string {
 
 func set_gbasepath() {
 	srcPaths := []string{}
-	for _, lookAt := range []string{"/usr/share", "/usr/local/share"} {
+	for _, lookAt := range []string{"/usr/share", "/usr/local/share", "/usr/lib"} {
 		srcPaths = find_srcpaths(lookAt, srcPaths)
 	}
 	if len(srcPaths) > 0 {
