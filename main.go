@@ -27,8 +27,6 @@ var gBasePath string = "/usr/share/go-dummy/"
 var giDEBUG int = 0
 var gbTEST bool
 var gbAllSymbols bool
-var gbSkipSrcInternal bool
-var gbSkipSrcCmd bool
 var gSkipFiles = []string{}
 var gbCaseSensitive bool
 var gsMatchMode string = "contains"
@@ -79,9 +77,7 @@ func handle_args() {
 	flag.IntVar(&giDEBUG, "debug", 0, "Set debug level to control debug prints")
 	flag.BoolVar(&gbTEST, "test", false, "Enable test logics")
 	flag.BoolVar(&gbAllSymbols, "allsymbols", false, "Match all symbols and not just exported")
-	flag.BoolVar(&gbSkipSrcInternal, "skipsrcinternal", false, "Whether package files matching /src/internal/ are skipped or not")
-	flag.BoolVar(&gbSkipSrcCmd, "skipsrccmd", false, "Whether package files matching /src/cmd/ are skipped or not")
-	flag.Func("skipfiles", "Specify token to match for skipping package files. More than one can be specified", func(s string) error {
+	flag.Func("skipfiles", "Specify token to match wrt package path+filename for skipping package files. More than one can be specified", func(s string) error {
 		gSkipFiles = append(gSkipFiles, s)
 		return nil
 	})
@@ -116,8 +112,6 @@ func handle_args() {
 		fmt.Printf("%v:INFO:ARG: giDEBUG: %v\n", PRG_TAG, giDEBUG)
 		fmt.Printf("%v:INFO:ARG: gbAllSymbols: %v\n", PRG_TAG, gbAllSymbols)
 		fmt.Printf("%v:INFO:ARG: gbTEST: %v\n", PRG_TAG, gbTEST)
-		fmt.Printf("%v:INFO:ARG: gbSkipSrcInternal: %v\n", PRG_TAG, gbSkipSrcInternal)
-		fmt.Printf("%v:INFO:ARG: gbSkipSrcCmd: %v\n", PRG_TAG, gbSkipSrcCmd)
 		fmt.Printf("%v:INFO:ARG: gSkipFiles: %v\n", PRG_TAG, gSkipFiles)
 		fmt.Printf("%v:INFO:ARG: gbCaseSensitive: %v\n", PRG_TAG, gbCaseSensitive)
 		fmt.Printf("%v:INFO:ARG: gsMatchMode: %v\n", PRG_TAG, gsMatchMode)
@@ -129,12 +123,6 @@ func handle_file(sFile string) {
 		return
 	}
 	if strings.HasSuffix(sFile, "_test.go") {
-		return
-	}
-	if strings.Contains(sFile, "/src/internal/") && gbSkipSrcInternal {
-		return
-	}
-	if strings.Contains(sFile, "/src/cmd/") && gbSkipSrcCmd {
 		return
 	}
 	for _, mpath := range gSkipFiles {

@@ -91,13 +91,12 @@ automatic upper case conversion and inturn will leave the match token,
 as well as the pkg names and symbols and comments as it is.
 
 One can skip files matching certain predefined substrings in their name or
-path  by using one of the following arguments
-
-	--skipsrccmd=true (skip files containing /src/cmd/ in their path)
-
-	--skipsrcinternal=true (skip files containing /src/internal/ in them)
+path by using --skipfiles. One can specify multiple matching tokens to filter
+out source files from different-paths/... by using skipfiles multiple times.
 
 	--skipfiles "substring" (skip files containing substring in their path)
+
+	goapropos --skipfiles "/src/cmd/" --skipfiles "/src/internal/" findme
 
 
 Remember to pass the named arguments/flags before any unnamed args to the
