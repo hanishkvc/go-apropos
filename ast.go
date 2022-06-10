@@ -127,7 +127,7 @@ func gosrc_info(sFile string) (string, map[string]Ident) {
 	if giDEBUG > 5 {
 		fmt.Printf("%v:INFO:AST: GoFile:%v:%v\n", PRG_TAG, pkgName, theIdents)
 	}
-	if giDEBUG > -1 {
+	if giDEBUG > 20 {
 		fmt.Printf("%v:DBUG:AST: GoFile:%v:%v:%v\n", PRG_TAG, sFile, gIdentyStats, gIdentyStats.delta_summary())
 	}
 	return pkgName, theIdents
