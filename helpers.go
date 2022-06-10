@@ -5,6 +5,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"sort"
 	"strings"
 )
@@ -48,6 +49,9 @@ func string_sort(theSlice []string) []string {
 func map_print(theMap any, sSep, sEnd string) {
 	switch m := theMap.(type) {
 	case map[string][]string:
+		// TODO: Need to fall through if equivalence of MatchingPkgs wrt this type can be made understood to go compiler
+		// in some implicit/explicit way of the language
+	case MatchingPkgs:
 		keys := sort.StringSlice{}
 		for k, _ := range m {
 			keys = append(keys, k)
@@ -56,6 +60,8 @@ func map_print(theMap any, sSep, sEnd string) {
 		for _, k := range keys {
 			fmt.Printf("%v%v%v%v", k, sSep, m[k], sEnd)
 		}
+	default:
+		fmt.Fprintf(os.Stderr, "%v:WARN:MapPrint: UnSupportedMapType:%v\n", PRG_TAG, theMap)
 	}
 }
 

@@ -72,6 +72,10 @@ If one wants to find symbols based on their comments if any, then they can
 use --findcmt to specify a match token wrt comment. Any symbols which contain
 comments that match the specified token will be shown to the user.
 
+NOTE: If the comment being searched for is found at a generic file level,
+rather than wrt a specific symbol within it, then the package name of the
+file is shown.
+
 	goapropos --findcmt a_search_token
 	ex: goapropos --findcmt "device"
 
@@ -180,6 +184,10 @@ A bit more flexible find go source directory logic.
 Link comment at the block level wrt consts or vars or types to the members
 of the block, so that a search for any part of such a comment will list all
 the members of that block.
+
+If a comment level search matches any of the generic level comments in any
+of the files belonging to that package, instead of to the comment specific
+to a symbol, then the package name will be shown.
 
 
 20220608

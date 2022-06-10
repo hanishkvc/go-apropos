@@ -57,22 +57,45 @@ func db_print_pkgs() {
 	}
 }
 
+type MatchingPkgs map[string][]string
+
+func matchingpkgs_add(thePkgs MatchingPkgs, pkgName string, id string) {
+	_, ok := thePkgs[pkgName]
+	if !ok {
+		thePkgs[pkgName] = make([]string, 0)
+	}
+	thePkgs[pkgName] = append(thePkgs[pkgName], id)
+	if giDEBUG > 10 {
+		fmt.Printf("%v:DBUG:DB: MatchingPkgsAdd:%v:%v\n", PRG_TAG, pkgName, id)
+	}
+}
+
 func db_find(sFind string, sFindCmt string) {
 	if giDEBUG > 0 {
 		fmt.Printf("\n%v:INFO: Possible matches for [%v] at [%v]\n", PRG_TAG, gFind, gBasePath)
 	}
-	pkgs := map[string][]string{}
+	pkgs := MatchingPkgs{}
 	sFindP := match_prepare(sFind)
 	sFindCmtP := match_prepare(sFindCmt)
 	for pkgName, identsMap := range gDB {
+		bFoundInPackage := false
+		// Check symbols in the current package
 		for id, idInfo := range identsMap {
 			bFound := match_ok(id, sFindP) || match_ok(idInfo.doc, sFindCmtP)
 			if bFound {
-				_, ok := pkgs[pkgName]
-				if !ok {
-					pkgs[pkgName] = make([]string, 0)
+				bFoundInPackage = true
+				matchingpkgs_add(pkgs, pkgName, id)
+			}
+		}
+		// If no match, check comments wrt current package
+		if !bFoundInPackage && (gFindCmt != FINDCMT_DUMMY) {
+			for _, cmt := range gDBCmts[pkgName] {
+				if match_ok(cmt, sFindCmtP) {
+					bFoundInPackage = true
 				}
-				pkgs[pkgName] = append(pkgs[pkgName], id)
+			}
+			if bFoundInPackage {
+				matchingpkgs_add(pkgs, pkgName, "???")
 			}
 		}
 	}
