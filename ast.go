@@ -20,6 +20,13 @@ func test_identsmap_update() {
 	fmt.Printf("%v:INFO:T MAPSTRUCT2: aMap after updates:%v\n", PRG_TAG, aMap)
 }
 
+var gIdentyStats struct {
+	identCnt uint
+	funcCnt  uint
+	valueCnt uint
+	typeCnt  uint
+}
+
 func gosrc_info(sFile string) (string, map[string]Ident) {
 	tfs := token.NewFileSet()
 	astF, err := parser.ParseFile(tfs, sFile, nil, parser.ParseComments)
@@ -41,6 +48,7 @@ func gosrc_info(sFile string) (string, map[string]Ident) {
 			sType = "Identifier"
 			sExtra = t.Name
 			identsmap_update(theIdents, t.Name, 1, "", t.IsExported())
+			gIdentyStats.identCnt += 1
 		case *ast.ValueSpec:
 			sType = "ConstOrVar"
 			sCmt := ":Cmt:" + t.Comment.Text() + ":Doc:" + t.Doc.Text()
@@ -48,6 +56,7 @@ func gosrc_info(sFile string) (string, map[string]Ident) {
 			for _, ident := range t.Names {
 				saExtra = append(saExtra, ident.Name)
 				identsmap_update(theIdents, ident.Name, 1, sCmt, ident.IsExported())
+				gIdentyStats.valueCnt += 1
 			}
 			sExtra = "<" + strings.Join(saExtra, ",") + "> " + sCmt
 		case *ast.TypeSpec:
@@ -55,6 +64,7 @@ func gosrc_info(sFile string) (string, map[string]Ident) {
 			sCmt := ":Cmt:" + t.Comment.Text() + ":Doc:" + t.Doc.Text()
 			sExtra = "<" + t.Name.Name + "> " + sCmt
 			identsmap_update(theIdents, t.Name.Name, 1, sCmt, t.Name.IsExported())
+			gIdentyStats.typeCnt += 1
 		case *ast.GenDecl:
 			sType = "ImpTypeConstVar"
 			switch t.Tok {
@@ -78,6 +88,7 @@ func gosrc_info(sFile string) (string, map[string]Ident) {
 			sType = "Function"
 			sExtra = t.Name.Name + ", :Doc:" + t.Doc.Text()
 			identsmap_update(theIdents, t.Name.Name, 1, t.Doc.Text(), t.Name.IsExported())
+			gIdentyStats.funcCnt += 1
 		case *ast.Package: // Dont seem to encounter this type
 			sType = "Package"
 			sExtra = t.Name
@@ -103,6 +114,9 @@ func gosrc_info(sFile string) (string, map[string]Ident) {
 	})
 	if giDEBUG > 5 {
 		fmt.Printf("%v:INFO:AST: GoFile:%v:%v\n", PRG_TAG, pkgName, theIdents)
+	}
+	if giDEBUG > -1 {
+		fmt.Printf("%v:DBUG:AST: GoFile:%v:%v\n", PRG_TAG, sFile, gIdentyStats)
 	}
 	return pkgName, theIdents
 }
