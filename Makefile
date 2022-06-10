@@ -17,3 +17,11 @@ gofmt:
 gorun:
 	go run goapropos --test=true
 
+test:
+	./goapropos fmt
+	./goapropos --find numcpu
+	./goapropos --findpkg fmt
+	./goapropos --findcmt "type 'x'"
+	./goapropos --findcmt "type flags for"
+	./goapropos --findcmt "type flags"
+	./goapropos --findcmt "uid and gid"
