@@ -20,11 +20,21 @@ func test_identsmap_update() {
 	fmt.Printf("%v:INFO:T MAPSTRUCT2: aMap after updates:%v\n", PRG_TAG, aMap)
 }
 
-var gIdentyStats struct {
+type IdentyStats struct {
 	identCnt uint
 	funcCnt  uint
 	valueCnt uint
 	typeCnt  uint
+}
+
+var gIdentyStats IdentyStats
+
+func (is IdentyStats) String() string {
+	return fmt.Sprintf("{ i:%v f:%v v:%v t:%v }", is.identCnt, is.funcCnt, is.valueCnt, is.typeCnt)
+}
+
+func (is *IdentyStats) delta_summary() int {
+	return (int(is.identCnt - (is.funcCnt + is.typeCnt + is.valueCnt)))
 }
 
 func gosrc_info(sFile string) (string, map[string]Ident) {
@@ -116,7 +126,7 @@ func gosrc_info(sFile string) (string, map[string]Ident) {
 		fmt.Printf("%v:INFO:AST: GoFile:%v:%v\n", PRG_TAG, pkgName, theIdents)
 	}
 	if giDEBUG > -1 {
-		fmt.Printf("%v:DBUG:AST: GoFile:%v:%v\n", PRG_TAG, sFile, gIdentyStats)
+		fmt.Printf("%v:DBUG:AST: GoFile:%v:%v:%v\n", PRG_TAG, sFile, gIdentyStats, gIdentyStats.delta_summary())
 	}
 	return pkgName, theIdents
 }
