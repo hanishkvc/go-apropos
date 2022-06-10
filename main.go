@@ -133,13 +133,13 @@ func handle_file(sFile string) {
 			return
 		}
 	}
-	name, idents := gosrc_info(sFile)
+	name, cmts, idents := gosrc_info(sFile)
 	if gFindPkg != FINDPKG_DEFAULT {
 		if !match_ok(name, gFindPkgP) {
 			return
 		}
 	}
-	db_add(name, sFile, idents)
+	db_add(name, sFile, cmts, idents)
 }
 
 func do_walkdir(sPath string) {

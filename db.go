@@ -15,6 +15,7 @@ type Ident struct {
 
 var gDB = make(map[string]map[string]Ident)
 var gDBPaths = make(map[string][]string)
+var gDBCmts = make(map[string][]string)
 
 func identsmap_update(theMap map[string]Ident, identName string, identCnt int, identDoc string, identIsExported bool) {
 	if identIsExported || gbAllSymbols {
@@ -29,17 +30,19 @@ func identsmap_update(theMap map[string]Ident, identName string, identCnt int, i
 	}
 }
 
-func db_add(pkgName string, path string, idents map[string]Ident) {
+func db_add(pkgName string, path string, cmts string, idents map[string]Ident) {
 	_, ok := gDB[pkgName]
 	if !ok {
 		gDB[pkgName] = idents
 		gDBPaths[pkgName] = make([]string, 0)
+		gDBCmts[pkgName] = make([]string, 0)
 	} else {
 		for identName, identInfo := range idents {
 			identsmap_update(gDB[pkgName], identName, identInfo.cnt, identInfo.doc, true)
 		}
 	}
 	gDBPaths[pkgName] = append(gDBPaths[pkgName], path)
+	gDBCmts[pkgName] = append(gDBCmts[pkgName], cmts)
 }
 
 func db_print() {

@@ -37,14 +37,20 @@ func (is *IdentyStats) delta_summary() int {
 	return (int(is.identCnt - (is.funcCnt + is.typeCnt + is.valueCnt)))
 }
 
-func gosrc_info(sFile string) (string, map[string]Ident) {
+// Retreive info about the go source file specified
+// It returns
+//		the package name to which the file belongs
+//		all the comments in the file
+//		map of exported / all identifiers defined by the file
+func gosrc_info(sFile string) (string, string, map[string]Ident) {
 	tfs := token.NewFileSet()
 	astF, err := parser.ParseFile(tfs, sFile, nil, parser.ParseComments)
 	if err != nil {
 		fmt.Printf("%v:ERRR:AST: %v\n", PRG_TAG, err)
-		return "", nil
+		return "", "", nil
 	}
 	pkgName := ""
+	fileCmts := ""
 	theIdents := map[string]Ident{}
 	ast.Inspect(astF, func(n ast.Node) bool {
 		bDigDeeper := true
@@ -101,7 +107,7 @@ func gosrc_info(sFile string) (string, map[string]Ident) {
 			sExtra = t.Name.Name + ", :Doc:" + t.Doc.Text()
 			identsmap_update(theIdents, t.Name.Name, 1, t.Doc.Text(), t.Name.IsExported())
 			gIdentyStats.funcCnt += 1
-		case *ast.Package: // Dont seem to encounter this type
+		case *ast.Package: // Working on individual Go src files doesnt seem to encounter this type
 			sType = "Package"
 			sExtra = t.Name
 			pkgName = t.Name
@@ -110,11 +116,10 @@ func gosrc_info(sFile string) (string, map[string]Ident) {
 			sExtra = t.Name.Name
 			pkgName = t.Name.Name
 			//fmt.Printf("%v:INFO:AST: File.Scope: %v\n", PRG_TAG, t.Scope)
-			if giDEBUG > 20 {
-				for _, cmtG := range t.Comments {
-					fmt.Printf("%v:DBUG:AST File:cmt: %v\n", PRG_TAG, cmtG.Text())
-				}
+			for _, cmtG := range t.Comments {
+				fileCmts += cmtG.Text()
 			}
+			sExtra += (", " + fileCmts)
 		default:
 			//t1 := reflect.TypeOf(t)
 			//sExtra = t1.Name()
@@ -130,5 +135,5 @@ func gosrc_info(sFile string) (string, map[string]Ident) {
 	if giDEBUG > 20 {
 		fmt.Printf("%v:DBUG:AST: GoFile:%v:%v:%v\n", PRG_TAG, sFile, gIdentyStats, gIdentyStats.delta_summary())
 	}
-	return pkgName, theIdents
+	return pkgName, fileCmts, theIdents
 }
