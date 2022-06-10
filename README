@@ -173,9 +173,13 @@ Rather major changes
 ==========
 
 Avoid populating the apropos's pkg symbols database with symbols from other
-pkgs used by a given go source file.
+pkgs used by a given go source file. IE avoid using ast.Ident node.
 
 A bit more flexible find go source directory logic.
+
+Link comment at the block level wrt consts or vars or types to the members
+of the block, so that a search for any part of such a comment will list all
+the members of that block.
 
 
 20220608
