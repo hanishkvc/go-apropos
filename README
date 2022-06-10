@@ -156,4 +156,28 @@ as also looking at go doc parser I can see a parser.parseDir, which seems to
 return package nodes (as a given source directory could have multiple pkgs).
 Also found bits about the Mode type and inturn ParseComments.
 
+By using the go/ast and inturn the nodes that it extracts during inspecting
+of the go source files, realised that ast.Ident node is triggered for both
+own as well as others' (bcas the go source file refers to symbols from the
+packages it uses) symbols which is found in a go source file. WHile GenDecl/
+ValueSpec/TypeSpec/FuncDecl nodes are triggered only for own symbols, which
+the go source file being inspected, defines.
+
+
+Changelog
+############
+
+Rather major changes
+
+20220610
+==========
+
+Avoid populating the apropos's pkg symbols database with symbols from other
+pkgs used by a given go source file.
+
+
+20220608
+==========
+
+A almost basic level of go apropos logic has been implemented.
 

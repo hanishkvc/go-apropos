@@ -54,11 +54,13 @@ func gosrc_info(sFile string) (string, map[string]Ident) {
 		sType := "???"
 		sExtra := ""
 		switch t := n.(type) {
-		case *ast.Ident: // This gives names of vars, consts and funcs also
+		/* Commenting out, bcas this path traps for both own as well as other packages' identifiers used by go source file being inspected
+		case *ast.Ident: // This gives names of vars, consts, types and funcs also
 			sType = "Identifier"
 			sExtra = t.Name
 			identsmap_update(theIdents, t.Name, 1, "", t.IsExported())
 			gIdentyStats.identCnt += 1
+		*/
 		case *ast.ValueSpec:
 			sType = "ConstOrVar"
 			sCmt := ":Cmt:" + t.Comment.Text() + ":Doc:" + t.Doc.Text()
