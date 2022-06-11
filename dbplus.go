@@ -76,7 +76,7 @@ func adjust_path(sPath string) (string, error) {
 		fmt.Printf("%v:ERRR:DB+: HomeDir:%v\n", PRG_TAG, err)
 		return "", err
 	}
-	sPath = strings.Join([]string{sHomeDir, sPath}, string(os.PathSeparator))
+	sPath = strings.Replace(sPath, "~", sHomeDir, 1)
 	return sPath, nil
 }
 
