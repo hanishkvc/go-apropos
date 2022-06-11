@@ -67,13 +67,30 @@ func do_walkdir(sPath string) {
 func prep_dir(sPath string) {
 }
 
+func adjust_path(sPath string) (string, error) {
+	if !strings.HasPrefix(sPath, "~/") {
+		return sPath, nil
+	}
+	sHomeDir, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Printf("%v:ERRR:DB+: HomeDir:%v\n", PRG_TAG, err)
+		return "", err
+	}
+	sPath = strings.Join([]string{sHomeDir, sPath}, string(os.PathSeparator))
+	return sPath, nil
+}
+
 func save_dbs() error {
 	sDB, err := json.Marshal(gDB)
 	if err != nil {
 		fmt.Printf("%v:ERRR:DB+: SaveDBs:Marshal:%v\n", PRG_TAG, err)
 		return err
 	}
-	err = os.WriteFile(gCacheFile, sDB, fs.FileMode(os.O_RDWR))
+	sCacheFile, err := adjust_path(gCacheFile)
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(sCacheFile, sDB, fs.FileMode(os.O_RDWR))
 	if err != nil {
 		fmt.Printf("%v:ERRR:DB+: SaveDBs:WriteFile:%v\n", PRG_TAG, err)
 		return err
