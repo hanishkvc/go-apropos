@@ -9,6 +9,7 @@ import (
 	"io/fs"
 	"os"
 	"strings"
+	"syscall"
 )
 
 var gCacheFile = "~/.cache/goapropos.db"
@@ -90,7 +91,7 @@ func save_dbs() error {
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile(sCacheFile, sDB, 0400)
+	err = os.WriteFile(sCacheFile, sDB, syscall.S_IRUSR|syscall.S_IWUSR)
 	if err != nil {
 		fmt.Printf("%v:ERRR:DB+: SaveDBs:WriteFile:%v\n", PRG_TAG, err)
 		return err
