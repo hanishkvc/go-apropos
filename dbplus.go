@@ -114,9 +114,11 @@ func load_dbs() error {
 	}
 	if giDEBUG > 20 {
 		fmt.Printf("%v:DBUG:DB+: LoadDBs:Read: %v\n", PRG_TAG, string(bsDB))
+		fmt.Printf("%v:DBUG:DB+: LoadDBs:gDB:Before: %v\n", PRG_TAG, gDB)
 	}
-	fmt.Printf("gDB:B: %v\n", gDB)
 	json.Unmarshal(bsDB, &gDB)
-	fmt.Printf("gDB:A: %v\n", gDB)
+	if giDEBUG > 20 {
+		fmt.Printf("%v:DBUG:DB+: LoadDBs:gDB: %v\n", PRG_TAG, gDB)
+	}
 	return nil
 }

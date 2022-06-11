@@ -28,9 +28,29 @@ func (o Ident) MarshalJSON() ([]byte, error) {
 	identJSON := fmt.Sprintf("{ %v: %v }", docJSON, o.cnt)
 	identJSONB := []byte(identJSON)
 	if giDEBUG > 20 {
-		fmt.Printf("%v:DBUG:DB: IdentMJSon:%v\n", PRG_TAG, identJSON)
+		fmt.Printf("%v:DBUG:DB: IdentMJSON:%v\n", PRG_TAG, identJSON)
 	}
 	return identJSONB, nil
+}
+
+func (p *Ident) UnmarshalJSON(bsJSON []byte) error {
+	if giDEBUG > 20 {
+		fmt.Printf("%v:DBUG:DB: IdentUmJSON:bs:%v\n", PRG_TAG, string(bsJSON))
+	}
+	tMap := map[string]int{}
+	err := json.Unmarshal(bsJSON, &tMap)
+	if err != nil {
+		fmt.Printf("%v:ERRR:DB: IdentUmJSON:%v\n", PRG_TAG, err)
+		return err
+	}
+	for k, v := range tMap {
+		p.doc = k
+		p.cnt = v
+	}
+	if giDEBUG > 20 {
+		fmt.Printf("%v:INFO:DB: IdentUmJSON:%v\n", PRG_TAG, p)
+	}
+	return nil
 }
 
 func identsmap_update(theMap map[string]Ident, identName string, identCnt int, identDoc string, identIsExported bool) {
