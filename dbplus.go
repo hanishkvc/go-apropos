@@ -83,17 +83,25 @@ func adjust_path(sPath string) (string, error) {
 	return sPath, nil
 }
 
+func cache_filenames() (string, error) {
+	sCacheBase, err := adjust_path(gCacheBase)
+	if err != nil {
+		return "", err
+	}
+	sDBCacheFile := sCacheBase + string(os.PathSeparator) + gDBCacheFile
+	return sDBCacheFile, nil
+}
+
 func save_dbs() error {
 	sDB, err := json.Marshal(gDB)
 	if err != nil {
 		fmt.Printf("%v:ERRR:DB+: SaveDBs:Marshal:%v\n", PRG_TAG, err)
 		return err
 	}
-	sCacheBase, err := adjust_path(gCacheBase)
+	sDBCacheFile, err := cache_filenames()
 	if err != nil {
 		return err
 	}
-	sDBCacheFile := sCacheBase + string(os.PathSeparator) + gDBCacheFile
 	err = os.WriteFile(sDBCacheFile, sDB, syscall.S_IRUSR|syscall.S_IWUSR)
 	if err != nil {
 		fmt.Printf("%v:ERRR:DB+: SaveDBs:WriteFile:%v\n", PRG_TAG, err)
@@ -106,11 +114,10 @@ func save_dbs() error {
 }
 
 func load_dbs() error {
-	sCacheBase, err := adjust_path(gCacheBase)
+	sDBCacheFile, err := cache_filenames()
 	if err != nil {
 		return err
 	}
-	sDBCacheFile := sCacheBase + string(os.PathSeparator) + gDBCacheFile
 	bsDB, err := os.ReadFile(sDBCacheFile)
 	if err != nil {
 		fmt.Printf("%v:ERRR:DB+: LoadDBs:ReadFile:%v\n", PRG_TAG, err)
