@@ -83,22 +83,22 @@ func adjust_path(sPath string) (string, error) {
 	return sPath, nil
 }
 
-func cache_filenames() (string, error) {
+func cache_filenames(cacheFile string) (string, error) {
 	sCacheBase, err := adjust_path(gCacheBase)
 	if err != nil {
 		return "", err
 	}
-	sDBCacheFile := sCacheBase + string(os.PathSeparator) + gDBCacheFile
+	sDBCacheFile := sCacheBase + string(os.PathSeparator) + cacheFile
 	return sDBCacheFile, nil
 }
 
-func save_dbs() error {
-	sDB, err := json.Marshal(gDB)
+func save_db(theDB any, cacheFile string) error {
+	sDB, err := json.Marshal(theDB)
 	if err != nil {
 		fmt.Printf("%v:ERRR:DB+: SaveDBs:Marshal:%v\n", PRG_TAG, err)
 		return err
 	}
-	sDBCacheFile, err := cache_filenames()
+	sDBCacheFile, err := cache_filenames(cacheFile)
 	if err != nil {
 		return err
 	}
@@ -113,8 +113,13 @@ func save_dbs() error {
 	return nil
 }
 
-func load_dbs() error {
-	sDBCacheFile, err := cache_filenames()
+func save_dbs() error {
+	err := save_db(gDB, gDBCacheFile)
+	return err
+}
+
+func load_db(theDB any, cacheFile string) error {
+	sDBCacheFile, err := cache_filenames(cacheFile)
 	if err != nil {
 		return err
 	}
@@ -125,15 +130,20 @@ func load_dbs() error {
 	}
 	if giDEBUG > 20 {
 		fmt.Printf("%v:DBUG:DB+: LoadDBs:Read: %v\n", PRG_TAG, string(bsDB))
-		fmt.Printf("%v:DBUG:DB+: LoadDBs:gDB:Before: %v\n", PRG_TAG, gDB)
+		fmt.Printf("%v:DBUG:DB+: LoadDBs:gDB:Before: %v\n", PRG_TAG, theDB)
 	}
-	err = json.Unmarshal(bsDB, &gDB)
+	err = json.Unmarshal(bsDB, theDB)
 	if err != nil {
 		fmt.Printf("%v:ERRR:DB+: LoadDBs:Unmarshal:%v\n", PRG_TAG, err)
 		return err
 	}
 	if giDEBUG > 20 {
-		fmt.Printf("%v:DBUG:DB+: LoadDBs:gDB: %v\n", PRG_TAG, gDB)
+		fmt.Printf("%v:DBUG:DB+: LoadDBs:gDB: %v\n", PRG_TAG, theDB)
 	}
 	return nil
+}
+
+func load_dbs() error {
+	err := load_db(&gDB, gDBCacheFile)
+	return err
 }
