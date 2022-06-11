@@ -5,6 +5,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 type Ident struct {
@@ -16,6 +17,13 @@ type Ident struct {
 var gDB = make(map[string]map[string]Ident)
 var gDBPaths = make(map[string][]string)
 var gDBCmts = make(map[string][]string)
+
+func (o Ident) MarshalJSON() ([]byte, error) {
+	sJson := fmt.Sprintf("{ \"%v\": %v }", o.doc, o.cnt)
+	sJson = strings.Replace(sJson, "\n", "\\n", -1)
+	fmt.Printf("DBUG:IdentJSon: 2:%v\n", sJson)
+	return []byte(sJson), nil
+}
 
 func identsmap_update(theMap map[string]Ident, identName string, identCnt int, identDoc string, identIsExported bool) {
 	if identIsExported || gbAllSymbols {
