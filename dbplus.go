@@ -90,7 +90,7 @@ func save_dbs() error {
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile(sCacheFile, sDB, fs.FileMode(os.O_RDWR))
+	err = os.WriteFile(sCacheFile, sDB, 0400)
 	if err != nil {
 		fmt.Printf("%v:ERRR:DB+: SaveDBs:WriteFile:%v\n", PRG_TAG, err)
 		return err
