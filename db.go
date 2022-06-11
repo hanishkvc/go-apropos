@@ -21,16 +21,15 @@ var gDBCmts = make(map[string][]string)
 func (o Ident) MarshalJSON() ([]byte, error) {
 	docJSONB, err := json.Marshal(o.doc)
 	if err != nil {
-		fmt.Printf("%v:ERRR:DB: IdentJSON:%v\n", PRG_TAG, err)
+		fmt.Printf("%v:ERRR:DB: IdentMJSON:%v\n", PRG_TAG, err)
 		return nil, err
 	}
 	docJSON := string(docJSONB)
-	fmt.Printf("docJSONB: %v\n", docJSONB)
-	fmt.Printf("docJSON: %v\n", docJSON)
 	identJSON := fmt.Sprintf("{ %v: %v }", docJSON, o.cnt)
 	identJSONB := []byte(identJSON)
-	fmt.Printf("IdentJSon: %v\n", identJSON)
-	fmt.Printf("identJSONB: %v\n", identJSONB)
+	if giDEBUG > 20 {
+		fmt.Printf("%v:DBUG:DB: IdentMJSon:%v\n", PRG_TAG, identJSON)
+	}
 	return identJSONB, nil
 }
 

@@ -96,6 +96,8 @@ func save_dbs() error {
 		fmt.Printf("%v:ERRR:DB+: SaveDBs:WriteFile:%v\n", PRG_TAG, err)
 		return err
 	}
-	fmt.Println("DBUG:JSON", string(sDB))
+	if giDEBUG > 20 {
+		fmt.Printf("%v:DBUG:DB+: SaveDBs:gDB:JSON:%v\n", PRG_TAG, string(sDB))
+	}
 	return nil
 }
