@@ -4,8 +4,8 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"strings"
 )
 
 type Ident struct {
@@ -19,10 +19,19 @@ var gDBPaths = make(map[string][]string)
 var gDBCmts = make(map[string][]string)
 
 func (o Ident) MarshalJSON() ([]byte, error) {
-	sJson := fmt.Sprintf("{ \"%v\": %v }", o.doc, o.cnt)
-	sJson = strings.Replace(sJson, "\n", "\\n", -1)
-	fmt.Printf("DBUG:IdentJSon: 2:%v\n", sJson)
-	return []byte(sJson), nil
+	docJSONB, err := json.Marshal(o.doc)
+	if err != nil {
+		fmt.Printf("%v:ERRR:DB: IdentJSON:%v\n", PRG_TAG, err)
+		return nil, err
+	}
+	docJSON := string(docJSONB)
+	fmt.Printf("docJSONB: %v\n", docJSONB)
+	fmt.Printf("docJSON: %v\n", docJSON)
+	identJSON := fmt.Sprintf("{ %v: %v }", docJSON, o.cnt)
+	identJSONB := []byte(identJSON)
+	fmt.Printf("IdentJSon: %v\n", identJSON)
+	fmt.Printf("identJSONB: %v\n", identJSONB)
+	return identJSONB, nil
 }
 
 func identsmap_update(theMap map[string]Ident, identName string, identCnt int, identDoc string, identIsExported bool) {
