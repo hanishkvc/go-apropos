@@ -127,6 +127,7 @@ func main() {
 	}
 	test_go()
 	do_walkdir(gBasePath)
+	save_dbs()
 	if giDEBUG > 3 {
 		db_print()
 	}

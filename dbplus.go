@@ -4,11 +4,14 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/fs"
 	"os"
 	"strings"
 )
+
+var gCacheFile = "~/.cache/goapropos.db"
 
 func handle_file(sFile string) {
 	if !strings.HasSuffix(sFile, "go") {
@@ -59,4 +62,22 @@ func do_walkdir(sPath string) {
 		}
 		return nil
 	})
+}
+
+func prep_dir(sPath string) {
+}
+
+func save_dbs() error {
+	sDB, err := json.Marshal(gDB)
+	if err != nil {
+		fmt.Printf("%v:ERRR:DB+: SaveDBs:Marshal:%v\n", PRG_TAG, err)
+		return err
+	}
+	err = os.WriteFile(gCacheFile, sDB, fs.FileMode(os.O_RDWR))
+	if err != nil {
+		fmt.Printf("%v:ERRR:DB+: SaveDBs:WriteFile:%v\n", PRG_TAG, err)
+		return err
+	}
+	fmt.Println("DBUG:JSON", string(sDB))
+	return nil
 }
