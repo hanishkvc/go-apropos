@@ -101,3 +101,22 @@ func save_dbs() error {
 	}
 	return nil
 }
+
+func load_dbs() error {
+	sCacheFile, err := adjust_path(gCacheFile)
+	if err != nil {
+		return err
+	}
+	bsDB, err := os.ReadFile(sCacheFile)
+	if err != nil {
+		fmt.Printf("%v:ERRR:DB+: LoadDBs:ReadFile:%v\n", PRG_TAG, err)
+		return err
+	}
+	if giDEBUG > 20 {
+		fmt.Printf("%v:DBUG:DB+: LoadDBs:Read: %v\n", PRG_TAG, string(bsDB))
+	}
+	fmt.Printf("gDB:B: %v\n", gDB)
+	json.Unmarshal(bsDB, &gDB)
+	fmt.Printf("gDB:A: %v\n", gDB)
+	return nil
+}
