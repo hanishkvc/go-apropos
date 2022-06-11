@@ -12,7 +12,9 @@ import (
 	"syscall"
 )
 
-var gCacheFile = "~/.cache/goapropos.db"
+var gCacheBase = "~/.cache"
+
+const gDBCacheFile = "goapropos.db"
 
 func handle_file(sFile string) {
 	if !strings.HasSuffix(sFile, "go") {
@@ -87,11 +89,12 @@ func save_dbs() error {
 		fmt.Printf("%v:ERRR:DB+: SaveDBs:Marshal:%v\n", PRG_TAG, err)
 		return err
 	}
-	sCacheFile, err := adjust_path(gCacheFile)
+	sCacheBase, err := adjust_path(gCacheBase)
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile(sCacheFile, sDB, syscall.S_IRUSR|syscall.S_IWUSR)
+	sDBCacheFile := sCacheBase + string(os.PathSeparator) + gDBCacheFile
+	err = os.WriteFile(sDBCacheFile, sDB, syscall.S_IRUSR|syscall.S_IWUSR)
 	if err != nil {
 		fmt.Printf("%v:ERRR:DB+: SaveDBs:WriteFile:%v\n", PRG_TAG, err)
 		return err
@@ -103,11 +106,12 @@ func save_dbs() error {
 }
 
 func load_dbs() error {
-	sCacheFile, err := adjust_path(gCacheFile)
+	sCacheBase, err := adjust_path(gCacheBase)
 	if err != nil {
 		return err
 	}
-	bsDB, err := os.ReadFile(sCacheFile)
+	sDBCacheFile := sCacheBase + string(os.PathSeparator) + gDBCacheFile
+	bsDB, err := os.ReadFile(sDBCacheFile)
 	if err != nil {
 		fmt.Printf("%v:ERRR:DB+: LoadDBs:ReadFile:%v\n", PRG_TAG, err)
 		return err
