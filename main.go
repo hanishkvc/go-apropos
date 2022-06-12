@@ -28,6 +28,8 @@ var gbTEST bool
 var gbAllSymbols bool
 var gSkipFiles = []string{}
 var gbCaseSensitive bool
+var gbUseCache bool
+var gbCreateCache bool
 
 var giMatchMode = MatchMode_Contains
 var gsMatchMode string = "contains"
@@ -84,6 +86,8 @@ func handle_args() {
 	})
 	flag.BoolVar(&gbCaseSensitive, "casesensitive", false, "Whether pkg name and symbol matching is case sensitive or not")
 	flag.StringVar(&gsMatchMode, "matchmode", gsMatchMode, "Specify the strategy used for matching wrt pkg names and symbols. Supported modes contains regexp")
+	flag.BoolVar(&gbCreateCache, "createcache", false, "Create a cache of the package symbols, paths and comments")
+	flag.BoolVar(&gbUseCache, "createcache", false, "Use cache of the package symbols, paths and comments, instead of parsing the go sources")
 	flag.Parse()
 	if len(flag.Args()) > 0 {
 		if gFind != FIND_DUMMY {
