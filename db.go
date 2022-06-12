@@ -14,7 +14,7 @@ type Ident struct {
 	// name string
 }
 
-var gDB = make(map[string]map[string]Ident)
+var gDBSymbols = make(map[string]map[string]Ident)
 var gDBPaths = make(map[string][]string)
 var gDBCmts = make(map[string][]string)
 
@@ -67,14 +67,14 @@ func identsmap_update(theMap map[string]Ident, identName string, identCnt int, i
 }
 
 func db_add(pkgName string, path string, cmts string, idents map[string]Ident) {
-	_, ok := gDB[pkgName]
+	_, ok := gDBSymbols[pkgName]
 	if !ok {
-		gDB[pkgName] = idents
+		gDBSymbols[pkgName] = idents
 		gDBPaths[pkgName] = make([]string, 0)
 		gDBCmts[pkgName] = make([]string, 0)
 	} else {
 		for identName, identInfo := range idents {
-			identsmap_update(gDB[pkgName], identName, identInfo.cnt, identInfo.doc, true)
+			identsmap_update(gDBSymbols[pkgName], identName, identInfo.cnt, identInfo.doc, true)
 		}
 	}
 	gDBPaths[pkgName] = append(gDBPaths[pkgName], path)
@@ -82,13 +82,13 @@ func db_add(pkgName string, path string, cmts string, idents map[string]Ident) {
 }
 
 func db_print() {
-	for pkgName, identsMap := range gDB {
+	for pkgName, identsMap := range gDBSymbols {
 		fmt.Println(pkgName, identsMap)
 	}
 }
 
 func db_print_pkgs() {
-	for pkgName := range gDB {
+	for pkgName := range gDBSymbols {
 		fmt.Printf("Package:%v:%v\n", pkgName, gDBPaths[pkgName])
 	}
 }
@@ -113,7 +113,7 @@ func db_find(sFind string, sFindCmt string) {
 	pkgs := MatchingPkgs{}
 	sFindP := match_prepare(sFind)
 	sFindCmtP := match_prepare(sFindCmt)
-	for pkgName, identsMap := range gDB {
+	for pkgName, identsMap := range gDBSymbols {
 		bFoundInPackage := false
 		// Check symbols in the current package
 		for id, idInfo := range identsMap {

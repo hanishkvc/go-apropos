@@ -116,7 +116,7 @@ func save_db(theDB any, cacheFile string) error {
 }
 
 func save_dbs() error {
-	err := save_db(gDB, gDBCacheFile)
+	err := save_db(gDBSymbols, gDBCacheFile)
 	if err != nil {
 		fmt.Printf("%v:ERRR:DB+: SaveDBs:DBSymbols:%v\n", PRG_TAG, err)
 		return err
@@ -160,7 +160,7 @@ func load_db(theDB any, cacheFile string) error {
 }
 
 func load_dbs() error {
-	err := load_db(&gDB, gDBCacheFile)
+	err := load_db(&gDBSymbols, gDBCacheFile)
 	if err != nil {
 		fmt.Printf("%v:ERRR:DB+: LoadDBs:DBSymbols:%v\n", PRG_TAG, err)
 		return err
