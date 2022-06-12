@@ -150,14 +150,16 @@ individually seperately. However this may not skip test go source files in
 them, parsing of which can be avoided by walking through files and calling
 parseFile on them, like current flow. THink of this later.
 
-Maybe add support to cache the package+identifiers map. This will inturn
-require a cmdline argument to force rebuilding of this cache, when required.
+DONE:Maybe add support to cache the package identifiers/paths/comments map.
+This will inturn require a cmdline argument to force rebuilding of this cache,
+when required.
 
 Compile regexp match tokens, later.
 
 Maybe later add support for searching multiple different comment tokens and
 or symbol tokens. Currently one can search for either a single symbol or
 single comment or one symbolORcomment match tokens together.
+
 
 Note
 ######
