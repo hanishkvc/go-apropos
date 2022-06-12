@@ -130,9 +130,14 @@ func main() {
 		fmt.Println(PRG_TAG, PRG_NAME, PRG_VERSION)
 	}
 	test_go()
-	do_walkdir(gBasePath)
-	save_dbs()
-	load_dbs()
+	if gbUseCache {
+		load_dbs()
+	} else {
+		do_walkdir(gBasePath)
+		if gbCreateCache {
+			save_dbs()
+		}
+	}
 	if giDEBUG > 3 {
 		db_print()
 	}
