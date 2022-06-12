@@ -131,8 +131,14 @@ can ask it to create a cache of the requried data and inturn use the same.
 Use the flag --createcache to create / update the cache of data wrt package
 symbols, paths and comments.
 
+	goapropos --createcache
+
 Use the flag --usecache to use a previously created cache rather than freshly
 parsing through the go source files.
+
+	goapropos --usecache search_token
+
+NOTE: One needs to first create the cache before trying to use it.
 
 
 TODO
