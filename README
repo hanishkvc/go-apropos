@@ -22,9 +22,13 @@ However I havent really looked at Go or read through Go documentation,
 so this code could be as far away from the conventions and concepts in
 Go land. This is based on some quick random scanning of docs and go src
 followed by compilation errors and potentially flawed logical guess work.
+At same time, it should do the job and be useful when exploring Go lang.
 
 Usage
 ######
+
+Normal Use
+============
 
 By default it uses 1st directory under /usr/share or /usr/local/share
 or /usr/lib which matchs the pattern "go-*" or "golang*" as the go source
@@ -117,6 +121,19 @@ out source files from different-paths/... by using skipfiles multiple times.
 
 Remember to pass the named arguments/flags before any unnamed args to the
 program.
+
+Cache Use
+===========
+
+Instead of parsing the go source files each time the program is called, One
+can ask it to create a cache of the requried data and inturn use the same.
+
+Use the flag --createcache to create / update the cache of data wrt package
+symbols, paths and comments.
+
+Use the flag --usecache to use a previously created cache rather than freshly
+parsing through the go source files.
+
 
 TODO
 ######

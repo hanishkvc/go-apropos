@@ -12,7 +12,7 @@ import (
 
 const PRG_TAG = "GOAPRO"
 const PRG_NAME = "GoApropos"
-const PRG_VERSION = "v3-20220610IST1920"
+const PRG_VERSION = "v4-20220612IST1553"
 
 const FIND_DUMMY = "__FIND_DUMMY__"
 const FINDPKG_DEFAULT = ""
@@ -87,7 +87,7 @@ func handle_args() {
 	flag.BoolVar(&gbCaseSensitive, "casesensitive", false, "Whether pkg name and symbol matching is case sensitive or not")
 	flag.StringVar(&gsMatchMode, "matchmode", gsMatchMode, "Specify the strategy used for matching wrt pkg names and symbols. Supported modes contains regexp")
 	flag.BoolVar(&gbCreateCache, "createcache", false, "Create a cache of the package symbols, paths and comments")
-	flag.BoolVar(&gbUseCache, "createcache", false, "Use cache of the package symbols, paths and comments, instead of parsing the go sources")
+	flag.BoolVar(&gbUseCache, "usecache", false, "Use cache of the package symbols, paths and comments, instead of parsing the go sources")
 	flag.Parse()
 	if len(flag.Args()) > 0 {
 		if gFind != FIND_DUMMY {
@@ -98,6 +98,7 @@ func handle_args() {
 		gFind = flag.Arg(0)
 	}
 	if (gFind == FIND_DUMMY) && (gFindPkg == FINDPKG_DEFAULT) && (gFindCmt == FINDCMT_DUMMY) {
+		fmt.Fprintf(os.Stderr, "%v:%v:%v\n", PRG_TAG, PRG_NAME, PRG_VERSION)
 		flag.Usage()
 		fmt.Fprintf(os.Stderr, "Sample usage:\n")
 		fmt.Fprintln(os.Stderr, "\tgoapropos searchToken")
