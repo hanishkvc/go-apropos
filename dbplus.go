@@ -97,7 +97,7 @@ func cache_filenames(cacheFile string) (string, error) {
 func save_db(theDB any, cacheFile string) error {
 	sDB, err := json.Marshal(theDB)
 	if err != nil {
-		fmt.Printf("%v:ERRR:DB+: SaveDBs:Marshal:%v\n", PRG_TAG, err)
+		fmt.Printf("%v:ERRR:DB+: SaveDB:Marshal:%v\n", PRG_TAG, err)
 		return err
 	}
 	sDBCacheFile, err := cache_filenames(cacheFile)
@@ -106,11 +106,11 @@ func save_db(theDB any, cacheFile string) error {
 	}
 	err = os.WriteFile(sDBCacheFile, sDB, syscall.S_IRUSR|syscall.S_IWUSR)
 	if err != nil {
-		fmt.Printf("%v:ERRR:DB+: SaveDBs:WriteFile:%v\n", PRG_TAG, err)
+		fmt.Printf("%v:ERRR:DB+: SaveDB:WriteFile:%v\n", PRG_TAG, err)
 		return err
 	}
 	if giDEBUG > 20 {
-		fmt.Printf("%v:DBUG:DB+: SaveDBs:gDB:JSON:%v\n", PRG_TAG, string(sDB))
+		fmt.Printf("%v:DBUG:DB+: SaveDB:DB:JSON:%v\n", PRG_TAG, string(sDB))
 	}
 	return nil
 }
@@ -141,20 +141,20 @@ func load_db(theDB any, cacheFile string) error {
 	}
 	bsDB, err := os.ReadFile(sDBCacheFile)
 	if err != nil {
-		fmt.Printf("%v:ERRR:DB+: LoadDBs:ReadFile:%v\n", PRG_TAG, err)
+		fmt.Printf("%v:ERRR:DB+: LoadDB:ReadFile:%v\n", PRG_TAG, err)
 		return err
 	}
 	if giDEBUG > 20 {
-		fmt.Printf("%v:DBUG:DB+: LoadDBs:Read: %v\n", PRG_TAG, string(bsDB))
-		fmt.Printf("%v:DBUG:DB+: LoadDBs:gDB:Before: %v\n", PRG_TAG, theDB)
+		fmt.Printf("%v:DBUG:DB+: LoadDB:Read: %v\n", PRG_TAG, string(bsDB))
+		fmt.Printf("%v:DBUG:DB+: LoadDB:DB:Before: %v\n", PRG_TAG, theDB)
 	}
 	err = json.Unmarshal(bsDB, theDB)
 	if err != nil {
-		fmt.Printf("%v:ERRR:DB+: LoadDBs:Unmarshal:%v\n", PRG_TAG, err)
+		fmt.Printf("%v:ERRR:DB+: LoadDB:Unmarshal:%v\n", PRG_TAG, err)
 		return err
 	}
 	if giDEBUG > 20 {
-		fmt.Printf("%v:DBUG:DB+: LoadDBs:gDB: %v\n", PRG_TAG, theDB)
+		fmt.Printf("%v:DBUG:DB+: LoadDB:DB:After: %v\n", PRG_TAG, theDB)
 	}
 	return nil
 }
