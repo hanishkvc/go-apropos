@@ -15,6 +15,7 @@ import (
 var gCacheBase = "~/.cache"
 
 const gDBCacheFile = "goapropos.db"
+const gDBPathsCacheFile = "goapropos.dbpaths"
 
 func handle_file(sFile string) {
 	if !strings.HasSuffix(sFile, "go") {
@@ -115,6 +116,7 @@ func save_db(theDB any, cacheFile string) error {
 
 func save_dbs() error {
 	err := save_db(gDB, gDBCacheFile)
+	err = save_db(gDBPaths, gDBPathsCacheFile)
 	return err
 }
 
