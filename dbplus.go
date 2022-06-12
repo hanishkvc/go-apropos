@@ -16,6 +16,7 @@ var gCacheBase = "~/.cache"
 
 const gDBCacheFile = "goapropos.db"
 const gDBPathsCacheFile = "goapropos.dbpaths"
+const gDBCmtsCacheFile = "goapropos.dbcmts"
 
 func handle_file(sFile string) {
 	if !strings.HasSuffix(sFile, "go") {
@@ -116,8 +117,21 @@ func save_db(theDB any, cacheFile string) error {
 
 func save_dbs() error {
 	err := save_db(gDB, gDBCacheFile)
+	if err != nil {
+		fmt.Printf("%v:ERRR:DB+: SaveDBs:DBSymbols:%v\n", PRG_TAG, err)
+		return err
+	}
 	err = save_db(gDBPaths, gDBPathsCacheFile)
-	return err
+	if err != nil {
+		fmt.Printf("%v:ERRR:DB+: SaveDBs:DBPaths:%v\n", PRG_TAG, err)
+		return err
+	}
+	err = save_db(gDBCmts, gDBCmtsCacheFile)
+	if err != nil {
+		fmt.Printf("%v:ERRR:DB+: SaveDBs:DBCmts:%v\n", PRG_TAG, err)
+		return err
+	}
+	return nil
 }
 
 func load_db(theDB any, cacheFile string) error {
@@ -147,5 +161,19 @@ func load_db(theDB any, cacheFile string) error {
 
 func load_dbs() error {
 	err := load_db(&gDB, gDBCacheFile)
-	return err
+	if err != nil {
+		fmt.Printf("%v:ERRR:DB+: LoadDBs:DBSymbols:%v\n", PRG_TAG, err)
+		return err
+	}
+	err = load_db(&gDBPaths, gDBPathsCacheFile)
+	if err != nil {
+		fmt.Printf("%v:ERRR:DB+: LoadDBs:DBPaths:%v\n", PRG_TAG, err)
+		return err
+	}
+	err = load_db(&gDBCmts, gDBCmtsCacheFile)
+	if err != nil {
+		fmt.Printf("%v:ERRR:DB+: LoadDBs:DBCmts:%v\n", PRG_TAG, err)
+		return err
+	}
+	return nil
 }
