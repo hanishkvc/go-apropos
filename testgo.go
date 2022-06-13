@@ -93,12 +93,13 @@ func test_gochan() {
 		for {
 			x := <-c1
 			fmt.Printf("%v:INFO:T GOCHAN: Got:%v\n", PRG_TAG, x)
+			time.Sleep(2 * time.Second)
 		}
 	}()
 	for i := 0; i < 10; i++ {
 		t1 := time.Now()
 		c1 <- i
-		fmt.Printf("%v:INFO:T GOCHAN: SendTook:%v\n", PRG_TAG, time.Since(t1))
+		fmt.Printf("%v:INFO:T GOCHAN: Send:%v:Took:%v\n", PRG_TAG, i, time.Since(t1))
 	}
 }
 
