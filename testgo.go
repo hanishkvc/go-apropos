@@ -9,6 +9,7 @@ import (
 	"io"
 	"io/fs"
 	"os"
+	"time"
 )
 
 const FILE2READ = "/etc/passwd"
@@ -86,6 +87,21 @@ func test_data() {
 	test_identsmap_update()
 }
 
+func test_gochan() {
+	c1 := make(chan int, 3)
+	go func() {
+		for {
+			x := <-c1
+			fmt.Printf("%v:INFO:T GOCHAN: Got:%v\n", PRG_TAG, x)
+		}
+	}()
+	for i := 0; i < 10; i++ {
+		t1 := time.Now()
+		c1 <- i
+		fmt.Printf("%v:INFO:T GOCHAN: SendTook:%v\n", PRG_TAG, time.Since(t1))
+	}
+}
+
 func test_flag() {
 	var lInt int
 	piTest := flag.Int("int", 123, "Test a int flag")
@@ -151,6 +167,7 @@ func test_go() {
 	test_flag()
 	test_data()
 	test_env()
+	test_gochan()
 	test_fileread_low(FILE2READ)
 	test_fileread_simple(FILE2READ[1:])
 }
