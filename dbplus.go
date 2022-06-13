@@ -39,7 +39,27 @@ func handle_file(sFile string) {
 	db_add(name, sFile, cmts, idents)
 }
 
+const GR_NOMORE = "__NO_MORE__"
+
+var gHFChan = make(chan string, 3)
+
+func gr_handlefile() {
+	bNoMore := false
+	for !bNoMore {
+		sFile := <-gHFChan
+		if sFile == GR_NOMORE {
+			fmt.Printf("%v:INFO:GRHF: NoMoreFiles\n", PRG_TAG)
+			break
+		}
+		handle_file(sFile)
+	}
+}
+
 func do_walkdir(sPath string) {
+	go gr_handlefile()
+	defer func() {
+		gHFChan <- GR_NOMORE
+	}()
 	oFS := os.DirFS(sPath)
 	if giDEBUG > 10 {
 		fmt.Printf("%v:INFO:WALKDIR: oFS: %v\n", PRG_TAG, oFS)
@@ -63,7 +83,7 @@ func do_walkdir(sPath string) {
 		}
 		if sPType == "File" {
 			theFile := sPath + string(os.PathSeparator) + path
-			handle_file(theFile)
+			gHFChan <- theFile
 		}
 		return nil
 	})
