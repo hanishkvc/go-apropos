@@ -6,6 +6,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"sync"
 )
 
 type Ident struct {
@@ -79,6 +80,14 @@ func db_add(pkgName string, path string, cmts string, idents map[string]Ident) {
 	}
 	gDBPaths[pkgName] = append(gDBPaths[pkgName], path)
 	gDBCmts[pkgName] = append(gDBCmts[pkgName], cmts)
+}
+
+var dbMutex sync.Mutex
+
+func gr_dbadd(pkgName string, path string, cmts string, idents map[string]Ident) {
+	dbMutex.Lock()
+	db_add(pkgName, path, cmts, idents)
+	dbMutex.Unlock()
 }
 
 func db_print() {

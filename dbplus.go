@@ -36,7 +36,7 @@ func handle_file(sFile string) {
 			return
 		}
 	}
-	db_add(name, sFile, cmts, idents)
+	gr_dbadd(name, sFile, cmts, idents)
 }
 
 const GR_NOMORE = "__NO_MORE__"
