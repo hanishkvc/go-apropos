@@ -58,6 +58,7 @@ func map_print(theMap any, sSep, sEnd string) {
 		}
 		keys.Sort()
 		for _, k := range keys {
+			sort.Strings(m[k])
 			fmt.Printf("%v%v%v%v", k, sSep, m[k], sEnd)
 		}
 	default:
