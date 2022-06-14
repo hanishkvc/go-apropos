@@ -166,6 +166,11 @@ Maybe later add support for searching multiple different comment tokens and
 or symbol tokens. Currently one can search for either a single symbol or
 single comment or one symbolORcomment match tokens together.
 
+Build seperate maps wrt each go routine, and then merge them at the end.
+This should allow the go routines to run without blocking when trying to
+update map / db, unlike today, when they block as they need to synchronise
+when trying to update a single map / db..
+
 
 Note
 ######
@@ -199,6 +204,20 @@ Changelog
 ############
 
 Rather major changes
+
+20220614
+=========
+
+Use go routines to see how things go.
+
+
+20220612
+==========
+
+Cache and use the Maps/Database created wrt Pkg symbols, paths and comments.
+User needs to pass named arguments to enable the creation as well as use of
+cache.
+
 
 20220610
 ==========
