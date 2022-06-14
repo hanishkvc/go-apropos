@@ -122,6 +122,8 @@ func handle_args() {
 		fmt.Printf("%v:INFO:ARG: gSkipFiles: %v\n", PRG_TAG, gSkipFiles)
 		fmt.Printf("%v:INFO:ARG: gbCaseSensitive: %v\n", PRG_TAG, gbCaseSensitive)
 		fmt.Printf("%v:INFO:ARG: gsMatchMode: %v\n", PRG_TAG, gsMatchMode)
+		fmt.Printf("%v:INFO:ARG: gbCreateCache: %v\n", PRG_TAG, gbCreateCache)
+		fmt.Printf("%v:INFO:ARG: gbUseCache: %v\n", PRG_TAG, gbUseCache)
 	}
 }
 
