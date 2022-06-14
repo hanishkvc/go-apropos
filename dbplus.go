@@ -200,19 +200,9 @@ func save_db(theDB any, cacheFile string) error {
 }
 
 func save_dbs() error {
-	err := save_db(gDBSymbols, gDBSymbolsCacheFile)
+	err := save_db(gDB, gDBSymbolsCacheFile)
 	if err != nil {
-		fmt.Printf("%v:ERRR:DB+: SaveDBs:DBSymbols:%v\n", PRG_TAG, err)
-		return err
-	}
-	err = save_db(gDBPaths, gDBPathsCacheFile)
-	if err != nil {
-		fmt.Printf("%v:ERRR:DB+: SaveDBs:DBPaths:%v\n", PRG_TAG, err)
-		return err
-	}
-	err = save_db(gDBCmts, gDBCmtsCacheFile)
-	if err != nil {
-		fmt.Printf("%v:ERRR:DB+: SaveDBs:DBCmts:%v\n", PRG_TAG, err)
+		fmt.Printf("%v:ERRR:DB+: SaveDBs:gDB:%v\n", PRG_TAG, err)
 		return err
 	}
 	return nil
@@ -244,19 +234,9 @@ func load_db(theDB any, cacheFile string) error {
 }
 
 func load_dbs() error {
-	err := load_db(&gDBSymbols, gDBSymbolsCacheFile)
+	err := load_db(&gDB, gDBSymbolsCacheFile)
 	if err != nil {
-		fmt.Printf("%v:ERRR:DB+: LoadDBs:DBSymbols:%v\n", PRG_TAG, err)
-		return err
-	}
-	err = load_db(&gDBPaths, gDBPathsCacheFile)
-	if err != nil {
-		fmt.Printf("%v:ERRR:DB+: LoadDBs:DBPaths:%v\n", PRG_TAG, err)
-		return err
-	}
-	err = load_db(&gDBCmts, gDBCmtsCacheFile)
-	if err != nil {
-		fmt.Printf("%v:ERRR:DB+: LoadDBs:DBCmts:%v\n", PRG_TAG, err)
+		fmt.Printf("%v:ERRR:DB+: LoadDBs:gDB:%v\n", PRG_TAG, err)
 		return err
 	}
 	return nil
