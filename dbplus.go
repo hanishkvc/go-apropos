@@ -41,7 +41,8 @@ func handle_file(sFile string) {
 }
 
 const GR_NOMORE = "__NO_MORE__"
-const GR_COUNT = 4
+const GR_COUNT = 16
+const GR_CHANDEPTH = 256
 
 type TrackHF struct {
 	todo   int
@@ -54,7 +55,7 @@ var gTrackHFs [GR_COUNT]TrackHF
 
 func gr_hf_start() {
 	for i := 0; i < GR_COUNT; i++ {
-		gTrackHFs[i].hfChan = make(chan string, 1024)
+		gTrackHFs[i].hfChan = make(chan string, GR_CHANDEPTH)
 		go gr_handlefile(i)
 	}
 }
