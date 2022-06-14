@@ -4,6 +4,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 )
 
@@ -16,6 +17,24 @@ type DBEntry struct {
 type TheDB map[string]DBEntry
 
 var gDB TheDB = make(TheDB)
+
+func (dbe DBEntry) MarshalJSON() ([]byte, error) {
+	bSyms, err := json.Marshal(dbe.symbols)
+	if err != nil {
+		return nil, err
+	}
+	return bSyms, err
+}
+
+func (dbeP *DBEntry) UnmarshalJSON(bSyms []byte) error {
+	idents := make(map[string]string)
+	err := json.Unmarshal(bSyms, &idents)
+	if err != nil {
+		return err
+	}
+	dbeP.symbols = idents
+	return nil
+}
 
 func identsmap_update(theMap map[string]string, identName string, identDoc string, identIsExported bool) {
 	if identIsExported || gbAllSymbols {
