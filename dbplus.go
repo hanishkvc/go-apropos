@@ -73,7 +73,9 @@ func gr_hf_stop() {
 			if gTrackHFs[i].todo == gTrackHFs[i].done {
 				gTrackHFs[i].bOver = true
 			}
-			fmt.Printf("%v:INFO:GRHF:%v: Walk over, waiting for data:%v\n", PRG_TAG, i, gTrackHFs[i])
+			if giDEBUG > 1 {
+				fmt.Printf("%v:INFO:GRHF:%v: Walk over, waiting for data:%v\n", PRG_TAG, i, gTrackHFs[i])
+			}
 		}
 		if bAllDone {
 			break
@@ -87,7 +89,9 @@ func gr_handlefile(i int) {
 	for !bNoMore {
 		sFile := <-gTrackHFs[i].hfChan
 		if sFile == GR_NOMORE {
-			fmt.Printf("%v:INFO:GRHF:%v: NoMoreFiles\n", PRG_TAG, i)
+			if giDEBUG > 1 {
+				fmt.Printf("%v:INFO:GRHF:%v: NoMoreFiles\n", PRG_TAG, i)
+			}
 			break
 		}
 		handle_file(sFile)
