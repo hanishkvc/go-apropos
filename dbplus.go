@@ -102,7 +102,20 @@ func do_walkdir(sPath string) {
 	})
 }
 
-func prep_dir(sPath string) {
+func prep_dir() error {
+	sCacheBase, err := adjust_path(gCacheBase)
+	if err != nil {
+		return err
+	}
+	err = os.MkdirAll(sCacheBase, 0700)
+	if err != nil {
+		fmt.Printf("%v:ERRR:PrepDir: %v\n", PRG_TAG, err)
+		return err
+	}
+	if giDEBUG > 2 {
+		fmt.Printf("%v:INFO:PrepDir: %v, exists\n", PRG_TAG, sCacheBase)
+	}
+	return nil
 }
 
 func adjust_path(sPath string) (string, error) {

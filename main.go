@@ -136,6 +136,7 @@ func main() {
 	} else {
 		do_walkdir(gBasePath)
 		if gbCreateCache {
+			prep_dir()
 			save_dbs()
 		}
 	}
