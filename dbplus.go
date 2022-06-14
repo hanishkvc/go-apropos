@@ -41,11 +41,15 @@ func handle_file(sFile string) {
 }
 
 const GR_NOMORE = "__NO_MORE__"
+const GR_COUNT = 4
 
-var gHFChan = make(chan string, 3)
-var trackHF struct {
-	todo, done int
+type TrackHF struct {
+	todo   int
+	done   int
+	hfChan chan string
 }
+
+var gTrackHFs [GR_COUNT]TrackHF
 
 func gr_handlefile() {
 	bNoMore := false
