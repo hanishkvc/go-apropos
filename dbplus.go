@@ -97,6 +97,7 @@ func gr_handlefile(i int) {
 func do_walkdir(sPath string) {
 	gr_hf_start()
 	defer gr_hf_stop()
+	fileCnt := 0
 	oFS := os.DirFS(sPath)
 	if giDEBUG > 10 {
 		fmt.Printf("%v:INFO:WALKDIR: oFS: %v\n", PRG_TAG, oFS)
@@ -120,8 +121,10 @@ func do_walkdir(sPath string) {
 		}
 		if sPType == "File" {
 			theFile := sPath + string(os.PathSeparator) + path
-			trackHF.todo += 1
-			gHFChan <- theFile
+			iGR := fileCnt % GR_COUNT
+			gTrackHFs[iGR].todo += 1
+			gTrackHFs[iGR].hfChan <- theFile
+			fileCnt += 1
 		}
 		return nil
 	})
