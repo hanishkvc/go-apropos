@@ -86,6 +86,19 @@ func gr_hf_stop() {
 		time.Sleep(time.Second)
 	}
 	// Create the Merged DB
+	for i := 0; i < GR_COUNT; i++ {
+		for pkgName, pkgData := range gTrackHFs[i].theDB {
+			sCmt := ""
+			sPath := ""
+			if len(pkgData.cmts) > 0 {
+				sCmt = pkgData.cmts[0]
+			}
+			if len(pkgData.paths) > 0 {
+				sPath = pkgData.paths[0]
+			}
+			db_add(gDB, pkgName, sPath, sCmt, pkgData.symbols)
+		}
+	}
 }
 
 func gr_handlefile(i int) {
