@@ -54,6 +54,7 @@ var gTrackHFs [GR_COUNT]TrackHF
 
 func gr_hf_start() {
 	for i := 0; i < GR_COUNT; i++ {
+		gTrackHFs[i].hfChan = make(chan string, 1024)
 		go gr_handlefile(i)
 	}
 }
