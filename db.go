@@ -46,15 +46,15 @@ func db_add(theDB TheDB, pkgName string, path string, cmts string, idents map[st
 	aPkg.cmts = append(aPkg.cmts, cmts)
 }
 
-func db_print() {
-	for pkgName, identsMap := range gDBSymbols {
-		fmt.Println(pkgName, identsMap)
+func dbprint_all_all(theDB TheDB) {
+	for pkgName, pkgData := range theDB {
+		fmt.Println(pkgName, pkgData)
 	}
 }
 
-func db_print_pkgs() {
-	for pkgName := range gDBSymbols {
-		fmt.Printf("Package:%v:%v\n", pkgName, gDBPaths[pkgName])
+func dbprint_all_paths(theDB TheDB) {
+	for pkgName := range theDB {
+		fmt.Printf("Package:%v:%v\n", pkgName, theDB[pkgName].paths)
 	}
 }
 

@@ -143,10 +143,10 @@ func main() {
 		}
 	}
 	if giDEBUG > 3 {
-		db_print()
+		dbprint_all_all(gDB)
 	}
 	if gFindPkg != FINDPKG_DEFAULT {
-		db_print_pkgs()
+		dbprint_all_paths(gDB)
 	}
 	db_find(gFind, gFindCmt)
 }
