@@ -35,7 +35,7 @@ func handle_file(theDB TheDB, sFile string) {
 			return
 		}
 	}
-	db_add(theDB, name, sFile, cmts, idents)
+	db_add(theDB, name, []string{sFile}, []string{cmts}, idents)
 }
 
 const GR_NOMORE = "__NO_MORE__"
@@ -88,15 +88,7 @@ func gr_hf_stop() {
 	// Create the Merged DB
 	for i := 0; i < GR_COUNT; i++ {
 		for pkgName, pkgData := range gTrackHFs[i].theDB {
-			sCmt := ""
-			sPath := ""
-			if len(pkgData.cmts) > 0 {
-				sCmt = pkgData.cmts[0]
-			}
-			if len(pkgData.paths) > 0 {
-				sPath = pkgData.paths[0]
-			}
-			db_add(gDB, pkgName, sPath, sCmt, pkgData.symbols)
+			db_add(gDB, pkgName, pkgData.paths, pkgData.cmts, pkgData.symbols)
 		}
 	}
 }
