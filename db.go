@@ -32,11 +32,10 @@ func identsmap_update(theMap map[string]string, identName string, identDoc strin
 func db_add(theDB TheDB, pkgName string, pathS []string, cmtS []string, idents map[string]string) {
 	aPkg, ok := theDB[pkgName]
 	if !ok {
-		aPkg := DBEntry{}
+		aPkg = DBEntry{}
 		aPkg.symbols = idents
 		aPkg.paths = make([]string, 0)
 		aPkg.cmts = make([]string, 0)
-		theDB[pkgName] = aPkg
 	} else {
 		for identName, identInfo := range idents {
 			identsmap_update(aPkg.symbols, identName, identInfo, true)
@@ -44,6 +43,7 @@ func db_add(theDB TheDB, pkgName string, pathS []string, cmtS []string, idents m
 	}
 	aPkg.paths = append(aPkg.paths, pathS...)
 	aPkg.cmts = append(aPkg.cmts, cmtS...)
+	theDB[pkgName] = aPkg
 }
 
 func dbprint_all_all(theDB TheDB) {
