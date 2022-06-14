@@ -15,9 +15,7 @@ import (
 
 var gCacheBase = "~/.cache"
 
-const gDBSymbolsCacheFile = "goapropos.dbsymbols"
-const gDBPathsCacheFile = "goapropos.dbpaths"
-const gDBCmtsCacheFile = "goapropos.dbcmts"
+const gDBAllCacheFile = "goapropos.dball"
 
 func handle_file(theDB TheDB, sFile string) {
 	if !strings.HasSuffix(sFile, "go") {
@@ -57,6 +55,7 @@ var gTrackHFs [GR_COUNT]TrackHF
 func gr_hf_start() {
 	for i := 0; i < GR_COUNT; i++ {
 		gTrackHFs[i].hfChan = make(chan string, GR_CHANDEPTH)
+		gTrackHFs[i].theDB = make(TheDB, 0)
 		go gr_handlefile(i)
 	}
 }
@@ -200,7 +199,7 @@ func save_db(theDB any, cacheFile string) error {
 }
 
 func save_dbs() error {
-	err := save_db(gDB, gDBSymbolsCacheFile)
+	err := save_db(gDB, gDBAllCacheFile)
 	if err != nil {
 		fmt.Printf("%v:ERRR:DB+: SaveDBs:gDB:%v\n", PRG_TAG, err)
 		return err
@@ -234,7 +233,7 @@ func load_db(theDB any, cacheFile string) error {
 }
 
 func load_dbs() error {
-	err := load_db(&gDB, gDBSymbolsCacheFile)
+	err := load_db(&gDB, gDBAllCacheFile)
 	if err != nil {
 		fmt.Printf("%v:ERRR:DB+: LoadDBs:gDB:%v\n", PRG_TAG, err)
 		return err

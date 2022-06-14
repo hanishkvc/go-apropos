@@ -15,7 +15,7 @@ type DBEntry struct {
 
 type TheDB map[string]DBEntry
 
-var gDB TheDB
+var gDB TheDB = make(TheDB)
 
 func identsmap_update(theMap map[string]string, identName string, identDoc string, identIsExported bool) {
 	if identIsExported || gbAllSymbols {
