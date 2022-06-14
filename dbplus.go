@@ -19,7 +19,7 @@ const gDBSymbolsCacheFile = "goapropos.dbsymbols"
 const gDBPathsCacheFile = "goapropos.dbpaths"
 const gDBCmtsCacheFile = "goapropos.dbcmts"
 
-func handle_file(sFile string) {
+func handle_file(theDB TheDB, sFile string) {
 	if !strings.HasSuffix(sFile, "go") {
 		return
 	}
@@ -37,7 +37,7 @@ func handle_file(sFile string) {
 			return
 		}
 	}
-	gr_dbadd(name, sFile, cmts, idents)
+	db_add(theDB, name, sFile, cmts, idents)
 }
 
 const GR_NOMORE = "__NO_MORE__"
@@ -49,6 +49,7 @@ type TrackHF struct {
 	done   int
 	hfChan chan string
 	bOver  bool
+	theDB  TheDB
 }
 
 var gTrackHFs [GR_COUNT]TrackHF
@@ -61,9 +62,11 @@ func gr_hf_start() {
 }
 
 func gr_hf_stop() {
+	// Inform all GRs about no more jobs
 	for i := 0; i < GR_COUNT; i++ {
 		gTrackHFs[i].hfChan <- GR_NOMORE
 	}
+	// Wait for all GRs to finish
 	for {
 		bAllDone := true
 		for i := 0; i < GR_COUNT; i++ {
@@ -83,6 +86,7 @@ func gr_hf_stop() {
 		}
 		time.Sleep(time.Second)
 	}
+	// Create the Merged DB
 }
 
 func gr_handlefile(i int) {
@@ -95,7 +99,7 @@ func gr_handlefile(i int) {
 			}
 			break
 		}
-		handle_file(sFile)
+		handle_file(gTrackHFs[i].theDB, sFile)
 		gTrackHFs[i].done += 1
 	}
 }
