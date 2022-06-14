@@ -4,70 +4,27 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"sync"
 )
 
-type Ident struct {
-	cnt int
-	doc string
-	// name string
-}
-
-var gDBSymbols = make(map[string]map[string]Ident)
+var gDBSymbols = make(map[string]map[string]string)
 var gDBPaths = make(map[string][]string)
 var gDBCmts = make(map[string][]string)
 
-func (o Ident) MarshalJSON() ([]byte, error) {
-	docJSONB, err := json.Marshal(o.doc)
-	if err != nil {
-		fmt.Printf("%v:ERRR:DB: IdentMJSON:%v\n", PRG_TAG, err)
-		return nil, err
-	}
-	docJSON := string(docJSONB)
-	identJSON := fmt.Sprintf("{ %v: %v }", docJSON, o.cnt)
-	identJSONB := []byte(identJSON)
-	if giDEBUG > 20 {
-		fmt.Printf("%v:DBUG:DB: IdentMJSON:%v\n", PRG_TAG, identJSON)
-	}
-	return identJSONB, nil
-}
-
-func (p *Ident) UnmarshalJSON(bsJSON []byte) error {
-	if giDEBUG > 20 {
-		fmt.Printf("%v:DBUG:DB: IdentUmJSON:bs:%v\n", PRG_TAG, string(bsJSON))
-	}
-	tMap := map[string]int{}
-	err := json.Unmarshal(bsJSON, &tMap)
-	if err != nil {
-		fmt.Printf("%v:ERRR:DB: IdentUmJSON:%v\n", PRG_TAG, err)
-		return err
-	}
-	for k, v := range tMap {
-		p.doc = k
-		p.cnt = v
-	}
-	if giDEBUG > 20 {
-		fmt.Printf("%v:INFO:DB: IdentUmJSON:%v\n", PRG_TAG, p)
-	}
-	return nil
-}
-
-func identsmap_update(theMap map[string]Ident, identName string, identCnt int, identDoc string, identIsExported bool) {
+func identsmap_update(theMap map[string]string, identName string, identDoc string, identIsExported bool) {
 	if identIsExported || gbAllSymbols {
-		ident, ok := theMap[identName]
+		identDocCur, ok := theMap[identName]
 		if !ok {
-			theMap[identName] = Ident{identCnt, identDoc}
+			theMap[identName] = identDoc
 		} else {
-			ident.cnt += identCnt
-			ident.doc = ident.doc + "; " + identDoc
-			theMap[identName] = ident
+			identDocCur = identDocCur + "; " + identDoc
+			theMap[identName] = identDocCur
 		}
 	}
 }
 
-func db_add(pkgName string, path string, cmts string, idents map[string]Ident) {
+func db_add(pkgName string, path string, cmts string, idents map[string]string) {
 	_, ok := gDBSymbols[pkgName]
 	if !ok {
 		gDBSymbols[pkgName] = idents
@@ -75,7 +32,7 @@ func db_add(pkgName string, path string, cmts string, idents map[string]Ident) {
 		gDBCmts[pkgName] = make([]string, 0)
 	} else {
 		for identName, identInfo := range idents {
-			identsmap_update(gDBSymbols[pkgName], identName, identInfo.cnt, identInfo.doc, true)
+			identsmap_update(gDBSymbols[pkgName], identName, identInfo, true)
 		}
 	}
 	gDBPaths[pkgName] = append(gDBPaths[pkgName], path)
@@ -84,7 +41,7 @@ func db_add(pkgName string, path string, cmts string, idents map[string]Ident) {
 
 var dbMutex sync.Mutex
 
-func gr_dbadd(pkgName string, path string, cmts string, idents map[string]Ident) {
+func gr_dbadd(pkgName string, path string, cmts string, idents map[string]string) {
 	dbMutex.Lock()
 	db_add(pkgName, path, cmts, idents)
 	dbMutex.Unlock()
@@ -126,7 +83,7 @@ func db_find(sFind string, sFindCmt string) {
 		bFoundInPackage := false
 		// Check symbols in the current package
 		for id, idInfo := range identsMap {
-			bFound := match_ok(id, sFindP) || match_ok(idInfo.doc, sFindCmtP)
+			bFound := match_ok(id, sFindP) || match_ok(idInfo, sFindCmtP)
 			if bFound {
 				bFoundInPackage = true
 				matchingpkgs_add(pkgs, pkgName, id)

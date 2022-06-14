@@ -210,6 +210,11 @@ Rather major changes
 
 Use go routines to see how things go.
 
+Wrt each symbol store just the comments related string, thus simplifying
+the flow. This should simplify the json loading and inturn seems to speed up
+usecache based search by around 20-25%.
+
+
 
 20220612
 ==========
