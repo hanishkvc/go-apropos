@@ -10,6 +10,7 @@ import (
 	"os"
 	"strings"
 	"syscall"
+	"time"
 )
 
 var gCacheBase = "~/.cache"
@@ -42,6 +43,9 @@ func handle_file(sFile string) {
 const GR_NOMORE = "__NO_MORE__"
 
 var gHFChan = make(chan string, 3)
+var trackHF struct {
+	todo, done int
+}
 
 func gr_handlefile() {
 	bNoMore := false
@@ -52,6 +56,7 @@ func gr_handlefile() {
 			break
 		}
 		handle_file(sFile)
+		trackHF.done += 1
 	}
 }
 
@@ -59,6 +64,13 @@ func do_walkdir(sPath string) {
 	go gr_handlefile()
 	defer func() {
 		gHFChan <- GR_NOMORE
+		for {
+			fmt.Printf("%v:INFO:WALKDIR: WalkOver WaitingForData:%v\n", PRG_TAG, trackHF)
+			if trackHF.todo == trackHF.done {
+				break
+			}
+			time.Sleep(time.Second)
+		}
 	}()
 	oFS := os.DirFS(sPath)
 	if giDEBUG > 10 {
@@ -83,6 +95,7 @@ func do_walkdir(sPath string) {
 		}
 		if sPType == "File" {
 			theFile := sPath + string(os.PathSeparator) + path
+			trackHF.todo += 1
 			gHFChan <- theFile
 		}
 		return nil
