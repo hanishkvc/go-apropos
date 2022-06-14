@@ -5,12 +5,17 @@ package main
 
 import (
 	"fmt"
-	"sync"
 )
 
-var gDBSymbols = make(map[string]map[string]string)
-var gDBPaths = make(map[string][]string)
-var gDBCmts = make(map[string][]string)
+type DBEntry struct {
+	symbols map[string]string
+	paths   []string
+	cmts    []string
+}
+
+type TheDB map[string]DBEntry
+
+var gDB TheDB
 
 func identsmap_update(theMap map[string]string, identName string, identDoc string, identIsExported bool) {
 	if identIsExported || gbAllSymbols {
@@ -24,27 +29,21 @@ func identsmap_update(theMap map[string]string, identName string, identDoc strin
 	}
 }
 
-func db_add(pkgName string, path string, cmts string, idents map[string]string) {
-	_, ok := gDBSymbols[pkgName]
+func db_add(theDB TheDB, pkgName string, path string, cmts string, idents map[string]string) {
+	aPkg, ok := theDB[pkgName]
 	if !ok {
-		gDBSymbols[pkgName] = idents
-		gDBPaths[pkgName] = make([]string, 0)
-		gDBCmts[pkgName] = make([]string, 0)
+		aPkg := DBEntry{}
+		aPkg.symbols = idents
+		aPkg.paths = make([]string, 0)
+		aPkg.cmts = make([]string, 0)
+		theDB[pkgName] = aPkg
 	} else {
 		for identName, identInfo := range idents {
-			identsmap_update(gDBSymbols[pkgName], identName, identInfo, true)
+			identsmap_update(aPkg.symbols, identName, identInfo, true)
 		}
 	}
-	gDBPaths[pkgName] = append(gDBPaths[pkgName], path)
-	gDBCmts[pkgName] = append(gDBCmts[pkgName], cmts)
-}
-
-var dbMutex sync.Mutex
-
-func gr_dbadd(pkgName string, path string, cmts string, idents map[string]string) {
-	dbMutex.Lock()
-	db_add(pkgName, path, cmts, idents)
-	dbMutex.Unlock()
+	aPkg.paths = append(aPkg.paths, path)
+	aPkg.cmts = append(aPkg.cmts, cmts)
 }
 
 func db_print() {
