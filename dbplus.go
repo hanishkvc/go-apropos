@@ -47,35 +47,56 @@ type TrackHF struct {
 	todo   int
 	done   int
 	hfChan chan string
+	bOver  bool
 }
 
 var gTrackHFs [GR_COUNT]TrackHF
 
-func gr_handlefile() {
+func gr_hf_start() {
+	for i := 0; i < GR_COUNT; i++ {
+		go gr_handlefile(i)
+	}
+}
+
+func gr_hf_stop() {
+	for i := 0; i < GR_COUNT; i++ {
+		gTrackHFs[i].hfChan <- GR_NOMORE
+	}
+	for {
+		bAllDone := true
+		for i := 0; i < GR_COUNT; i++ {
+			if gTrackHFs[i].bOver {
+				continue
+			}
+			bAllDone = false
+			if gTrackHFs[i].todo == gTrackHFs[i].done {
+				gTrackHFs[i].bOver = true
+			}
+			fmt.Printf("%v:INFO:GRHF:%v: Walk over, waiting for data:%v\n", PRG_TAG, i, gTrackHFs[i])
+		}
+		if bAllDone {
+			break
+		}
+		time.Sleep(time.Second)
+	}
+}
+
+func gr_handlefile(i int) {
 	bNoMore := false
 	for !bNoMore {
-		sFile := <-gHFChan
+		sFile := <-gTrackHFs[i].hfChan
 		if sFile == GR_NOMORE {
-			fmt.Printf("%v:INFO:GRHF: NoMoreFiles\n", PRG_TAG)
+			fmt.Printf("%v:INFO:GRHF:%v: NoMoreFiles\n", PRG_TAG, i)
 			break
 		}
 		handle_file(sFile)
-		trackHF.done += 1
+		gTrackHFs[i].done += 1
 	}
 }
 
 func do_walkdir(sPath string) {
-	go gr_handlefile()
-	defer func() {
-		gHFChan <- GR_NOMORE
-		for {
-			fmt.Printf("%v:INFO:WALKDIR: WalkOver WaitingForData:%v\n", PRG_TAG, trackHF)
-			if trackHF.todo == trackHF.done {
-				break
-			}
-			time.Sleep(time.Second)
-		}
-	}()
+	gr_hf_start()
+	defer gr_hf_stop()
 	oFS := os.DirFS(sPath)
 	if giDEBUG > 10 {
 		fmt.Printf("%v:INFO:WALKDIR: oFS: %v\n", PRG_TAG, oFS)
