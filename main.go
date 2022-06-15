@@ -84,6 +84,13 @@ Sample usage:
 Look at the README for more info about the program and its usage`
 
 func handle_args() {
+	flag.Usage = func() {
+		fmt.Fprintf(flag.CommandLine.Output(), "%v:%v:%v\n", PRG_TAG, PRG_NAME, PRG_VERSION)
+		fmt.Fprintf(flag.CommandLine.Output(), "Usage of %s:\n", os.Args[0])
+		flag.PrintDefaults()
+		fmt.Fprintln(flag.CommandLine.Output(), sAdditional)
+	}
+
 	set_gbasepath()
 	flag.StringVar(&gFind, "find", gFind, "Specify the token/substring to match wrt symbols. The token to match can also be specified as a standalone arg on its own")
 	flag.StringVar(&gFindPkg, "findpkg", gFindPkg, "Specify the token/substring to match wrt package name")
@@ -111,9 +118,7 @@ func handle_args() {
 		gFind = flag.Arg(0)
 	}
 	if ((gFind == FIND_DUMMY) && (gFindPkg == FINDPKG_DEFAULT) && (gFindCmt == FINDCMT_DUMMY)) && !gbCreateCache {
-		fmt.Fprintf(os.Stderr, "%v:%v:%v\n", PRG_TAG, PRG_NAME, PRG_VERSION)
 		flag.Usage()
-		fmt.Fprintln(os.Stderr, sAdditional)
 		os.Exit(1)
 	}
 	gFindPkgP = match_prepare(gFindPkg)
