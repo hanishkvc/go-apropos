@@ -30,6 +30,7 @@ var gSkipFiles = []string{}
 var gbCaseSensitive bool
 var gbUseCache bool
 var gbCreateCache bool
+var gbIndentJSON bool = false
 
 var giMatchMode = MatchMode_Contains
 var gsMatchMode string = "contains"
@@ -88,6 +89,7 @@ func handle_args() {
 	flag.StringVar(&gsMatchMode, "matchmode", gsMatchMode, "Specify the strategy used for matching wrt pkg names and symbols. Supported modes contains regexp")
 	flag.BoolVar(&gbCreateCache, "createcache", false, "Create a cache of the package symbols, paths and comments")
 	flag.BoolVar(&gbUseCache, "usecache", false, "Use cache of the package symbols, paths and comments, instead of parsing the go sources")
+	flag.BoolVar(&gbIndentJSON, "indentjson", gbIndentJSON, "Create pretty indented json cache files")
 	flag.Parse()
 	if len(flag.Args()) > 0 {
 		if gFind != FIND_DUMMY {

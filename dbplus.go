@@ -183,7 +183,13 @@ func cache_filenames(cacheFile string) (string, error) {
 }
 
 func save_db(theDB any, cacheFile string) error {
-	sDB, err := json.Marshal(theDB)
+	var sDB []byte
+	var err error
+	if gbIndentJSON {
+		sDB, err = json.MarshalIndent(theDB, "", " ")
+	} else {
+		sDB, err = json.Marshal(theDB)
+	}
 	if err != nil {
 		fmt.Printf("%v:ERRR:DB+: SaveDB:Marshal:%v\n", PRG_TAG, err)
 		return err
