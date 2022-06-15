@@ -208,8 +208,8 @@ Changelog
 
 Rather major changes
 
-20220614
-=========
+20220614+
+==========
 
 Use go routines to see how things go. Here the walking of dir is made
 parallel to the handling of the file. Logically this shouldnt and doesnt
@@ -238,6 +238,8 @@ end build a merged global database.
     test machine and potentially in general on other machines also, to allow
     the parallel go routines to munch on additional files.
 
+Make both raw source file parsing and cache based paths handle find++ queries
+in equivalently similar ways.
 
 
 20220612

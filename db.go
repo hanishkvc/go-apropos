@@ -76,14 +76,21 @@ func matchingpkgs_add(thePkgs MatchingPkgs, pkgName string, id string) {
 	}
 }
 
-func db_find(theDB TheDB, sFind string, sFindCmt string) {
+func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 	if giDEBUG > 0 {
 		fmt.Printf("\n%v:INFO: Possible matches for [%v] at [%v]\n", PRG_TAG, gFind, gBasePath)
 	}
 	pkgs := MatchingPkgs{}
 	sFindP := match_prepare(sFind)
 	sFindCmtP := match_prepare(sFindCmt)
+	sFindPkgP := match_prepare(sFindPkg)
 	for pkgName, pkgData := range theDB {
+		// Honor any findpkg based package filtering
+		if gFindPkg != FINDPKG_DEFAULT {
+			if !match_ok(pkgName, sFindPkgP) {
+				continue
+			}
+		}
 		bFoundInPackage := false
 		// Check symbols in the current package
 		for id, idInfo := range pkgData.Symbols {

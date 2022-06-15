@@ -150,5 +150,5 @@ func main() {
 	if gFindPkg != FINDPKG_DEFAULT {
 		dbprint_all_paths(gDB, false)
 	}
-	db_find(gDB, gFind, gFindCmt)
+	db_find(gDB, gFind, gFindCmt, gFindPkg)
 }
