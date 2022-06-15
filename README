@@ -17,6 +17,12 @@ the packages in the go source directory.
 
 NOTE: Symbol refers to const or var or type or func name.
 
+NOTE: By default it works in non cache mode, where it parses the go
+source files always, so also its results will match what ever is there
+in the system or specified go source directory. However if required
+one could ask it to create a cache and inturn use the same when searching
+for matching tokens. Look at Cache use in usage section for more.
+
 As I wanted to look at Go lang a bit, so found this need and thus this.
 However I havent really looked at Go or read through Go documentation,
 so this code could be as far away from the conventions and concepts in
@@ -139,6 +145,9 @@ parsing through the go source files.
 	goapropos --usecache search_token
 
 NOTE: One needs to first create the cache before trying to use it.
+
+When ever the go language package is updated, one will have to recreate the
+cache file, to match the same.
 
 
 TODO
