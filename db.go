@@ -52,8 +52,13 @@ func dbprint_all_all(theDB TheDB) {
 	}
 }
 
-func dbprint_all_paths(theDB TheDB) {
+func dbprint_all_paths(theDB TheDB, bAllPkgs bool) {
 	for pkgName := range theDB {
+		if !bAllPkgs && (gFindPkg != FINDPKG_DEFAULT) {
+			if !match_ok(pkgName, gFindPkgP) {
+				continue
+			}
+		}
 		fmt.Printf("Package:%v:%v\n", pkgName, theDB[pkgName].Paths)
 	}
 }
