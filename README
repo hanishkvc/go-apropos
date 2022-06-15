@@ -217,6 +217,14 @@ Changelog
 
 Rather major changes
 
+20220615+
+===========
+
+Sorted find related results at end or as they are found.
+
+Add type info (ie Const/Var or Type or Func) wrt each Symbol.
+
+
 20220614+
 ==========
 
