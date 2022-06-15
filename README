@@ -169,7 +169,10 @@ single comment or one symbolORcomment match tokens together.
 Build seperate maps wrt each go routine, and then merge them at the end.
 This should allow the go routines to run without blocking when trying to
 update map / db, unlike today, when they block as they need to synchronise
-when trying to update a single map / db..
+when trying to update a single map / db.. [DONE: But didnt gain much, if any,
+performance, bcas rather availability of multiple go routines for working
+with multiple files parallely, seems to be bypassing from this contention
+becoming the hot path.]
 
 
 Note
@@ -208,11 +211,32 @@ Rather major changes
 20220614
 =========
 
-Use go routines to see how things go.
+Use go routines to see how things go. Here the walking of dir is made
+parallel to the handling of the file. Logically this shouldnt and doesnt
+change performance much, rightly so. Rather the overhead with go routines,
+if any, makes the overall logic bit more slower compared to the NoGoRoutines
+version.
 
 Wrt each symbol store just the comments related string, thus simplifying
 the flow. This should simplify the json loading and inturn seems to speed up
 usecache based search by around 20-25%.
+
+Add support for Multiple Go Routines wrt file handling, so that even when
+there is a contention like trying to update the shared global db or a io
+delay like reading a file, there is some other go routine to make use of
+the available cpu/processing resources.
+
+    This version is about 25% faster than the No Go routines version.
+
+Use independent maps wrt each go routine, so that there is no need for any
+contention to a shared global database when they are running. Then at the
+end build a merged global database.
+
+    The multiple go routines seems to be hiding any contention wrt shared
+    global db, as had been hoped. This version didnt change performance much.
+    This also indicates that there is enough io bandwidth to spare on the
+    test machine and potentially in general on other machines also, to allow
+    the parallel go routines to munch on additional files.
 
 
 

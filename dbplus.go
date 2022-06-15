@@ -83,7 +83,7 @@ func gr_hf_stop() {
 		if bAllDone {
 			break
 		}
-		time.Sleep(time.Second)
+		time.Sleep(200 * time.Millisecond)
 	}
 	// Create the Merged DB
 	for i := 0; i < GR_COUNT; i++ {
