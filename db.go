@@ -123,6 +123,8 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 			fmt.Printf("%v %v\n", pkgName, matchingPkgSymbols[pkgName])
 		}
 	}
-	map_print(matchingPkgPaths, " ", "\n")
-	map_print(matchingPkgSymbols, " ", "\n")
+	if gbSortedResult {
+		map_print(matchingPkgPaths, " ", "\n")
+		map_print(matchingPkgSymbols, " ", "\n")
+	}
 }

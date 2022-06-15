@@ -31,6 +31,7 @@ var gbCaseSensitive bool
 var gbUseCache bool
 var gbCreateCache bool
 var gbIndentJSON bool = false
+var gbSortedResult bool = false
 
 var giMatchMode = MatchMode_Contains
 var gsMatchMode string = "contains"
@@ -108,6 +109,7 @@ func handle_args() {
 	flag.BoolVar(&gbCreateCache, "createcache", false, "Create a cache of the package symbols, paths and comments")
 	flag.BoolVar(&gbUseCache, "usecache", false, "Use cache of the package symbols, paths and comments, instead of parsing the go sources")
 	flag.BoolVar(&gbIndentJSON, "indentjson", gbIndentJSON, "Create pretty indented json cache files")
+	flag.BoolVar(&gbSortedResult, "sortedresult", gbSortedResult, "Show results as found or sorted at the end")
 	flag.Parse()
 	if len(flag.Args()) > 0 {
 		if gFind != FIND_DUMMY {
@@ -136,6 +138,8 @@ func handle_args() {
 		fmt.Printf("%v:INFO:ARG: gsMatchMode: %v\n", PRG_TAG, gsMatchMode)
 		fmt.Printf("%v:INFO:ARG: gbCreateCache: %v\n", PRG_TAG, gbCreateCache)
 		fmt.Printf("%v:INFO:ARG: gbUseCache: %v\n", PRG_TAG, gbUseCache)
+		fmt.Printf("%v:INFO:ARG: gbIndentJSON: %v\n", PRG_TAG, gbIndentJSON)
+		fmt.Printf("%v:INFO:ARG: gbSortedResult: %v\n", PRG_TAG, gbSortedResult)
 	}
 }
 
