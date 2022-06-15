@@ -12,11 +12,11 @@ import (
 )
 
 func test_identsmap_update() {
-	aMap := map[string]string{}
-	identsmap_update(aMap, "t1", "doc for t1", true)
+	aMap := map[string]SymbolEntry{}
+	identsmap_update(aMap, "t1", SymbolEntry{"doc for t1", ""}, true)
 	fmt.Printf("%v:INFO:T MAPSTRUCT2: aMap:%v\n", PRG_TAG, aMap)
-	identsmap_update(aMap, "t1", "doc for t1", true)
-	identsmap_update(aMap, "t2", "doc for t2", true)
+	identsmap_update(aMap, "t1", SymbolEntry{"doc for t1", ""}, true)
+	identsmap_update(aMap, "t2", SymbolEntry{"doc for t2", ""}, true)
 	fmt.Printf("%v:INFO:T MAPSTRUCT2: aMap after updates:%v\n", PRG_TAG, aMap)
 }
 
@@ -42,7 +42,7 @@ func (is *IdentyStats) delta_summary() int {
 //		the package name to which the file belongs
 //		all the comments in the file
 //		map of exported / all identifiers defined by the file
-func gosrc_info(sFile string) (string, string, map[string]string) {
+func gosrc_info(sFile string) (string, string, map[string]SymbolEntry) {
 	tfs := token.NewFileSet()
 	astF, err := parser.ParseFile(tfs, sFile, nil, parser.ParseComments)
 	if err != nil {
@@ -51,7 +51,7 @@ func gosrc_info(sFile string) (string, string, map[string]string) {
 	}
 	pkgName := ""
 	fileCmts := ""
-	theIdents := map[string]string{}
+	theIdents := map[string]SymbolEntry{}
 	genDeclCmt := ""
 	ast.Inspect(astF, func(n ast.Node) bool {
 		bDigDeeper := true
@@ -75,7 +75,7 @@ func gosrc_info(sFile string) (string, string, map[string]string) {
 			saExtra := []string{}
 			for _, ident := range t.Names {
 				saExtra = append(saExtra, ident.Name)
-				identsmap_update(theIdents, ident.Name, valCmt, ident.IsExported())
+				identsmap_update(theIdents, ident.Name, SymbolEntry{valCmt, "C|V"}, ident.IsExported())
 				gIdentyStats.valueCnt += 1
 			}
 			sExtra = "<" + strings.Join(saExtra, ",") + "> " + sCmt
@@ -84,7 +84,7 @@ func gosrc_info(sFile string) (string, string, map[string]string) {
 			sCmt := ":Cmt:" + t.Comment.Text() + ":Doc:" + t.Doc.Text()
 			typeCmt := genDeclCmt + "\n" + t.Comment.Text() + "\n" + t.Doc.Text()
 			sExtra = "<" + t.Name.Name + "> " + sCmt
-			identsmap_update(theIdents, t.Name.Name, typeCmt, t.Name.IsExported())
+			identsmap_update(theIdents, t.Name.Name, SymbolEntry{typeCmt, "T"}, t.Name.IsExported())
 			gIdentyStats.typeCnt += 1
 		case *ast.GenDecl:
 			sType = "ImpTypeConstVar"
@@ -109,7 +109,7 @@ func gosrc_info(sFile string) (string, string, map[string]string) {
 		case *ast.FuncDecl:
 			sType = "Function"
 			sExtra = t.Name.Name + ", :Doc:" + t.Doc.Text()
-			identsmap_update(theIdents, t.Name.Name, t.Doc.Text(), t.Name.IsExported())
+			identsmap_update(theIdents, t.Name.Name, SymbolEntry{t.Doc.Text(), "F"}, t.Name.IsExported())
 			gIdentyStats.funcCnt += 1
 		case *ast.Package: // Working on individual Go src files doesnt seem to encounter this type
 			sType = "Package"
