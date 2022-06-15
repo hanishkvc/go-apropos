@@ -4,37 +4,18 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 )
 
 type DBEntry struct {
-	symbols map[string]string
-	paths   []string
-	cmts    []string
+	Symbols map[string]string
+	Paths   []string
+	Cmts    []string
 }
 
 type TheDB map[string]DBEntry
 
 var gDB TheDB = make(TheDB)
-
-func (dbe DBEntry) MarshalJSON() ([]byte, error) {
-	bSyms, err := json.Marshal(dbe.symbols)
-	if err != nil {
-		return nil, err
-	}
-	return bSyms, err
-}
-
-func (dbeP *DBEntry) UnmarshalJSON(bSyms []byte) error {
-	idents := make(map[string]string)
-	err := json.Unmarshal(bSyms, &idents)
-	if err != nil {
-		return err
-	}
-	dbeP.symbols = idents
-	return nil
-}
 
 func identsmap_update(theMap map[string]string, identName string, identDoc string, identIsExported bool) {
 	if identIsExported || gbAllSymbols {
@@ -52,16 +33,16 @@ func db_add(theDB TheDB, pkgName string, pathS []string, cmtS []string, idents m
 	aPkg, ok := theDB[pkgName]
 	if !ok {
 		aPkg = DBEntry{}
-		aPkg.symbols = idents
-		aPkg.paths = make([]string, 0)
-		aPkg.cmts = make([]string, 0)
+		aPkg.Symbols = idents
+		aPkg.Paths = make([]string, 0)
+		aPkg.Cmts = make([]string, 0)
 	} else {
 		for identName, identInfo := range idents {
-			identsmap_update(aPkg.symbols, identName, identInfo, true)
+			identsmap_update(aPkg.Symbols, identName, identInfo, true)
 		}
 	}
-	aPkg.paths = append(aPkg.paths, pathS...)
-	aPkg.cmts = append(aPkg.cmts, cmtS...)
+	aPkg.Paths = append(aPkg.Paths, pathS...)
+	aPkg.Cmts = append(aPkg.Cmts, cmtS...)
 	theDB[pkgName] = aPkg
 }
 
@@ -73,7 +54,7 @@ func dbprint_all_all(theDB TheDB) {
 
 func dbprint_all_paths(theDB TheDB) {
 	for pkgName := range theDB {
-		fmt.Printf("Package:%v:%v\n", pkgName, theDB[pkgName].paths)
+		fmt.Printf("Package:%v:%v\n", pkgName, theDB[pkgName].Paths)
 	}
 }
 
@@ -100,7 +81,7 @@ func db_find(theDB TheDB, sFind string, sFindCmt string) {
 	for pkgName, pkgData := range theDB {
 		bFoundInPackage := false
 		// Check symbols in the current package
-		for id, idInfo := range pkgData.symbols {
+		for id, idInfo := range pkgData.Symbols {
 			bFound := match_ok(id, sFindP) || match_ok(idInfo, sFindCmtP)
 			if bFound {
 				bFoundInPackage = true
@@ -109,7 +90,7 @@ func db_find(theDB TheDB, sFind string, sFindCmt string) {
 		}
 		// If no match, check comments wrt current package
 		if !bFoundInPackage && (gFindCmt != FINDCMT_DUMMY) {
-			for _, cmt := range pkgData.cmts {
+			for _, cmt := range pkgData.Cmts {
 				if match_ok(cmt, sFindCmtP) {
 					bFoundInPackage = true
 				}

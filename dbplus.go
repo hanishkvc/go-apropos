@@ -88,7 +88,7 @@ func gr_hf_stop() {
 	// Create the Merged DB
 	for i := 0; i < GR_COUNT; i++ {
 		for pkgName, pkgData := range gTrackHFs[i].theDB {
-			db_add(gDB, pkgName, pkgData.paths, pkgData.cmts, pkgData.symbols)
+			db_add(gDB, pkgName, pkgData.Paths, pkgData.Cmts, pkgData.Symbols)
 		}
 	}
 }
