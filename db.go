@@ -65,14 +65,14 @@ func dbprint_all_paths(theDB TheDB, bAllPkgs bool) {
 
 type MatchingPkgs map[string][]string
 
-func matchingpkgs_add(thePkgs MatchingPkgs, pkgName string, id string) {
+func matchingpkgs_add(thePkgs MatchingPkgs, pkgName string, datas []string) {
 	_, ok := thePkgs[pkgName]
 	if !ok {
 		thePkgs[pkgName] = make([]string, 0)
 	}
-	thePkgs[pkgName] = append(thePkgs[pkgName], id)
+	thePkgs[pkgName] = append(thePkgs[pkgName], datas...)
 	if giDEBUG > 10 {
-		fmt.Printf("%v:DBUG:DB: MatchingPkgsAdd:%v:%v\n", PRG_TAG, pkgName, id)
+		fmt.Printf("%v:DBUG:DB: MatchingPkgsAdd:%v:%v\n", PRG_TAG, pkgName, datas)
 	}
 }
 
@@ -80,7 +80,8 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 	if giDEBUG > 0 {
 		fmt.Printf("\n%v:INFO: Possible matches for [%v] at [%v]\n", PRG_TAG, gFind, gBasePath)
 	}
-	pkgs := MatchingPkgs{}
+	matchingPkgSymbols := MatchingPkgs{}
+	matchingPkgPaths := MatchingPkgs{}
 	sFindP := match_prepare(sFind)
 	sFindCmtP := match_prepare(sFindCmt)
 	sFindPkgP := match_prepare(sFindPkg)
@@ -90,7 +91,11 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 			if !match_ok(pkgName, sFindPkgP) {
 				continue
 			}
-			fmt.Printf("Package:%v:%v\n", pkgName, theDB[pkgName].Paths)
+			if gbSortedResult {
+				matchingpkgs_add(matchingPkgPaths, pkgName, theDB[pkgName].Paths)
+			} else {
+				fmt.Printf("Package:%v:%v\n", pkgName, theDB[pkgName].Paths)
+			}
 		}
 		bFoundInPackage := false
 		// Check symbols in the current package
@@ -98,7 +103,9 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 			bFound := match_ok(id, sFindP) || match_ok(idInfo, sFindCmtP)
 			if bFound {
 				bFoundInPackage = true
-				matchingpkgs_add(pkgs, pkgName, id)
+				if gbSortedResult {
+					matchingpkgs_add(matchingPkgSymbols, pkgName, []string{id})
+				}
 			}
 		}
 		// If no match, check comments wrt current package
@@ -108,10 +115,14 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 					bFoundInPackage = true
 				}
 			}
-			if bFoundInPackage {
-				matchingpkgs_add(pkgs, pkgName, "???")
+			if bFoundInPackage && gbSortedResult {
+				matchingpkgs_add(matchingPkgSymbols, pkgName, []string{"???"})
 			}
 		}
+		if bFoundInPackage && !gbSortedResult {
+			fmt.Printf("%v %v\n", pkgName, matchingPkgSymbols[pkgName])
+		}
 	}
-	map_print(pkgs, " ", "\n")
+	map_print(matchingPkgPaths, " ", "\n")
+	map_print(matchingPkgSymbols, " ", "\n")
 }
