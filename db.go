@@ -122,7 +122,7 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 		}
 	}
 	if gbSortedResult {
-		map_print(matchingPkgPaths, " ", "\n")
-		map_print(matchingPkgSymbols, " ", "\n")
+		map_print(matchingPkgPaths, "Package", ":", ":", "\n")
+		map_print(matchingPkgSymbols, "", "", " ", "\n")
 	}
 }

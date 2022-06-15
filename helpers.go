@@ -46,7 +46,7 @@ func string_sort(theSlice []string) []string {
 
 // THis is a sort of centralised map print logic
 // using pure Interface type mechanism to create a sort of generic function.
-func map_print(theMap any, sSep, sEnd string) {
+func map_print(theMap any, sPrefix, sPrefixSep, sSep, sEnd string) {
 	switch m := theMap.(type) {
 	case map[string][]string:
 		// TODO: Need to fall through if equivalence of MatchingPkgs wrt this type can be made understood to go compiler
@@ -59,7 +59,7 @@ func map_print(theMap any, sSep, sEnd string) {
 		keys.Sort()
 		for _, k := range keys {
 			sort.Strings(m[k])
-			fmt.Printf("%v%v%v%v", k, sSep, m[k], sEnd)
+			fmt.Printf("%v%v%v%v%v%v", sPrefix, sPrefixSep, k, sSep, m[k], sEnd)
 		}
 	default:
 		fmt.Fprintf(os.Stderr, "%v:WARN:MapPrint: UnSupportedMapType:%v\n", PRG_TAG, theMap)
