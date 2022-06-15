@@ -7,8 +7,13 @@ import (
 	"fmt"
 )
 
+type SymbolEntry struct {
+	Cmt  string
+	Type string
+}
+
 type DBEntry struct {
-	Symbols map[string]string
+	Symbols map[string]SymbolEntry
 	Paths   []string
 	Cmts    []string
 }
@@ -17,19 +22,22 @@ type TheDB map[string]DBEntry
 
 var gDB TheDB = make(TheDB)
 
-func identsmap_update(theMap map[string]string, identName string, identDoc string, identIsExported bool) {
+func identsmap_update(theMap map[string]SymbolEntry, identName string, identData SymbolEntry, identIsExported bool) {
 	if identIsExported || gbAllSymbols {
-		identDocCur, ok := theMap[identName]
+		identDataCur, ok := theMap[identName]
 		if !ok {
-			theMap[identName] = identDoc
+			theMap[identName] = identData
 		} else {
-			identDocCur = identDocCur + "; " + identDoc
-			theMap[identName] = identDocCur
+			identDataCur.Cmt += ("; " + identData.Cmt)
+			if identData.Type == "" {
+				identDataCur.Cmt += ("; " + identData.Cmt)
+			}
+			theMap[identName] = identDataCur
 		}
 	}
 }
 
-func db_add(theDB TheDB, pkgName string, pathS []string, cmtS []string, idents map[string]string) {
+func db_add(theDB TheDB, pkgName string, pathS []string, cmtS []string, idents map[string]SymbolEntry) {
 	aPkg, ok := theDB[pkgName]
 	if !ok {
 		aPkg = DBEntry{}
@@ -100,7 +108,7 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 		bFoundInPackage := false
 		// Check symbols in the current package
 		for id, idInfo := range pkgData.Symbols {
-			bFound := match_ok(id, sFindP) || match_ok(idInfo, sFindCmtP)
+			bFound := match_ok(id, sFindP) || match_ok(idInfo.Cmt, sFindCmtP)
 			if bFound {
 				bFoundInPackage = true
 				matchingpkgs_add(matchingPkgSymbols, pkgName, []string{id})
@@ -114,7 +122,7 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 				}
 			}
 			if bFoundInPackage {
-				matchingpkgs_add(matchingPkgSymbols, pkgName, []string{"???"})
+				matchingpkgs_add(matchingPkgSymbols, pkgName, []string{"[p]???"})
 			}
 		}
 		if bFoundInPackage && !gbSortedResult {
