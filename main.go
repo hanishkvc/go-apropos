@@ -72,6 +72,17 @@ func set_gbasepath() {
 	}
 }
 
+var sAdditional string = `
+Sample usage:
+	goapropos searchToken
+	goapropos --find searchToken
+	goapropos --findcmt searchToken
+	goapropos --findpkg searchToken
+	goapropos --matchmode regexp searchToken
+	goapropos --createcache
+	goapropos --usecache --matchmode regexp --findcmt searchToken
+Look at the README for more info about the program and its usage`
+
 func handle_args() {
 	set_gbasepath()
 	flag.StringVar(&gFind, "find", gFind, "Specify the token/substring to match wrt symbols. The token to match can also be specified as a standalone arg on its own")
@@ -102,13 +113,7 @@ func handle_args() {
 	if ((gFind == FIND_DUMMY) && (gFindPkg == FINDPKG_DEFAULT) && (gFindCmt == FINDCMT_DUMMY)) && !gbCreateCache {
 		fmt.Fprintf(os.Stderr, "%v:%v:%v\n", PRG_TAG, PRG_NAME, PRG_VERSION)
 		flag.Usage()
-		fmt.Fprintf(os.Stderr, "Sample usage:\n")
-		fmt.Fprintln(os.Stderr, "\tgoapropos searchToken")
-		fmt.Fprintln(os.Stderr, "\tgoapropos --find searchToken")
-		fmt.Fprintln(os.Stderr, "\tgoapropos --findcmt searchToken")
-		fmt.Fprintln(os.Stderr, "\tgoapropos --findpkg searchToken")
-		fmt.Fprintln(os.Stderr, "\tgoapropos --matchmode regexp searchToken")
-		fmt.Fprintln(os.Stderr, "Look at the README for more info about the program and its usage")
+		fmt.Fprintln(os.Stderr, sAdditional)
 		os.Exit(1)
 	}
 	gFindPkgP = match_prepare(gFindPkg)
