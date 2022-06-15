@@ -90,6 +90,7 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 			if !match_ok(pkgName, sFindPkgP) {
 				continue
 			}
+			fmt.Printf("Package:%v:%v\n", pkgName, theDB[pkgName].Paths)
 		}
 		bFoundInPackage := false
 		// Check symbols in the current package
