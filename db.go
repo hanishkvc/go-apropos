@@ -111,7 +111,8 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 			bFound := match_ok(id, sFindP) || match_ok(idInfo.Cmt, sFindCmtP)
 			if bFound {
 				bFoundInPackage = true
-				matchingpkgs_add(matchingPkgSymbols, pkgName, []string{id})
+				idType := "<" + idInfo.Type + ">"
+				matchingpkgs_add(matchingPkgSymbols, pkgName, []string{idType + id})
 			}
 		}
 		// If no match, check comments wrt current package
@@ -122,7 +123,7 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 				}
 			}
 			if bFoundInPackage {
-				matchingpkgs_add(matchingPkgSymbols, pkgName, []string{"[p]???"})
+				matchingpkgs_add(matchingPkgSymbols, pkgName, []string{"<p>???"})
 			}
 		}
 		if bFoundInPackage && !gbSortedResult {
