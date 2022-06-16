@@ -54,6 +54,7 @@ func gosrc_info(sFile string) (string, string, map[string]SymbolEntry) {
 	fileCmts := ""
 	theIdents := map[string]SymbolEntry{}
 	genDeclCmt := ""
+	genDeclType := "?"
 	ast.Inspect(astF, func(n ast.Node) bool {
 		bDigDeeper := true
 		if n == nil {
@@ -73,18 +74,18 @@ func gosrc_info(sFile string) (string, string, map[string]SymbolEntry) {
 			identsmap_update(theIdents, t.Name, "", t.IsExported())
 			gIdentyStats.identCnt += 1
 		*/
-		case *ast.ValueSpec:
+		case *ast.ValueSpec: // Through GenDecl
 			sType = "ConstOrVar"
 			sCmt := ":Cmt:" + t.Comment.Text() + ":Doc:" + t.Doc.Text()
 			valCmt := genDeclCmt + "\n" + t.Comment.Text() + "\n" + t.Doc.Text()
 			saExtra := []string{}
 			for _, ident := range t.Names {
 				saExtra = append(saExtra, ident.Name)
-				identsmap_update(theIdents, ident.Name, SymbolEntry{valCmt, "C|V"}, ident.IsExported())
+				identsmap_update(theIdents, ident.Name, SymbolEntry{valCmt, genDeclType}, ident.IsExported())
 				gIdentyStats.valueCnt += 1
 			}
 			sExtra = "<" + strings.Join(saExtra, ",") + "> " + sCmt
-		case *ast.TypeSpec:
+		case *ast.TypeSpec: // Through GenDecl
 			sType = "Type"
 			sCmt := ":Cmt:" + t.Comment.Text() + ":Doc:" + t.Doc.Text()
 			typeCmt := genDeclCmt + "\n" + t.Comment.Text() + "\n" + t.Doc.Text()
@@ -93,16 +94,21 @@ func gosrc_info(sFile string) (string, string, map[string]SymbolEntry) {
 			gIdentyStats.typeCnt += 1
 		case *ast.GenDecl:
 			sType = "ImpTypeConstVar"
+			genDeclType = "*"
 			switch t.Tok {
 			case token.IMPORT:
 				sType = "GenDecl:Import"
+				genDeclType = "I"
 				bDigDeeper = false
 			case token.CONST:
 				sType = "GenDecl:Const"
+				genDeclType = "C"
 			case token.TYPE:
 				sType = "GenDecl:Type"
+				genDeclType = "T"
 			case token.VAR:
 				sType = "GenDecl:Var"
+				genDeclType = "V"
 			}
 			/*
 				for _, spec := range t.Specs {
