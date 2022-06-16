@@ -13,10 +13,6 @@ import (
 	"time"
 )
 
-var gCacheBase = "~/.cache"
-
-const gDBAllCacheFile = "goapropos.dball"
-
 func handle_file(theDB TheDB, sFile string) {
 	if !strings.HasSuffix(sFile, "go") {
 		return

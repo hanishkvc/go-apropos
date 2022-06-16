@@ -224,6 +224,7 @@ Sorted find related results at end or as they are found.
 
 Add type info (ie Const/Var or Type or Func) wrt each Symbol.
 
+Differentiate within ValueSpec (ie Const or Var)
 
 20220614+
 ==========
