@@ -12,7 +12,7 @@ import (
 
 const PRG_TAG = "GOAPRO"
 const PRG_NAME = "GoApropos"
-const PRG_VERSION = "v6-20220616IST0043"
+const PRG_VERSION = "v6-20220616IST1710"
 
 const FIND_DUMMY = "__FIND_DUMMY__"
 const FINDPKG_DEFAULT = ""
@@ -28,8 +28,8 @@ var gbTEST bool
 var gbAllSymbols bool
 var gSkipFiles = []string{}
 var gbCaseSensitive bool
-var gbUseCache bool
-var gbCreateCache bool
+var gbUseCache bool = true
+var gbCreateCache bool = false
 var gbIndentJSON bool = false
 var gbSortedResult bool = false
 
@@ -106,8 +106,8 @@ func handle_args() {
 	})
 	flag.BoolVar(&gbCaseSensitive, "casesensitive", false, "Whether pkg name and symbol matching is case sensitive or not")
 	flag.StringVar(&gsMatchMode, "matchmode", gsMatchMode, "Specify the strategy used for matching wrt pkg names and symbols. Supported modes contains regexp")
-	flag.BoolVar(&gbCreateCache, "createcache", false, "Create a cache of the package symbols, paths and comments")
-	flag.BoolVar(&gbUseCache, "usecache", false, "Use cache of the package symbols, paths and comments, instead of parsing the go sources")
+	flag.BoolVar(&gbCreateCache, "createcache", gbCreateCache, "Create a cache of the package symbols, paths and comments")
+	flag.BoolVar(&gbUseCache, "usecache", gbUseCache, "Use cache of the package symbols, paths and comments, instead of parsing the go sources")
 	flag.BoolVar(&gbIndentJSON, "indentjson", gbIndentJSON, "Create pretty indented json cache files")
 	flag.BoolVar(&gbSortedResult, "sortedresult", gbSortedResult, "Show results as found or sorted at the end")
 	flag.Parse()
