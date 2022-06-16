@@ -231,7 +231,12 @@ func load_db(theDB any, cacheFile string) error {
 	return nil
 }
 
-func load_dbs() error {
+func load_dbs() (theErr error) {
+	defer func() {
+		if theErr != nil {
+			gDB = make(TheDB)
+		}
+	}()
 	err := load_db(&gDB, gDBAllCacheFile)
 	if err != nil {
 		fmt.Printf("%v:ERRR:DB+: LoadDBs:gDB:%v\n", PRG_TAG, err)

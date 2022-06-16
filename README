@@ -299,6 +299,8 @@ Rather major changes
 
 Auto manage cache by default.
 
+Recover from insane (minimal check currently) / unavailable db.
+
 20220615+
 ===========
 
