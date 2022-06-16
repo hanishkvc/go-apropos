@@ -137,8 +137,18 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 }
 
 func db_sane(theDB TheDB) bool {
-	if len(theDB) <= 1 {
+	pkgCnt := 0
+	symCnt := 0
+	for _, pkgInfo := range theDB {
+		pkgCnt += 1
+		symCnt += len(pkgInfo.Symbols)
+	}
+	if giDEBUG > 2 {
+		fmt.Printf("%v:INFO:DB: pkgCnt:%v, symCnt:%v\n", PRG_TAG, pkgCnt, symCnt)
+	}
+	if (pkgCnt < 1) || (symCnt < 1) {
 		return false
 	}
+
 	return true
 }
