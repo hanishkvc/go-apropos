@@ -202,6 +202,7 @@ func save_dbs() error {
 		fmt.Printf("%v:ERRR:DB+: SaveDBs:gDB:%v\n", PRG_TAG, err)
 		return err
 	}
+	cache_writever()
 	return nil
 }
 

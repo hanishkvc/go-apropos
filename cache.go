@@ -34,6 +34,21 @@ func cache_force_fresh() {
 	fmt.Printf("%v:INFO:Cache: Will create/update cache...\n", PRG_TAG)
 }
 
+func cache_writever() {
+	fName, err := cache_filename(gsFNCacheVersion)
+	if err != nil {
+		fmt.Printf("%v:ERRR:Cache: WriteVer:Filename:%v\n", PRG_TAG, err)
+		return
+	}
+	err = os.WriteFile(fName, []byte(gsGoVersion), 0600)
+	if err != nil {
+		fmt.Printf("%v:ERRR:Cache: WriteVer:WriteFile:%v\n", PRG_TAG, err)
+	}
+	if giDEBUG > -1 {
+		fmt.Printf("%v:Info:Cache: WriteVer:Done\n", PRG_TAG)
+	}
+}
+
 func cache_ok_or_fresh() {
 	fName, err := cache_filename(gsFNCacheVersion)
 	if err != nil {
