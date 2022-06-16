@@ -237,5 +237,9 @@ func load_dbs() error {
 		fmt.Printf("%v:ERRR:DB+: LoadDBs:gDB:%v\n", PRG_TAG, err)
 		return err
 	}
+	if !db_sane(gDB) {
+		return fmt.Errorf("LoadDBs:gDB:insane db")
+	}
+
 	return nil
 }

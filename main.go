@@ -155,12 +155,11 @@ func main() {
 	bWalkPlus := true
 	if gbUseCache {
 		err := load_dbs()
-		if err == nil {
-			if db_sane(gDB) {
-				bWalkPlus = false
-			} else {
-				fmt.Printf("%v:WARN:P1: DBInsanity reached, walking...\n", PRG_TAG)
-			}
+		if err != nil {
+			fmt.Printf("%v:ERRR:Main: flying failed, will walk and cache...[%v]\n", PRG_TAG, err)
+			gbCreateCache = true
+		} else {
+			bWalkPlus = false
 		}
 	}
 	if bWalkPlus {
