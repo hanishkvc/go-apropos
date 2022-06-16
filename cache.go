@@ -15,6 +15,15 @@ var gCacheBase = "~/.cache"
 const gDBAllCacheFile = "goapropos.dball"
 const gsFNCacheVersion = "goapropos.ver"
 
+func cache_filename(cacheFile string) (string, error) {
+	sCacheBase, err := adjust_path(gCacheBase)
+	if err != nil {
+		return "", err
+	}
+	sDBCacheFile := sCacheBase + string(os.PathSeparator) + cacheFile
+	return sDBCacheFile, nil
+}
+
 func cache_force_fresh() {
 	gbUseCache = false
 	gbCreateCache = true
@@ -26,7 +35,13 @@ func cache_force_fresh() {
 }
 
 func cache_ok_or_fresh() {
-	bsCacheVer, err := os.ReadFile(gsFNCacheVersion)
+	fName, err := cache_filename(gsFNCacheVersion)
+	if err != nil {
+		fmt.Printf("%v:ERRR:Cache: Filename:%v\n", PRG_TAG, err)
+		cache_force_fresh()
+		return
+	}
+	bsCacheVer, err := os.ReadFile(fName)
 	if err != nil {
 		fmt.Printf("%v:ERRR:Cache: VersionFile:%v\n", PRG_TAG, err)
 		cache_force_fresh()

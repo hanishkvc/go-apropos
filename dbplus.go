@@ -169,15 +169,6 @@ func adjust_path(sPath string) (string, error) {
 	return sPath, nil
 }
 
-func cache_filenames(cacheFile string) (string, error) {
-	sCacheBase, err := adjust_path(gCacheBase)
-	if err != nil {
-		return "", err
-	}
-	sDBCacheFile := sCacheBase + string(os.PathSeparator) + cacheFile
-	return sDBCacheFile, nil
-}
-
 func save_db(theDB any, cacheFile string) error {
 	var sDB []byte
 	var err error
@@ -190,7 +181,7 @@ func save_db(theDB any, cacheFile string) error {
 		fmt.Printf("%v:ERRR:DB+: SaveDB:Marshal:%v\n", PRG_TAG, err)
 		return err
 	}
-	sDBCacheFile, err := cache_filenames(cacheFile)
+	sDBCacheFile, err := cache_filename(cacheFile)
 	if err != nil {
 		return err
 	}
@@ -215,7 +206,7 @@ func save_dbs() error {
 }
 
 func load_db(theDB any, cacheFile string) error {
-	sDBCacheFile, err := cache_filenames(cacheFile)
+	sDBCacheFile, err := cache_filename(cacheFile)
 	if err != nil {
 		return err
 	}
