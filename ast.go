@@ -8,6 +8,7 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"reflect"
 	"strings"
 )
 
@@ -56,7 +57,11 @@ func gosrc_info(sFile string) (string, string, map[string]SymbolEntry) {
 	ast.Inspect(astF, func(n ast.Node) bool {
 		bDigDeeper := true
 		if n == nil {
-			return bDigDeeper // true or false maynot matter here
+			if giDEBUG > 6 {
+				fmt.Printf("%v:INFO:AST: n:nil:: %v\n", PRG_TAG, n)
+			}
+			bDigDeeper = false // true or false may not matter here, but still
+			return bDigDeeper
 		}
 		sType := "???"
 		sExtra := ""
@@ -125,8 +130,11 @@ func gosrc_info(sFile string) (string, string, map[string]SymbolEntry) {
 			}
 			sExtra += (", " + fileCmts)
 		default:
-			//t1 := reflect.TypeOf(t)
-			//sExtra = t1.Name()
+			if giDEBUG > 6 {
+				sType = "?" + reflect.TypeOf(t).String() + "?"
+				//sExtra = t1.Name() + ";" + t1.Elem().Name()
+				sExtra = reflect.ValueOf(t).String()
+			}
 		}
 		if giDEBUG > 6 {
 			fmt.Printf("%v:INFO:AST: n:%v:%v: %v\n", PRG_TAG, sType, sExtra, n)
