@@ -24,8 +24,8 @@ var gFindPkgP string = match_prepare(gFindPkg) // the explicit initialising can 
 var gFindCmt string = FINDCMT_DUMMY
 var gBasePath string = "/usr/share/go-dummy/"
 var giDEBUG int = 0
-var gbTEST bool
-var gbAllSymbols bool
+var gbTEST bool = false
+var gbAllSymbols bool = false
 var gSkipFiles = []string{}
 var gbCaseSensitive bool = false
 var gbUseCache bool = false
@@ -99,8 +99,8 @@ func handle_args() {
 	flag.StringVar(&gFindCmt, "findcmt", gFindCmt, "Specify the token/substring to match wrt comments in package source")
 	flag.StringVar(&gBasePath, "basepath", gBasePath, "Specify the dir containing files to search")
 	flag.IntVar(&giDEBUG, "debug", 0, "Set debug level to control debug prints")
-	flag.BoolVar(&gbTEST, "test", false, "Enable test logics")
-	flag.BoolVar(&gbAllSymbols, "allsymbols", false, "Match all symbols and not just exported")
+	flag.BoolVar(&gbTEST, "test", gbTEST, "Enable test logics")
+	flag.BoolVar(&gbAllSymbols, "allsymbols", gbAllSymbols, "Match all symbols and not just exported")
 	flag.Func("skipfiles", "Specify token to match wrt package path+filename for skipping package files. More than one can be specified", func(s string) error {
 		gSkipFiles = append(gSkipFiles, s)
 		return nil
