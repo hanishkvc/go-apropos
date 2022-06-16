@@ -8,14 +8,14 @@ import (
 )
 
 type SymbolEntry struct {
-	Cmt  string
-	Type string
+	Cmt  string `json:"c"`
+	Type string `json:"t"`
 }
 
 type DBEntry struct {
-	Symbols map[string]SymbolEntry
-	Paths   []string
-	Cmts    []string
+	Symbols map[string]SymbolEntry `json:"s"`
+	Paths   []string               `json:"p"`
+	Cmts    []string               `json:"c"`
 }
 
 type TheDB map[string]DBEntry
@@ -134,4 +134,11 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 		map_print(matchingPkgPaths, "Package", ":", ":", "\n")
 		map_print(matchingPkgSymbols, "", "", " ", "\n")
 	}
+}
+
+func db_sane(theDB TheDB) bool {
+	if len(theDB) <= 1 {
+		return false
+	}
+	return true
 }

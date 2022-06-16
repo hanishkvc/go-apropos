@@ -152,9 +152,18 @@ func main() {
 		fmt.Println(PRG_TAG, PRG_NAME, PRG_VERSION)
 	}
 	test_go()
+	bWalkPlus := true
 	if gbUseCache {
-		load_dbs()
-	} else {
+		err := load_dbs()
+		if err == nil {
+			if db_sane(gDB) {
+				bWalkPlus = false
+			} else {
+				fmt.Printf("%v:WARN:P1: DBInsanity reached, walking...\n", PRG_TAG)
+			}
+		}
+	}
+	if bWalkPlus {
 		do_walkdir(gBasePath)
 		if gbCreateCache {
 			prep_dir()
