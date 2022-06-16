@@ -43,9 +43,16 @@ passing the following args
 
 in which case it will parse through the system / specified go source dir.
 
-NOTE: Currently it uses the runtime.Version to decide whether the cache is
-out of sync or not. However this will be changed to timestamp wrt the src
-directory to make it potentially more useful.
+NOTE: Currently this logic uses the modtime wrt the go source directory
+as the version check. So if a new go source package install / update or
+go lang suite install / update occurs, 99% this modtime should change and
+inturn autocache logic should trigger a cache update. However if someone
+changes contents of some subdirectories only within the go src dir, then
+the src dir's modtime may not change. In order to udpate the cache in
+such a situation, one will have to manually either touch the go src dir's
+modtime or run
+
+	goapropos --autocache=false --createcache
 
 NOTE: In autocache mode createcache and usecache flags will be manipulated
 by the autocache logic, overriding any user commandline setup wrt same.

@@ -10,6 +10,7 @@ import (
 )
 
 var gsGoVersion = ""
+var gsCacheVersion = ""
 var gCacheBase = "~/.cache"
 
 const gDBAllCacheFile = "goapropos.dball"
@@ -22,6 +23,15 @@ func cache_filename(cacheFile string) (string, error) {
 	}
 	sDBCacheFile := sCacheBase + string(os.PathSeparator) + cacheFile
 	return sDBCacheFile, nil
+}
+
+func cache_version() string {
+	fi, err := os.Stat(gBasePath)
+	if err != nil {
+		fmt.Printf("%v:ERRR:Cache: Version:%v\n", PRG_TAG, err)
+		os.Exit(10)
+	}
+	return fi.ModTime().String()
 }
 
 func cache_force_fresh() {
@@ -40,7 +50,7 @@ func cache_writever() {
 		fmt.Printf("%v:ERRR:Cache: WriteVer:Filename:%v\n", PRG_TAG, err)
 		return
 	}
-	err = os.WriteFile(fName, []byte(gsGoVersion), 0600)
+	err = os.WriteFile(fName, []byte(gsCacheVersion), 0600)
 	if err != nil {
 		fmt.Printf("%v:ERRR:Cache: WriteVer:WriteFile:%v\n", PRG_TAG, err)
 	}
@@ -63,8 +73,8 @@ func cache_ok_or_fresh() {
 		return
 	}
 	sCacheVer := strings.TrimSpace(string(bsCacheVer))
-	if sCacheVer != gsGoVersion {
-		fmt.Printf("%v:WARN:Cache: Version mismatch [%v != %v]\n", PRG_TAG, sCacheVer, gsGoVersion)
+	if sCacheVer != gsCacheVersion {
+		fmt.Printf("%v:WARN:Cache: Version mismatch [%v != %v]\n", PRG_TAG, sCacheVer, gsCacheVersion)
 		cache_force_fresh()
 		return
 	}
@@ -73,5 +83,6 @@ func cache_ok_or_fresh() {
 
 func cache_maya() {
 	gsGoVersion = runtime.Version()
+	gsCacheVersion = cache_version()
 	cache_ok_or_fresh()
 }
