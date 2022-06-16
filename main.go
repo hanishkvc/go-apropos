@@ -113,9 +113,7 @@ func handle_args() {
 	flag.BoolVar(&gbIndentJSON, "indentjson", gbIndentJSON, "Create pretty indented json cache files")
 	flag.BoolVar(&gbSortedResult, "sortedresult", gbSortedResult, "Show results as found or sorted at the end")
 	flag.Parse()
-	if gbAutoCache {
-		cache_maya()
-	}
+	cache_maya()
 	if len(flag.Args()) > 0 {
 		if gFind != FIND_DUMMY {
 			fmt.Printf("%v:WARN:ARG: Unknown args: %v\n", PRG_TAG, flag.Args())

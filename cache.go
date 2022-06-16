@@ -84,5 +84,7 @@ func cache_ok_or_fresh() {
 func cache_maya() {
 	gsGoVersion = runtime.Version()
 	gsCacheVersion = cache_version()
-	cache_ok_or_fresh()
+	if gbAutoCache {
+		cache_ok_or_fresh()
+	}
 }
