@@ -27,11 +27,12 @@ var giDEBUG int = 0
 var gbTEST bool
 var gbAllSymbols bool
 var gSkipFiles = []string{}
-var gbCaseSensitive bool
-var gbUseCache bool = true
+var gbCaseSensitive bool = false
+var gbUseCache bool = false
 var gbCreateCache bool = false
 var gbIndentJSON bool = false
 var gbSortedResult bool = false
+var gbAutoCache bool = true
 
 var giMatchMode = MatchMode_Contains
 var gsMatchMode string = "contains"
@@ -104,14 +105,17 @@ func handle_args() {
 		gSkipFiles = append(gSkipFiles, s)
 		return nil
 	})
-	flag.BoolVar(&gbCaseSensitive, "casesensitive", false, "Whether pkg name and symbol matching is case sensitive or not")
+	flag.BoolVar(&gbCaseSensitive, "casesensitive", gbCaseSensitive, "Whether pkg name and symbol matching is case sensitive or not")
 	flag.StringVar(&gsMatchMode, "matchmode", gsMatchMode, "Specify the strategy used for matching wrt pkg names and symbols. Supported modes contains regexp")
+	flag.BoolVar(&gbAutoCache, "autocache", gbAutoCache, "Create and use the cache automatically. This manipulates usecache and createcache flags automatically")
 	flag.BoolVar(&gbCreateCache, "createcache", gbCreateCache, "Create a cache of the package symbols, paths and comments")
 	flag.BoolVar(&gbUseCache, "usecache", gbUseCache, "Use cache of the package symbols, paths and comments, instead of parsing the go sources")
 	flag.BoolVar(&gbIndentJSON, "indentjson", gbIndentJSON, "Create pretty indented json cache files")
 	flag.BoolVar(&gbSortedResult, "sortedresult", gbSortedResult, "Show results as found or sorted at the end")
 	flag.Parse()
-	cache_maya()
+	if gbAutoCache {
+		cache_maya()
+	}
 	if len(flag.Args()) > 0 {
 		if gFind != FIND_DUMMY {
 			fmt.Printf("%v:WARN:ARG: Unknown args: %v\n", PRG_TAG, flag.Args())

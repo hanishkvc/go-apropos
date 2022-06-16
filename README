@@ -6,6 +6,8 @@ HanishKVC, 2022
 Overview
 #########
 
+General
+========
 go doc requires one to already know the standard package to look for,
 to get info about the same. However if one doesnt know which package
 may contain what they want, they will have to grep the src directory
@@ -17,12 +19,6 @@ the packages in the go source directory.
 
 NOTE: Symbol refers to const or var or type or func name.
 
-NOTE: By default it works in non cache mode, where it parses the go
-source files always, so also its results will match what ever is there
-in the system or specified go source directory. However if required
-one could ask it to create a cache and inturn use the same when searching
-for matching tokens. Look at Cache use in usage section for more.
-
 As I wanted to look at Go lang a bit, so found this need and thus this.
 However I havent really looked at Go or read through Go documentation,
 so this code could be as far away from the conventions and concepts in
@@ -30,24 +26,43 @@ Go land. This is based on some quick random scanning of docs and go src
 followed by compilation errors and potentially flawed logical guess work.
 At same time, it should do the job and be useful when exploring Go lang.
 
+AutoCache Mode 
+===============
+
+To speed up normal use of the program, by default it works in auto cache
+mode, where it uses a previously created cache containing meta data wrt
+symbols / pkg names / comments, when searching for these.
+
+If the cache file is missing and or appears out of sync with the go source
+directory, then the cache file will be freshly created.
+
+However one can force the program into a non cache mode, if required, by
+passing the following args
+
+	goapropos --autocache=false --usecache=false searchtoken
+
+in which case it will parse through the system / specified go source dir.
+
+NOTE: Currently it uses the runtime.Version to decide whether the cache is
+out of sync or not. However this will be changed to timestamp wrt the src
+directory to make it potentially more useful.
+
+NOTE: In autocache mode createcache and usecache flags will be manipulated
+by the autocache logic, overriding any user commandline setup wrt same.
+
+
 Usage
 ######
 
 Normal Use
 ============
 
-By default it uses 1st directory under /usr/share or /usr/local/share
-or /usr/lib which matchs the pattern "go-*" or "golang*" as the go source
-directory wrt packages to search for. If required one can explicitly set
-the go source directory by using the cmdline arg
+NOTE: Remember to pass the named arguments/flags before any unnamed args to
+the program.
 
-	goapropos --basepath <base_path> search_token
-
-NOTE: Logic doesnt follow symbolic links under the go source directory
-
-One can specify the token to use to match / search for symbols in
-packages by using either the cmdline arg --find or by just specifing
-it in the cmdline ie.
+One can specify the token/substring to match / search for wrt symbols in
+packages by using either the cmdline arg --find or by just specifing it
+in the cmdline ie.
 
 	goapropos --find search_token
 
@@ -116,6 +131,27 @@ kept in mind. Inturn enablign casesensitive searching will disable this
 automatic upper case conversion and inturn will leave the match token,
 as well as the pkg names and symbols and comments as it is.
 
+
+Go Source directory
+======================
+
+When looking for go source directory, by default it uses 1st directory under
+/usr/share or /usr/local/share or /usr/lib which matchs the pattern "go-*" or
+"golang*" as the go source directory wrt packages to search for and or as the
+source for meta data saved into cache. If required one can explicitly set
+the go source directory by using the cmdline arg
+
+	goapropos --basepath <base_path> search_token
+
+NOTE: Logic doesnt follow symbolic links under the go source directory
+
+NOTE: If the go source directory auto identified by goapropos is wrong, and
+one is required to set a new basepath, then basepath argument needs to be
+used always, so that autocaching remains in sync.
+
+Skipping files
+================
+
 One can skip files matching certain predefined substrings in their name or
 path by using --skipfiles. One can specify multiple matching tokens to filter
 out source files from different-paths/... by using skipfiles multiple times.
@@ -124,25 +160,51 @@ out source files from different-paths/... by using skipfiles multiple times.
 
 	goapropos --skipfiles "/src/cmd/" --skipfiles "/src/internal/" findme
 
+If autocache true
+--------------------
 
-Remember to pass the named arguments/flags before any unnamed args to the
-program.
+As the program may autoupdate the cache any time, if one needs to skip certain
+go source files always, then one is required to pass the skipfiles argument
+always.
 
-Cache Use
-===========
+However If one wants the cache to contain these files, but at same time, if one
+wants to temporarily skip certain paths / files and search, then one will have
+to request the program to avoid using the cache and then search ie
 
-Instead of parsing the go source files each time the program is called, One
-can ask it to create a cache of the requried data and inturn use the same.
+	goapropos --autocache=false --usecache=false --skipfiles "path/to/skip" search_token
+
+NOTE: disabling autocache above is critical, because otherwise for any reason
+if autocache logic decides to udpate the cache, when one has passed skipfiles
+argument, then the cache will no longer contain data wrt these skipped files.
+
+NOTE: In some cases explicitly disabling autocache mode and inturn creating
+a new cache explicitly with the unwanted files skipped may allow one to avoid
+the need to pass the skipfiles each time. However this is not permanent and
+will get overridden, once the program autoupdates the cache file.
+
+	goapropos --autocache=false --skipfiles "path/to/skip" --createcache
+
+
+Cache management and use
+===========================
+
+To avoid having to parse the go source files each time the program is called,
+it supports the creation and inturn use of a cache, with required data.
+
+In autocache mode, which is the default, this cache is managed automatically.
+However for some reason if one wants to manually control caching, Then one
+will have to instruct the program to stop autocache management and inturn
+pass additional cache related arguments.
 
 Use the flag --createcache to create / update the cache of data wrt package
 symbols, paths and comments.
 
-	goapropos --createcache
+	goapropos --autocache=false --createcache
 
 Use the flag --usecache to use a previously created cache rather than freshly
 parsing through the go source files.
 
-	goapropos --usecache search_token
+	goapropos --autocache=false --usecache search_token
 
 NOTE: One needs to first create the cache before trying to use it.
 
@@ -216,6 +278,11 @@ Changelog
 ############
 
 Rather major changes
+
+20220616
+==========
+
+Auto manage cache by default.
 
 20220615+
 ===========

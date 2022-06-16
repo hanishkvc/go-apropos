@@ -66,7 +66,9 @@ func cache_ok_or_fresh() {
 	if sCacheVer != gsGoVersion {
 		fmt.Printf("%v:WARN:Cache: Version mismatch [%v != %v]\n", PRG_TAG, sCacheVer, gsGoVersion)
 		cache_force_fresh()
+		return
 	}
+	gbUseCache = true
 }
 
 func cache_maya() {
