@@ -17,7 +17,13 @@ gofmt:
 gorun:
 	go run goapropos --test=true
 
-test:
+gotest:
+	go test
+
+gobenchmark:
+	go test -test.bench .
+
+samples:
 	./goapropos fmt
 	./goapropos --find numcpu
 	./goapropos --findpkg fmt
