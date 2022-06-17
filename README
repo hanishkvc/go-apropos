@@ -304,6 +304,8 @@ Add simple test and benchmark helper functions.
 Update printing of find related results to be simple, clean and tagged
 wrt what it represents.
 
+Add sample Test and Benchmark functions.
+
 
 20220616
 ==========
