@@ -5,6 +5,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 )
 
 type DBSymbolInfo struct {
@@ -68,7 +69,13 @@ func dbfilter_pkgs(theDB TheDB, matchPkgName string) TheDB {
 }
 
 func dbprint_all(theDB TheDB, sNamePrefix, sNameSuffix, sInfoPrefix, sInfoSuffix, sEnd string) {
-	for pkgName, pkgInfo := range theDB {
+	pkgNames := []string{}
+	for pkgName := range theDB {
+		pkgNames = append(pkgNames, pkgName)
+	}
+	sort.Strings(pkgNames)
+	for _, pkgName := range pkgNames {
+		pkgInfo := theDB[pkgName]
 		//fmt.Println(pkgName, pkgData)
 		fmt.Printf("%v%v%v", sNamePrefix, pkgName, sNameSuffix)
 		dbprint_pkgpaths(pkgInfo.Paths, sInfoPrefix+"path:", sInfoSuffix)
