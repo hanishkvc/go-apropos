@@ -126,7 +126,7 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 				db_add(matchingPkgs, pkgName, pkgData.Paths, pkgData.Cmts, DBSymbols{})
 			} else {
 				fmt.Printf("Package:%v\n", pkgName)
-				dbprint_pkgpaths(theDB[pkgName].Paths, "\t", "\n")
+				dbprint_pkgpaths(theDB[pkgName].Paths, "\tpath:", "\n")
 			}
 		}
 		bFoundInPackage := false
@@ -153,16 +153,16 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 			if gbSortedResult {
 				db_add(matchingPkgs, pkgName, []string{}, []string{}, matchingSymbols)
 			} else {
-				fmt.Printf("Symbols:%v\n", pkgName)
-				dbprint_pkgsymbols(matchingSymbols, "\t", "\n")
+				fmt.Printf("Package:%v\n", pkgName)
+				dbprint_pkgsymbols(matchingSymbols, "\tsym:", "\n")
 			}
 		}
 	}
 	if gbSortedResult {
 		if gFindPkg != FINDPKG_DEFAULT {
-			dbprint_paths(matchingPkgs, "Package:", "\n", "\t", "\n", "\n")
+			dbprint_paths(matchingPkgs, "Package:", "\n", "\tpath:", "\n", "\n")
 		}
-		dbprint_symbols(matchingPkgs, "Symbols:", "\n", "\t", "\n", "\n")
+		dbprint_symbols(matchingPkgs, "Package:", "\n", "\tsym:", "\n", "\n")
 		//dbprint_symbols(matchingPkgs, "", " [", " ", " ", "]\n")
 	}
 	dbprint_all(matchingPkgs, "Package:", "\n", "\t", "\n", "\n")
