@@ -29,6 +29,22 @@ func matchmode_fromstr(sMode string) MatchMode {
 	}
 }
 
+type MTPRes interface {
+	string | *regexp.Regexp
+}
+
+func matchtoken_prepare(sToken string) (MTPRes, error) {
+	if giMatchMode == MatchMode_RegExp {
+		re, err := regexp.Compile(sToken)
+		if err != nil {
+			return nil, err
+		}
+		return re, nil
+	}
+	sP := match_prepare(sToken)
+	return sP, nil
+}
+
 // Prepare a token / string for use by match_ok logic
 func match_prepare(sToken string) string {
 	if gbCaseSensitive {
