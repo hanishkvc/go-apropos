@@ -170,7 +170,7 @@ func main() {
 		}
 	}
 	if giDEBUG > 3 {
-		dbprint_all(gDB)
+		dbprint_all(gDB, "Package:", "\n", "\t", "\n", "\n")
 	}
 	db_find(gDB, gFind, gFindCmt, gFindPkg)
 }

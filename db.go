@@ -67,9 +67,13 @@ func dbfilter_pkgs(theDB TheDB, matchPkgName string) TheDB {
 	return newDB
 }
 
-func dbprint_all(theDB TheDB) {
-	for pkgName, pkgData := range theDB {
-		fmt.Println(pkgName, pkgData)
+func dbprint_all(theDB TheDB, sNamePrefix, sNameSuffix, sInfoPrefix, sInfoSuffix, sEnd string) {
+	for pkgName, pkgInfo := range theDB {
+		//fmt.Println(pkgName, pkgData)
+		fmt.Printf("%v%v%v", sNamePrefix, pkgName, sNameSuffix)
+		dbprint_pkgpaths(pkgInfo.Paths, sInfoPrefix+"path:", sInfoSuffix)
+		dbprint_pkgsymbols(pkgInfo.Symbols, sInfoPrefix+"sym:", sInfoSuffix)
+		fmt.Printf("%v", sEnd)
 	}
 }
 
@@ -161,6 +165,7 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 		dbprint_symbols(matchingPkgs, "Symbols:", "\n", "\t", "\n", "\n")
 		//dbprint_symbols(matchingPkgs, "", " [", " ", " ", "]\n")
 	}
+	dbprint_all(matchingPkgs, "Package:", "\n", "\t", "\n", "\n")
 }
 
 func db_sane(theDB TheDB) bool {
