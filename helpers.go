@@ -68,13 +68,13 @@ func map_print(theMap any, sPrefix, sPrefixSep, sSep, sEnd string) {
 
 // THis is a sort of generic map print logic
 // using Type parameters support in the latest Go language versions (>= 1.18)
-func map_print_go118[GT any](theMap map[string]GT, sSep, sEnd string) {
+func map_print_go118[GT any](theMap map[string]GT, sPrefix, sPrefixSep, sSep, sEnd string) {
 	keys := sort.StringSlice{}
 	for k, _ := range theMap {
 		keys = append(keys, k)
 	}
 	keys.Sort()
 	for _, k := range keys {
-		fmt.Printf("%v%v%v%v", k, sSep, theMap[k], sEnd)
+		fmt.Printf("%v%v%v%v%v%v", sPrefix, sPrefixSep, k, sSep, theMap[k], sEnd)
 	}
 }
