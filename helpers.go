@@ -5,6 +5,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"sort"
 	"strings"
 )
@@ -45,31 +46,35 @@ func string_sort(theSlice []string) []string {
 
 // THis is a sort of centralised map print logic
 // using pure Interface type mechanism to create a sort of generic function.
-func map_print(theMap map[string]any, sPrefix, sPrefixSep, sSep, sEnd string) {
-	keys := sort.StringSlice{}
-	for k, _ := range theMap {
-		keys = append(keys, k)
-	}
-	keys.Sort()
-	for _, k := range keys {
-		v := theMap[k]
-		switch t := v.(type) {
-		case []string:
-			sort.Strings(t)
+func map_print(theMap any, sPrefix, sPrefixSep, sSep, sEnd string) {
+	switch m := theMap.(type) {
+	case map[string][]string:
+		// TODO: Need to fall through if equivalence of MatchingPkgs wrt this type can be made understood to go compiler
+		// in some implicit/explicit way of the language
+	case MatchingPkgs:
+		keys := sort.StringSlice{}
+		for k, _ := range m {
+			keys = append(keys, k)
 		}
-		fmt.Printf("%v%v%v%v%v%v", sPrefix, sPrefixSep, k, sSep, v, sEnd)
+		keys.Sort()
+		for _, k := range keys {
+			sort.Strings(m[k])
+			fmt.Printf("%v%v%v%v%v%v", sPrefix, sPrefixSep, k, sSep, m[k], sEnd)
+		}
+	default:
+		fmt.Fprintf(os.Stderr, "%v:WARN:MapPrint: UnSupportedMapType:%v\n", PRG_TAG, theMap)
 	}
 }
 
 // THis is a sort of generic map print logic
 // using Type parameters support in the latest Go language versions (>= 1.18)
-func map_print_go118[GT any](theMap map[string]GT, sPrefix, sPrefixSep, sSep, sEnd string) {
+func map_print_go118[GT any](theMap map[string]GT, sSep, sEnd string) {
 	keys := sort.StringSlice{}
 	for k, _ := range theMap {
 		keys = append(keys, k)
 	}
 	keys.Sort()
 	for _, k := range keys {
-		fmt.Printf("%v%v%v%v%v%v", sPrefix, sPrefixSep, k, sSep, theMap[k], sEnd)
+		fmt.Printf("%v%v%v%v", k, sSep, theMap[k], sEnd)
 	}
 }
