@@ -84,7 +84,65 @@ func test_data() {
 	fmt.Printf("%v:INFO:T MAPSTRUCT: aMapS: %v\n", PRG_TAG, aMapS)
 	fmt.Printf("%v:INFO:T MAPSTRUCT: tVS: %v\n", PRG_TAG, tVS)
 	// Map with Struct Value Test2
-	test_identsmap_update()
+	test_dbsymbols_update()
+}
+
+func test_assignment() {
+	fmt.Printf("%v:INFO:T ASSIGNMENTS: Bunch of value assignments follow\n", PRG_TAG)
+
+	type MyInt int
+	var aInt int
+	var mInt MyInt = 123
+	aInt = int(mInt)
+	fmt.Printf("\t %T:%v, %T:%v\n", aInt, aInt, mInt, mInt)
+
+	type MyRune rune
+	var aRune rune
+	var mRune MyRune = 234
+	aRune = rune(mRune)
+	fmt.Printf("\t %T:%v, %T:%v\n", aRune, aRune, mRune, mRune)
+
+	type MyString string
+	var aString string
+	var mString MyString = ""
+	aString = string(mString)
+	fmt.Printf("\t %T:%v, %T:%v\n", aString, aString, mString, mString)
+
+	type MyIntArray [3]int
+	var aIntArray [3]int
+	var mIntArray MyIntArray
+	aIntArray = mIntArray
+	fmt.Printf("\t %T:%v, %T:%v\n", aIntArray, aIntArray, mIntArray, mIntArray)
+
+	type MyIntSlice []int
+	var aIntSlice []int
+	var mIntSlice MyIntSlice
+	aIntSlice = mIntSlice
+	fmt.Printf("\t %T:%v, %T:%v\n", aIntSlice, aIntSlice, mIntSlice, mIntSlice)
+
+	type MyStruct struct {
+		f1 int
+		f2 string
+	}
+	var aStruct = struct {
+		f1 int
+		f2 string
+	}{11, "11"}
+	var mStruct MyStruct
+	aStruct = mStruct
+	fmt.Printf("\t %T:%v, %T:%v\n", aStruct, aStruct, mStruct, mStruct)
+
+	type MyMap map[string]int
+	var aMap map[string]int
+	var mMap MyMap
+	aMap = mMap
+	fmt.Printf("\t %T:%v, %T:%v\n", aMap, aMap, mMap, mMap)
+
+	xMap := map[string]SymbolEntry{"t100": {"doct of t100", "X"}}
+	yMap := DBSymbols{"t200": {"doc of t200", "Y"}}
+	xMap = yMap
+	fmt.Printf("\t %T:%v, %T:%v\n", xMap, xMap, yMap, yMap)
+
 }
 
 func test_gochan() {
@@ -167,6 +225,7 @@ func test_go() {
 	fmt.Printf("%v:INFO: TestGo\n", PRG_TAG)
 	test_flag()
 	test_data()
+	test_assignment()
 	test_env()
 	test_gochan()
 	test_fileread_low(FILE2READ)
