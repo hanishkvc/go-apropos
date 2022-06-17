@@ -73,24 +73,32 @@ func dbprint_all(theDB TheDB) {
 	}
 }
 
+func dbprint_pkgpaths(pkgPaths []string, sPrefix, sSuffix string) {
+	for _, path := range pkgPaths {
+		fmt.Printf("%v%v%v", sPrefix, path, sSuffix)
+	}
+}
+
 func dbprint_paths(theDB TheDB, sNamePrefix, sNameSuffix, sPathPrefix, sPathSuffix, sEnd string) {
 	for pkgName, pkgInfo := range theDB {
 		//fmt.Printf("%v%v%v%v%v", sNamePrefix, pkgName, sNameSuffix, theDB[pkgName].Paths, sEnd)
 		fmt.Printf("%v%v%v", sNamePrefix, pkgName, sNameSuffix)
-		for _, path := range pkgInfo.Paths {
-			fmt.Printf("%v%v%v", sPathPrefix, path, sPathSuffix)
-		}
+		dbprint_pkgpaths(pkgInfo.Paths, sPathPrefix, sPathSuffix)
 		fmt.Printf("%v", sEnd)
+	}
+}
+
+func dbprint_pkgsymbols(pkgSymbols DBSymbols, sPrefix, sSuffix string) {
+	for sym, symInfo := range pkgSymbols {
+		symPrint := symInfo.Type + ":" + sym
+		fmt.Printf("%v%v%v", sPrefix, symPrint, sSuffix)
 	}
 }
 
 func dbprint_symbols(theDB TheDB, sNamePrefix, sNameSuffix, sSymPrefix, sSymSuffix, sEnd string) {
 	for pkgName, pkgInfo := range theDB {
 		fmt.Printf("%v%v%v", sNamePrefix, pkgName, sNameSuffix)
-		for sym, symInfo := range pkgInfo.Symbols {
-			symPrint := symInfo.Type + ":" + sym
-			fmt.Printf("%v%v%v", sSymPrefix, symPrint, sSymSuffix)
-		}
+		dbprint_pkgsymbols(pkgInfo.Symbols, sSymPrefix, sSymSuffix)
 		fmt.Printf("%v", sEnd)
 	}
 }
@@ -113,7 +121,8 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 			if gbSortedResult {
 				db_add(matchingPkgs, pkgName, pkgData.Paths, pkgData.Cmts, DBSymbols{})
 			} else {
-				fmt.Printf("Package:%v:%v\n", pkgName, theDB[pkgName].Paths)
+				fmt.Printf("Package:%v\n", pkgName)
+				dbprint_pkgpaths(theDB[pkgName].Paths, "\t", "\n")
 			}
 		}
 		bFoundInPackage := false
@@ -140,12 +149,15 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 			if gbSortedResult {
 				db_add(matchingPkgs, pkgName, []string{}, []string{}, matchingSymbols)
 			} else {
-				fmt.Printf("%v %v\n", pkgName, matchingSymbols)
+				fmt.Printf("Symbols:%v\n", pkgName)
+				dbprint_pkgsymbols(matchingSymbols, "\t", "\n")
 			}
 		}
 	}
 	if gbSortedResult {
-		dbprint_paths(matchingPkgs, "Package:", "\n", "\t", "\n", "\n")
+		if gFindPkg != FINDPKG_DEFAULT {
+			dbprint_paths(matchingPkgs, "Package:", "\n", "\t", "\n", "\n")
+		}
 		dbprint_symbols(matchingPkgs, "Symbols:", "\n", "\t", "\n", "\n")
 		//dbprint_symbols(matchingPkgs, "", " [", " ", " ", "]\n")
 	}
