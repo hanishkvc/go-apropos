@@ -128,14 +128,14 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 		fmt.Printf("\n%v:INFO: Possible matches for [%v] at [%v]\n", PRG_TAG, gFind, gBasePath)
 	}
 	matchingPkgs := make(TheDB)
-	sFindP := match_prepare(sFind)
-	sFindCmtP := match_prepare(sFindCmt)
-	sFindPkgP := match_prepare(sFindPkg)
+	sFindP, _ := matchtoken_prepare(sFind)
+	sFindCmtP, _ := matchtoken_prepare(sFindCmt)
+	sFindPkgP, _ := matchtoken_prepare(sFindPkg)
 	for pkgName, pkgData := range theDB {
 		matchingSymbols := make(DBSymbols)
 		// Honor any findpkg based package filtering
 		if gFindPkg != FINDPKG_DEFAULT {
-			if !match_ok(pkgName, sFindPkgP) {
+			if !sFindPkgP.Matchok(pkgName) {
 				continue
 			}
 			if gbSortedResult {
@@ -148,7 +148,7 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 		bFoundInPackage := false
 		// Check symbols in the current package
 		for id, idInfo := range pkgData.Symbols {
-			bFound := match_ok(id, sFindP) || match_ok(idInfo.Cmt, sFindCmtP)
+			bFound := sFindP.Matchok(id) || sFindCmtP.Matchok(idInfo.Cmt)
 			if bFound {
 				bFoundInPackage = true
 				dbsymbols_update(matchingSymbols, id, idInfo, true)
@@ -157,7 +157,7 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 		// If no match, check comments wrt current package
 		if !bFoundInPackage && (gFindCmt != FINDCMT_DUMMY) {
 			for _, cmt := range pkgData.Cmts {
-				if match_ok(cmt, sFindCmtP) {
+				if sFindCmtP.Matchok(cmt) {
 					bFoundInPackage = true
 				}
 			}
