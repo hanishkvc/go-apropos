@@ -294,12 +294,15 @@ Changelog
 
 Rather major changes
 
-20220617
+20220617+
 ==========
 
 Cleanup db related types and print and find
 
 Add simple test and benchmark helper functions.
+
+Update printing of find related results to be simple, clean and tagged
+wrt what it represents.
 
 
 20220616
