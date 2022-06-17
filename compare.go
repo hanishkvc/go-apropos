@@ -4,6 +4,7 @@
 package main
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 )
@@ -29,20 +30,50 @@ func matchmode_fromstr(sMode string) MatchMode {
 	}
 }
 
-type MTPRes interface {
-	string | *regexp.Regexp
+type UMTP_string string
+type UMTP_re regexp.Regexp
+type UMTP interface {
+	Utype() string
+	Matchok(string) bool
 }
 
-func matchtoken_prepare(sToken string) (MTPRes, error) {
+func (o UMTP_string) Utype() string {
+	return "string"
+}
+
+func (subStr UMTP_string) Matchok(theStr string) bool {
+	return strings.Contains(theStr, string(subStr))
+}
+
+func (theRE UMTP_re) Utype() string {
+	return "re"
+}
+
+func (theRE UMTP_re) Matchok(theStr string) bool {
+	return (*regexp.Regexp)(&theRE).Match([]byte(theStr))
+}
+
+func matchtoken_prepare(sToken string) (UMTP, error) {
 	if giMatchMode == MatchMode_RegExp {
 		re, err := regexp.Compile(sToken)
 		if err != nil {
 			return nil, err
 		}
-		return re, nil
+		return UMTP_re(*re), nil
 	}
 	sP := match_prepare(sToken)
-	return sP, nil
+	sPR := UMTP_string(sP)
+	return sPR, nil
+}
+
+func test_mtp() {
+	const SearchToken = "st"
+	const CheckString = "testme"
+	mtp, err := matchtoken_prepare(SearchToken)
+	if err != nil {
+		return
+	}
+	fmt.Printf("%v:INFO:T MTP: %v ~ %v:%v\n", PRG_TAG, SearchToken, CheckString, mtp.Matchok(CheckString))
 }
 
 // Prepare a token / string for use by match_ok logic
