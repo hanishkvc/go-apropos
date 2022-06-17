@@ -103,7 +103,13 @@ func dbprint_paths(theDB TheDB, sNamePrefix, sNameSuffix, sPathPrefix, sPathSuff
 }
 
 func dbprint_pkgsymbols(pkgSymbols DBSymbols, sPrefix, sSuffix string) {
-	for sym, symInfo := range pkgSymbols {
+	syms := []string{}
+	for sym := range pkgSymbols {
+		syms = append(syms, sym)
+	}
+	sort.Strings(syms)
+	for _, sym := range syms {
+		symInfo := pkgSymbols[sym]
 		symPrint := symInfo.Type + ":" + sym
 		fmt.Printf("%v%v%v", sPrefix, symPrint, sSuffix)
 	}
