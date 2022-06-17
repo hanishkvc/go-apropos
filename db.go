@@ -7,37 +7,39 @@ import (
 	"fmt"
 )
 
-type SymbolEntry struct {
+type DBSymbolInfo struct {
 	Cmt  string `json:"c"`
 	Type string `json:"t"`
 }
 
+type DBSymbols map[string]DBSymbolInfo
+
 type DBEntry struct {
-	Symbols map[string]SymbolEntry `json:"s"`
-	Paths   []string               `json:"p"`
-	Cmts    []string               `json:"c"`
+	Symbols DBSymbols `json:"s"`
+	Paths   []string  `json:"p"`
+	Cmts    []string  `json:"c"`
 }
 
 type TheDB map[string]DBEntry
 
 var gDB TheDB = make(TheDB)
 
-func identsmap_update(theMap map[string]SymbolEntry, identName string, identData SymbolEntry, identIsExported bool) {
+func dbsymbols_update(dbSymbols DBSymbols, identName string, identData DBSymbolInfo, identIsExported bool) {
 	if identIsExported || gbAllSymbols {
-		identDataCur, ok := theMap[identName]
+		identDataCur, ok := dbSymbols[identName]
 		if !ok {
-			theMap[identName] = identData
+			dbSymbols[identName] = identData
 		} else {
 			identDataCur.Cmt += ("; " + identData.Cmt)
 			if identData.Type == "" {
 				identDataCur.Cmt += ("; " + identData.Cmt)
 			}
-			theMap[identName] = identDataCur
+			dbSymbols[identName] = identDataCur
 		}
 	}
 }
 
-func db_add(theDB TheDB, pkgName string, pathS []string, cmtS []string, idents map[string]SymbolEntry) {
+func db_add(theDB TheDB, pkgName string, pathS []string, cmtS []string, idents DBSymbols) {
 	aPkg, ok := theDB[pkgName]
 	if !ok {
 		aPkg = DBEntry{}
@@ -46,7 +48,7 @@ func db_add(theDB TheDB, pkgName string, pathS []string, cmtS []string, idents m
 		aPkg.Cmts = make([]string, 0)
 	} else {
 		for identName, identInfo := range idents {
-			identsmap_update(aPkg.Symbols, identName, identInfo, true)
+			dbsymbols_update(aPkg.Symbols, identName, identInfo, true)
 		}
 	}
 	aPkg.Paths = append(aPkg.Paths, pathS...)

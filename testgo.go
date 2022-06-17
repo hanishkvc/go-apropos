@@ -138,7 +138,7 @@ func test_assignment() {
 	aMap = mMap
 	fmt.Printf("\t %T:%v, %T:%v\n", aMap, aMap, mMap, mMap)
 
-	xMap := map[string]SymbolEntry{"t100": {"doct of t100", "X"}}
+	xMap := map[string]DBSymbolInfo{"t100": {"doct of t100", "X"}}
 	yMap := DBSymbols{"t200": {"doc of t200", "Y"}}
 	xMap = yMap
 	fmt.Printf("\t %T:%v, %T:%v\n", xMap, xMap, yMap, yMap)
