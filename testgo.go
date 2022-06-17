@@ -226,9 +226,9 @@ func test_go() {
 	test_flag()
 	test_data()
 	test_assignment()
+	test_mtp()
 	test_env()
 	test_gochan()
-	test_mtp()
 	test_fileread_low(FILE2READ)
 	test_fileread_simple(FILE2READ[1:])
 }

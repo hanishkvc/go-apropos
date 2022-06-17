@@ -50,7 +50,7 @@ func (theRE UMTP_re) Utype() string {
 }
 
 func (theRE UMTP_re) Matchok(theStr string) bool {
-	return (*regexp.Regexp)(&theRE).Match([]byte(theStr))
+	return (*regexp.Regexp)(&theRE).MatchString(theStr)
 }
 
 func matchtoken_prepare(sToken string) (UMTP, error) {
@@ -67,7 +67,7 @@ func matchtoken_prepare(sToken string) (UMTP, error) {
 }
 
 func test_mtp() {
-	const SearchToken = "st"
+	const SearchToken = ".*st.*"
 	const CheckString = "testme"
 	mtp, err := matchtoken_prepare(SearchToken)
 	if err != nil {
