@@ -55,7 +55,7 @@ func (theRE UMTP_re) Matchok(theStr string) bool {
 
 func matchtoken_prepare(sToken string) (UMTP, error) {
 	if giMatchMode == MatchMode_RegExp {
-		re, err := regexp.Compile(sToken)
+		re, err := regexp.Compile(match_prepare(sToken))
 		if err != nil {
 			return nil, err
 		}
@@ -67,13 +67,13 @@ func matchtoken_prepare(sToken string) (UMTP, error) {
 }
 
 func test_mtp() {
-	const SearchToken = ".*st.*"
+	const SearchToken = "st"
 	const CheckString = "testme"
 	mtp, err := matchtoken_prepare(SearchToken)
 	if err != nil {
 		return
 	}
-	fmt.Printf("%v:INFO:T MTP: %v ~ %v:%v\n", PRG_TAG, SearchToken, CheckString, mtp.Matchok(CheckString))
+	fmt.Printf("%v:INFO:T MTP: %v ~ %v:%v\n", PRG_TAG, SearchToken, CheckString, mtp.Matchok(match_prepare(CheckString)))
 }
 
 // Prepare a token / string for use by match_ok logic
