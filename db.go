@@ -85,7 +85,10 @@ func dbprint_all(theDB TheDB, sNamePrefix, sNameSuffix, sInfoPrefix, sInfoSuffix
 }
 
 func dbprint_pkgpaths(pkgPaths []string, sPrefix, sSuffix string) {
-	for _, path := range pkgPaths {
+	paths := []string{}
+	paths = append(paths, pkgPaths...)
+	sort.Strings(paths)
+	for _, path := range paths {
 		fmt.Printf("%v%v%v", sPrefix, path, sSuffix)
 	}
 }
