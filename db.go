@@ -159,13 +159,8 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 		}
 	}
 	if gbSortedResult {
-		if gFindPkg != FINDPKG_DEFAULT {
-			dbprint_paths(matchingPkgs, "Package:", "\n", "\tpath:", "\n", "\n")
-		}
-		dbprint_symbols(matchingPkgs, "Package:", "\n", "\tsym:", "\n", "\n")
-		//dbprint_symbols(matchingPkgs, "", " [", " ", " ", "]\n")
+		dbprint_all(matchingPkgs, "Package:", "\n", "\t", "\n", "\n")
 	}
-	dbprint_all(matchingPkgs, "Package:", "\n", "\t", "\n", "\n")
 }
 
 func db_sane(theDB TheDB) bool {
