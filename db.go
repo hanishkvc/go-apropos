@@ -56,33 +56,42 @@ func db_add(theDB TheDB, pkgName string, pathS []string, cmtS []string, idents D
 	theDB[pkgName] = aPkg
 }
 
-func dbprint_all_all(theDB TheDB) {
+func dbfilter_pkgs(theDB TheDB, matchPkgName string) TheDB {
+	newDB := TheDB{}
+	for pkgName, pkgInfo := range theDB {
+		if !match_ok(pkgName, matchPkgName) {
+			continue
+		}
+		db_add(newDB, pkgName, pkgInfo.Paths, pkgInfo.Cmts, pkgInfo.Symbols)
+	}
+	return newDB
+}
+
+func dbprint_all(theDB TheDB) {
 	for pkgName, pkgData := range theDB {
 		fmt.Println(pkgName, pkgData)
 	}
 }
 
-func dbprint_all_paths(theDB TheDB, bAllPkgs bool) {
-	for pkgName := range theDB {
-		if !bAllPkgs && (gFindPkg != FINDPKG_DEFAULT) {
-			if !match_ok(pkgName, gFindPkgP) {
-				continue
-			}
+func dbprint_paths(theDB TheDB, sNamePrefix, sNameSuffix, sPathPrefix, sPathSuffix, sEnd string) {
+	for pkgName, pkgInfo := range theDB {
+		//fmt.Printf("%v%v%v%v%v", sNamePrefix, pkgName, sNameSuffix, theDB[pkgName].Paths, sEnd)
+		fmt.Printf("%v%v%v", sNamePrefix, pkgName, sNameSuffix)
+		for _, path := range pkgInfo.Paths {
+			fmt.Printf("%v%v%v", sPathPrefix, path, sPathSuffix)
 		}
-		fmt.Printf("Package:%v:%v\n", pkgName, theDB[pkgName].Paths)
+		fmt.Printf("%v", sEnd)
 	}
 }
 
-type MatchingPkgs map[string][]string
-
-func matchingpkgs_add(thePkgs MatchingPkgs, pkgName string, datas []string) {
-	_, ok := thePkgs[pkgName]
-	if !ok {
-		thePkgs[pkgName] = make([]string, 0)
-	}
-	thePkgs[pkgName] = append(thePkgs[pkgName], datas...)
-	if giDEBUG > 10 {
-		fmt.Printf("%v:DBUG:DB: MatchingPkgsAdd:%v:%v\n", PRG_TAG, pkgName, datas)
+func dbprint_symbols(theDB TheDB, sNamePrefix, sNameSuffix, sSymPrefix, sSymSuffix, sEnd string) {
+	for pkgName, pkgInfo := range theDB {
+		fmt.Printf("%v%v%v", sNamePrefix, pkgName, sNameSuffix)
+		for sym, symInfo := range pkgInfo.Symbols {
+			symPrint := symInfo.Type + ":" + sym
+			fmt.Printf("%v%v%v", sSymPrefix, symPrint, sSymSuffix)
+		}
+		fmt.Printf("%v", sEnd)
 	}
 }
 
@@ -90,19 +99,19 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 	if giDEBUG > 0 {
 		fmt.Printf("\n%v:INFO: Possible matches for [%v] at [%v]\n", PRG_TAG, gFind, gBasePath)
 	}
-	matchingPkgSymbols := MatchingPkgs{}
-	matchingPkgPaths := MatchingPkgs{}
+	matchingPkgs := make(TheDB)
 	sFindP := match_prepare(sFind)
 	sFindCmtP := match_prepare(sFindCmt)
 	sFindPkgP := match_prepare(sFindPkg)
 	for pkgName, pkgData := range theDB {
+		matchingSymbols := make(DBSymbols)
 		// Honor any findpkg based package filtering
 		if gFindPkg != FINDPKG_DEFAULT {
 			if !match_ok(pkgName, sFindPkgP) {
 				continue
 			}
 			if gbSortedResult {
-				matchingpkgs_add(matchingPkgPaths, pkgName, theDB[pkgName].Paths)
+				db_add(matchingPkgs, pkgName, pkgData.Paths, pkgData.Cmts, DBSymbols{})
 			} else {
 				fmt.Printf("Package:%v:%v\n", pkgName, theDB[pkgName].Paths)
 			}
@@ -113,8 +122,7 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 			bFound := match_ok(id, sFindP) || match_ok(idInfo.Cmt, sFindCmtP)
 			if bFound {
 				bFoundInPackage = true
-				idType := idInfo.Type + ":"
-				matchingpkgs_add(matchingPkgSymbols, pkgName, []string{idType + id})
+				dbsymbols_update(matchingSymbols, id, idInfo, true)
 			}
 		}
 		// If no match, check comments wrt current package
@@ -125,16 +133,21 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 				}
 			}
 			if bFoundInPackage {
-				matchingpkgs_add(matchingPkgSymbols, pkgName, []string{"p:???"})
+				dbsymbols_update(matchingSymbols, "???", DBSymbolInfo{"", "P"}, true)
 			}
 		}
-		if bFoundInPackage && !gbSortedResult {
-			fmt.Printf("%v %v\n", pkgName, matchingPkgSymbols[pkgName])
+		if bFoundInPackage {
+			if gbSortedResult {
+				db_add(matchingPkgs, pkgName, []string{}, []string{}, matchingSymbols)
+			} else {
+				fmt.Printf("%v %v\n", pkgName, matchingSymbols)
+			}
 		}
 	}
 	if gbSortedResult {
-		map_print(matchingPkgPaths, "Package", ":", ":", "\n")
-		map_print(matchingPkgSymbols, "", "", " ", "\n")
+		dbprint_paths(matchingPkgs, "Package:", "\n", "\t", "\n", "\n")
+		dbprint_symbols(matchingPkgs, "Symbols:", "\n", "\t", "\n", "\n")
+		//dbprint_symbols(matchingPkgs, "", " [", " ", " ", "]\n")
 	}
 }
 

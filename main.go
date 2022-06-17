@@ -170,7 +170,7 @@ func main() {
 		}
 	}
 	if giDEBUG > 3 {
-		dbprint_all_all(gDB)
+		dbprint_all(gDB)
 	}
 	db_find(gDB, gFind, gFindCmt, gFindPkg)
 }
