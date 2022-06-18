@@ -51,6 +51,8 @@ func (o Matcher_string) Utype() string {
 }
 
 func (subStr Matcher_string) Matchok(theStr string) bool {
+	//fmt.Printf("%v:INFO:MatcherString: is [%v] in [%v]\n", PRG_TAG, subStr, theStr)
+	theStr = match_prepare(theStr)
 	return strings.Contains(theStr, string(subStr))
 }
 
@@ -59,6 +61,8 @@ func (theRE Matcher_re) Utype() string {
 }
 
 func (theRE Matcher_re) Matchok(theStr string) bool {
+	//fmt.Printf("%v:INFO:MatcherRE: is [%v] in [%v]\n", PRG_TAG, theRE, theStr)
+	theStr = match_prepare(theStr)
 	return (*regexp.Regexp)(&theRE).MatchString(theStr)
 }
 
