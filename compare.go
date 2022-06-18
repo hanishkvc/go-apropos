@@ -67,18 +67,18 @@ func (subStr Matcher_string) Pattern() string {
 	return string(subStr)
 }
 
-func (theRE Matcher_re) Utype() string {
+func (theRE *Matcher_re) Utype() string {
 	return "re"
 }
 
-func (theRE Matcher_re) Matchok(theStr string) bool {
+func (theRE *Matcher_re) Matchok(theStr string) bool {
 	//fmt.Printf("%v:INFO:MatcherRE: is [%v] in [%v]\n", PRG_TAG, theRE, theStr)
 	theStr = match_prepare(theStr)
-	return (*regexp.Regexp)(&theRE).MatchString(theStr)
+	return (*regexp.Regexp)(theRE).MatchString(theStr)
 }
 
-func (theRE Matcher_re) Pattern() string {
-	return (*regexp.Regexp)(&theRE).String()
+func (theRE *Matcher_re) Pattern() string {
+	return (*regexp.Regexp)(theRE).String()
 }
 
 // Based on current match mode either create
