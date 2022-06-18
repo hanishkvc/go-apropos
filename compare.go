@@ -29,6 +29,16 @@ func matchmode_fromstr(sMode string) MatchMode {
 	}
 }
 
+func matchmode_tostr(mode MatchMode) string {
+	switch mode {
+	case MatchMode_Contains:
+		return MATCHMODE_CONTAINS
+	case MatchMode_RegExp:
+		return MATCHMODE_REGEXP
+	}
+	return "ERROR:UNKNOWN"
+}
+
 type UMTP_string string
 type UMTP_re regexp.Regexp
 type UMTP interface {
