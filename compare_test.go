@@ -4,6 +4,7 @@
 package main
 
 import (
+	"regexp"
 	"testing"
 )
 
@@ -31,5 +32,21 @@ func TestMatcher(t *testing.T) {
 				t.Logf("FINE:MatchOk: Mode:%v[%v] Pattern:%v Check:%v Expected:%v Got:%v\n", sMatchMode, mtp.Utype(), test.pattern, test.check, test.expect, ok)
 			}
 		}
+	}
+}
+
+const BMRE_PATTERN = "st"
+const BMRE_CHECK = "testme"
+
+func BenchmarkRECompile(b *testing.B) {
+	re := regexp.MustCompile(BMRE_PATTERN)
+	for i := 0; i < b.N; i++ {
+		re.MatchString(BMRE_CHECK)
+	}
+}
+
+func BenchmarkRENoCompile(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		regexp.MatchString(BMRE_PATTERN, BMRE_CHECK)
 	}
 }

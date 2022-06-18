@@ -246,16 +246,16 @@ DONE:Maybe add support to cache the package identifiers/paths/comments map.
 This will inturn require a cmdline argument to force rebuilding of this cache,
 when required.
 
-Compile regexp match tokens, later.
+DONE: Compile regexp match tokens, later.
 
 Maybe later add support for searching multiple different comment tokens and
 or symbol tokens. Currently one can search for either a single symbol or
 single comment or one symbolORcomment match tokens together.
 
-Build seperate maps wrt each go routine, and then merge them at the end.
+DONE: Build seperate maps wrt each go routine, and then merge them at the end.
 This should allow the go routines to run without blocking when trying to
 update map / db, unlike today, when they block as they need to synchronise
-when trying to update a single map / db.. [DONE: But didnt gain much, if any,
+when trying to update a single map / db.. [DONE-NOTE: didnt gain much, if any,
 performance, bcas rather availability of multiple go routines for working
 with multiple files parallely, seems to be bypassing from this contention
 becoming the hot path.]
@@ -288,6 +288,18 @@ packages it uses) symbols which is found in a go source file. WHile GenDecl/
 ValueSpec/TypeSpec/FuncDecl nodes are triggered only for own symbols, which
 the go source file being inspected, defines.
 
+String Matchs
+===============
+
+For simple string matching based goapropos/find searchs, the strings.Contains
+version was found to be twice as fast as the uncompiled-regexp version. However
+using compiled-re and inturn reuse of the re which is possible in this program's
+flow, makes the re version as fast as the strings.Contains version.
+
+The matcher interface added to support both strings.Contains and re.MatchString
+in a seemless manner, adds a tiny pico bit of overhead compared to direct use
+of strings.Contains.
+
 
 Changelog
 ############
@@ -306,6 +318,11 @@ wrt what it represents.
 
 Add sample Test and Benchmark functions.
 
+Add a Matcher interface with implementations for strings-contains and
+re-compiled.
+
+Compile the re in regexp match mode, this makes the re version match
+the simple contains version speed.
 
 20220616
 ==========

@@ -22,7 +22,7 @@ gotest:
 	go test -test.run Ma -test.v
 
 gobenchmark:
-	go test -test.bench .
+	go test -test.run NONE -test.bench .
 
 samples:
 	./goapropos fmt
