@@ -1,3 +1,6 @@
+// Test main db related logics
+// HanishKVC, 2022
+
 package main
 
 import (

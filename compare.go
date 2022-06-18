@@ -4,7 +4,6 @@
 package main
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 )
@@ -64,16 +63,6 @@ func matchtoken_prepare(sToken string) (UMTP, error) {
 	sP := match_prepare(sToken)
 	sPR := UMTP_string(sP)
 	return sPR, nil
-}
-
-func test_mtp() {
-	const SearchToken = "st"
-	const CheckString = "testme"
-	mtp, err := matchtoken_prepare(SearchToken)
-	if err != nil {
-		return
-	}
-	fmt.Printf("%v:INFO:T MTP: %v ~ %v:%v\n", PRG_TAG, SearchToken, CheckString, mtp.Matchok(match_prepare(CheckString)))
 }
 
 // Prepare a token / string for use by match_ok logic
