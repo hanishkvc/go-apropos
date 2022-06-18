@@ -4,6 +4,8 @@
 package main
 
 import (
+	"fmt"
+	"os"
 	"regexp"
 	"strings"
 )
@@ -16,6 +18,7 @@ type MatchMode uint
 const (
 	MatchMode_Contains MatchMode = iota
 	MatchMode_RegExp
+	MatchMode_Invalid
 )
 
 func matchmode_fromstr(sMode string) MatchMode {
@@ -24,9 +27,10 @@ func matchmode_fromstr(sMode string) MatchMode {
 		return MatchMode_Contains
 	case MATCHMODE_REGEXP:
 		return MatchMode_RegExp
-	default:
-		return MatchMode_Contains
 	}
+	fmt.Printf("%v:ERRR:MatchMode %v is unknown, exiting...\n", PRG_TAG, sMode)
+	os.Exit(20)
+	return MatchMode_Invalid // program wont reach here, just to keep go tools happy
 }
 
 func matchmode_tostr(mode MatchMode) string {
@@ -36,7 +40,9 @@ func matchmode_tostr(mode MatchMode) string {
 	case MatchMode_RegExp:
 		return MATCHMODE_REGEXP
 	}
-	return "ERROR:UNKNOWN"
+	fmt.Printf("%v:ERRR:MatchMode %v is unknown, exiting...\n", PRG_TAG, mode)
+	os.Exit(20)
+	return "ERROR:UNKNOWN" // program wont reach here, just to keep go tools happy
 }
 
 type Matcher_string string
