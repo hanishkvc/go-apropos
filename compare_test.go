@@ -11,7 +11,8 @@ func TestMatch(t *testing.T) {
 	var testData = []struct {
 		pattern string
 		check   string
-	}{{"st", "testme"}, {"dial", "dialup"}}
+		expect  bool
+	}{{"st", "testme", true}, {"dial", "dialup", true}, {"dial", "testme", false}}
 
 	for _, m := range []MatchMode{MatchMode_Contains, MatchMode_RegExp} {
 		giMatchMode = m
@@ -24,10 +25,10 @@ func TestMatch(t *testing.T) {
 				continue
 			}
 			ok := mtp.Matchok(test.check)
-			if !ok {
-				t.Errorf("ERRR:MatchOk: Mode:%v Pattern:%v Check:%v\n", sMatchMode, test.pattern, test.check)
+			if ok != test.expect {
+				t.Errorf("ERRR:MatchOk: Mode:%v Pattern:%v Check:%v Expected:%v Got:%v\n", sMatchMode, test.pattern, test.check, test.expect, ok)
 			} else {
-				t.Logf("FINE:MatchOk: Mode:%v Pattern:%v Check:%v\n", sMatchMode, test.pattern, test.check)
+				t.Logf("FINE:MatchOk: Mode:%v Pattern:%v Check:%v Expected:%v Got:%v\n", sMatchMode, test.pattern, test.check, test.expect, ok)
 			}
 		}
 	}
