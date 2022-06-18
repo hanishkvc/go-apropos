@@ -44,6 +44,7 @@ type Matcher_re regexp.Regexp
 type Matcher interface {
 	Utype() string
 	Matchok(string) bool
+	Pattern() string
 }
 
 func (o Matcher_string) Utype() string {
@@ -56,6 +57,10 @@ func (subStr Matcher_string) Matchok(theStr string) bool {
 	return strings.Contains(theStr, string(subStr))
 }
 
+func (subStr Matcher_string) Pattern() string {
+	return string(subStr)
+}
+
 func (theRE Matcher_re) Utype() string {
 	return "re"
 }
@@ -66,15 +71,19 @@ func (theRE Matcher_re) Matchok(theStr string) bool {
 	return (*regexp.Regexp)(&theRE).MatchString(theStr)
 }
 
-func matcher_create(sToken string) (Matcher, error) {
+func (theRE Matcher_re) Pattern() string {
+	return (*regexp.Regexp)(&theRE).String()
+}
+
+func matcher_create(pattern string) (Matcher, error) {
 	if giMatchMode == MatchMode_RegExp {
-		re, err := regexp.Compile(match_prepare(sToken))
+		re, err := regexp.Compile(match_prepare(pattern))
 		if err != nil {
 			return nil, err
 		}
 		return Matcher_re(*re), nil
 	}
-	sP := match_prepare(sToken)
+	sP := match_prepare(pattern)
 	sPR := Matcher_string(sP)
 	return sPR, nil
 }
