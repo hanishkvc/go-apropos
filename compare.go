@@ -39,39 +39,39 @@ func matchmode_tostr(mode MatchMode) string {
 	return "ERROR:UNKNOWN"
 }
 
-type UMTP_string string
-type UMTP_re regexp.Regexp
-type UMTP interface {
+type Matcher_string string
+type Matcher_re regexp.Regexp
+type Matcher interface {
 	Utype() string
 	Matchok(string) bool
 }
 
-func (o UMTP_string) Utype() string {
+func (o Matcher_string) Utype() string {
 	return "string"
 }
 
-func (subStr UMTP_string) Matchok(theStr string) bool {
+func (subStr Matcher_string) Matchok(theStr string) bool {
 	return strings.Contains(theStr, string(subStr))
 }
 
-func (theRE UMTP_re) Utype() string {
+func (theRE Matcher_re) Utype() string {
 	return "re"
 }
 
-func (theRE UMTP_re) Matchok(theStr string) bool {
+func (theRE Matcher_re) Matchok(theStr string) bool {
 	return (*regexp.Regexp)(&theRE).MatchString(theStr)
 }
 
-func matchtoken_prepare(sToken string) (UMTP, error) {
+func matcher_create(sToken string) (Matcher, error) {
 	if giMatchMode == MatchMode_RegExp {
 		re, err := regexp.Compile(match_prepare(sToken))
 		if err != nil {
 			return nil, err
 		}
-		return UMTP_re(*re), nil
+		return Matcher_re(*re), nil
 	}
 	sP := match_prepare(sToken)
-	sPR := UMTP_string(sP)
+	sPR := Matcher_string(sP)
 	return sPR, nil
 }
 

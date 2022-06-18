@@ -128,9 +128,9 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 		fmt.Printf("\n%v:INFO: Possible matches for [%v] at [%v]\n", PRG_TAG, gFind, gBasePath)
 	}
 	matchingPkgs := make(TheDB)
-	sFindP, _ := matchtoken_prepare(sFind)
-	sFindCmtP, _ := matchtoken_prepare(sFindCmt)
-	sFindPkgP, _ := matchtoken_prepare(sFindPkg)
+	sFindP, _ := matcher_create(sFind)
+	sFindCmtP, _ := matcher_create(sFindCmt)
+	sFindPkgP, _ := matcher_create(sFindPkg)
 	for pkgName, pkgData := range theDB {
 		matchingSymbols := make(DBSymbols)
 		// Honor any findpkg based package filtering

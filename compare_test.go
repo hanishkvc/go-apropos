@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestMatch(t *testing.T) {
+func TestMatcher(t *testing.T) {
 	var testData = []struct {
 		pattern string
 		check   string
@@ -19,7 +19,7 @@ func TestMatch(t *testing.T) {
 		sMatchMode := matchmode_tostr(giMatchMode)
 		for i := range testData {
 			test := testData[i]
-			mtp, err := matchtoken_prepare(test.pattern)
+			mtp, err := matcher_create(test.pattern)
 			if err != nil {
 				t.Errorf("ERRR:Prepare: Mode:%v Pattern:%v Check:%v, Err:%v\n", sMatchMode, test.pattern, test.check, err)
 				continue
