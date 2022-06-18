@@ -26,9 +26,9 @@ func TestMatch(t *testing.T) {
 			}
 			ok := mtp.Matchok(test.check)
 			if ok != test.expect {
-				t.Errorf("ERRR:MatchOk: Mode:%v Pattern:%v Check:%v Expected:%v Got:%v\n", sMatchMode, test.pattern, test.check, test.expect, ok)
+				t.Errorf("ERRR:MatchOk: Mode:%v[%v] Pattern:%v Check:%v Expected:%v Got:%v\n", sMatchMode, mtp.Utype(), test.pattern, test.check, test.expect, ok)
 			} else {
-				t.Logf("FINE:MatchOk: Mode:%v Pattern:%v Check:%v Expected:%v Got:%v\n", sMatchMode, test.pattern, test.check, test.expect, ok)
+				t.Logf("FINE:MatchOk: Mode:%v[%v] Pattern:%v Check:%v Expected:%v Got:%v\n", sMatchMode, mtp.Utype(), test.pattern, test.check, test.expect, ok)
 			}
 		}
 	}
