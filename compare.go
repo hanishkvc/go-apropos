@@ -81,17 +81,14 @@ func (theRE Matcher_re) Pattern() string {
 // The matcher takes care of case sensitivity wrt matching.
 //		if case insensitive match is requested, currently it uses a simple to upper case conversion
 //		irrespective of the type of matcher used
-func matcher_create(pattern string) (Matcher, error) {
+func matcher_create(pattern string) Matcher {
 	if giMatchMode == MatchMode_RegExp {
-		re, err := regexp.Compile(match_prepare(pattern))
-		if err != nil {
-			return nil, err
-		}
-		return Matcher_re(*re), nil
+		re := regexp.MustCompile(match_prepare(pattern))
+		return Matcher_re(*re)
 	}
 	sP := match_prepare(pattern)
 	sPR := Matcher_string(sP)
-	return sPR, nil
+	return sPR
 }
 
 // Prepare a token / string for use by match_ok logic

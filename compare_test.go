@@ -20,16 +20,12 @@ func TestMatcher(t *testing.T) {
 		sMatchMode := matchmode_tostr(giMatchMode)
 		for i := range testData {
 			test := testData[i]
-			mtp, err := matcher_create(test.pattern)
-			if err != nil {
-				t.Errorf("ERRR:Prepare: Mode:%v Pattern:%v Check:%v, Err:%v\n", sMatchMode, test.pattern, test.check, err)
-				continue
-			}
-			ok := mtp.Matchok(test.check)
+			matcher := matcher_create(test.pattern)
+			ok := matcher.Matchok(test.check)
 			if ok != test.expect {
-				t.Errorf("ERRR:MatchOk: Mode:%v[%v] Pattern:%v Check:%v Expected:%v Got:%v\n", sMatchMode, mtp.Utype(), test.pattern, test.check, test.expect, ok)
+				t.Errorf("ERRR:MatchOk: Mode:%v[%v] Pattern:%v Check:%v Expected:%v Got:%v\n", sMatchMode, matcher.Utype(), test.pattern, test.check, test.expect, ok)
 			} else {
-				t.Logf("FINE:MatchOk: Mode:%v[%v] Pattern:%v Check:%v Expected:%v Got:%v\n", sMatchMode, mtp.Utype(), test.pattern, test.check, test.expect, ok)
+				t.Logf("FINE:MatchOk: Mode:%v[%v] Pattern:%v Check:%v Expected:%v Got:%v\n", sMatchMode, matcher.Utype(), test.pattern, test.check, test.expect, ok)
 			}
 		}
 	}

@@ -127,12 +127,7 @@ func handle_args() {
 		os.Exit(1)
 	}
 	giMatchMode = matchmode_fromstr(gsMatchMode)
-	var err error
-	gFindPkgP, err = matcher_create(gFindPkg)
-	if err != nil {
-		fmt.Printf("%v:ERRR:ARG: FindPkgMatcher %v\n", PRG_TAG, err)
-		os.Exit(1)
-	}
+	gFindPkgP = matcher_create(gFindPkg)
 	if giDEBUG > 1 {
 		fmt.Printf("%v:INFO:ARG: gFind: %v\n", PRG_TAG, gFind)
 		fmt.Printf("%v:INFO:ARG: gFindPkg: %v\n", PRG_TAG, gFindPkg)

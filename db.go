@@ -59,10 +59,7 @@ func db_add(theDB TheDB, pkgName string, pathS []string, cmtS []string, idents D
 
 func dbfilter_pkgs(theDB TheDB, matchPkgName string) (TheDB, error) {
 	newDB := TheDB{}
-	pkgNameMatcher, err := matcher_create(matchPkgName)
-	if err != nil {
-		return theDB, err
-	}
+	pkgNameMatcher := matcher_create(matchPkgName)
 	for pkgName, pkgInfo := range theDB {
 		if !pkgNameMatcher.Matchok(pkgName) {
 			continue
@@ -132,9 +129,9 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
 		fmt.Printf("\n%v:INFO: Possible matches for [%v] at [%v]\n", PRG_TAG, gFind, gBasePath)
 	}
 	matchingPkgs := make(TheDB)
-	sFindP, _ := matcher_create(sFind)
-	sFindCmtP, _ := matcher_create(sFindCmt)
-	sFindPkgP, _ := matcher_create(sFindPkg)
+	sFindP := matcher_create(sFind)
+	sFindCmtP := matcher_create(sFindCmt)
+	sFindPkgP := matcher_create(sFindPkg)
 	for pkgName, pkgData := range theDB {
 		matchingSymbols := make(DBSymbols)
 		// Honor any findpkg based package filtering
