@@ -27,7 +27,7 @@ func handle_file(theDB TheDB, sFile string) {
 	}
 	name, cmts, idents := gosrc_info(sFile)
 	if gFindPkg != FINDPKG_DEFAULT {
-		if !match_ok(name, gFindPkgP) {
+		if !gFindPkgP.Matchok(name) {
 			return
 		}
 	}

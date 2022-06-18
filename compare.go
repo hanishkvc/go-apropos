@@ -42,9 +42,9 @@ func matchmode_tostr(mode MatchMode) string {
 type Matcher_string string
 type Matcher_re regexp.Regexp
 type Matcher interface {
-	Utype() string
-	Matchok(string) bool
-	Pattern() string
+	Utype() string       // get the type of the matcher
+	Matchok(string) bool // check if the given string matches the pattern registered with matcher
+	Pattern() string     // retreive the string pattern registered with the matcher
 }
 
 func (o Matcher_string) Utype() string {
@@ -75,6 +75,12 @@ func (theRE Matcher_re) Pattern() string {
 	return (*regexp.Regexp)(&theRE).String()
 }
 
+// Based on current match mode either create
+// 		a string based contains matcher
+//		or a regexp based matcher
+// The matcher takes care of case sensitivity wrt matching.
+//		if case insensitive match is requested, currently it uses a simple to upper case conversion
+//		irrespective of the type of matcher used
 func matcher_create(pattern string) (Matcher, error) {
 	if giMatchMode == MatchMode_RegExp {
 		re, err := regexp.Compile(match_prepare(pattern))
@@ -94,35 +100,4 @@ func match_prepare(sToken string) string {
 		return sToken
 	}
 	return strings.ToUpper(sToken)
-}
-
-// Check if sToCheck contains sMatchTokenP as a substring with in it or not.
-//
-// sToCheck is expected to be the raw string.
-// sMatchTokenP is expected to be the token string, which has already been processed/prepared using match_prepare.
-func match_contains(sToCheck, sMatchTokenP string) bool {
-	sToCheckP := match_prepare(sToCheck)
-	return strings.Contains(sToCheckP, sMatchTokenP)
-}
-
-func match_regexp(sToCheck, sMatchTokenP string) bool {
-	sToCheckP := match_prepare(sToCheck)
-	match, err := regexp.Match(sMatchTokenP, []byte(sToCheckP))
-	if err != nil {
-		return false
-	}
-	return match
-}
-
-// Check if sToCheck satisfying the match token sMatchTokenP or not.
-//
-// It might use different strategies to check for a match like contains or regexp or ...
-//
-// sToCheck is expected to be the raw string.
-// sMatchTokenP is expected to be the token string, which has already been processed/prepared using match_prepare.
-func match_ok(sToCheck, sMatchTokenP string) bool {
-	if giMatchMode == MatchMode_RegExp {
-		return match_regexp(sToCheck, sMatchTokenP)
-	}
-	return match_contains(sToCheck, sMatchTokenP)
 }

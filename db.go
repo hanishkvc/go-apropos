@@ -57,15 +57,19 @@ func db_add(theDB TheDB, pkgName string, pathS []string, cmtS []string, idents D
 	theDB[pkgName] = aPkg
 }
 
-func dbfilter_pkgs(theDB TheDB, matchPkgName string) TheDB {
+func dbfilter_pkgs(theDB TheDB, matchPkgName string) (TheDB, error) {
 	newDB := TheDB{}
+	pkgNameMatcher, err := matcher_create(matchPkgName)
+	if err != nil {
+		return theDB, err
+	}
 	for pkgName, pkgInfo := range theDB {
-		if !match_ok(pkgName, matchPkgName) {
+		if !pkgNameMatcher.Matchok(pkgName) {
 			continue
 		}
 		db_add(newDB, pkgName, pkgInfo.Paths, pkgInfo.Cmts, pkgInfo.Symbols)
 	}
-	return newDB
+	return newDB, nil
 }
 
 func dbprint_all(theDB TheDB, sNamePrefix, sNameSuffix, sInfoPrefix, sInfoSuffix, sEnd string) {

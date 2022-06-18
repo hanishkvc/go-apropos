@@ -20,7 +20,7 @@ const FINDCMT_DUMMY = FIND_DUMMY
 
 var gFind string = FIND_DUMMY
 var gFindPkg string = FINDPKG_DEFAULT
-var gFindPkgP string = match_prepare(gFindPkg) // the explicit initialising can be avoided, but still
+var gFindPkgP Matcher
 var gFindCmt string = FINDCMT_DUMMY
 var gBasePath string = "/usr/share/go-dummy/"
 var giDEBUG int = 0
@@ -126,8 +126,13 @@ func handle_args() {
 		flag.Usage()
 		os.Exit(1)
 	}
-	gFindPkgP = match_prepare(gFindPkg)
 	giMatchMode = matchmode_fromstr(gsMatchMode)
+	var err error
+	gFindPkgP, err = matcher_create(gFindPkg)
+	if err != nil {
+		fmt.Printf("%v:ERRR:ARG: FindPkgMatcher %v\n", PRG_TAG, err)
+		os.Exit(1)
+	}
 	if giDEBUG > 1 {
 		fmt.Printf("%v:INFO:ARG: gFind: %v\n", PRG_TAG, gFind)
 		fmt.Printf("%v:INFO:ARG: gFindPkg: %v\n", PRG_TAG, gFindPkg)

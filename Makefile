@@ -19,6 +19,7 @@ gorun:
 
 gotest:
 	go test
+	go test -test.run Ma -test.v
 
 gobenchmark:
 	go test -test.bench .
