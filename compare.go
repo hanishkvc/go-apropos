@@ -46,7 +46,7 @@ func matchmode_tostr(mode MatchMode) string {
 }
 
 type Matcher_string string
-type Matcher_re *regexp.Regexp
+type Matcher_re regexp.Regexp
 type Matcher interface {
 	Utype() string       // get the type of the matcher
 	Matchok(string) bool // check if the given string matches the pattern registered with matcher
@@ -67,17 +67,17 @@ func (subStr Matcher_string) Pattern() string {
 	return string(subStr)
 }
 
-func (theRE Matcher_re) Utype() string {
+func (theRE *Matcher_re) Utype() string {
 	return "re"
 }
 
-func (theRE Matcher_re) Matchok(theStr string) bool {
+func (theRE *Matcher_re) Matchok(theStr string) bool {
 	//fmt.Printf("%v:INFO:MatcherRE: is [%v] in [%v]\n", PRG_TAG, theRE, theStr)
 	theStr = match_prepare(theStr)
 	return (*regexp.Regexp)(theRE).MatchString(theStr)
 }
 
-func (theRE Matcher_re) Pattern() string {
+func (theRE *Matcher_re) Pattern() string {
 	return (*regexp.Regexp)(theRE).String()
 }
 
@@ -90,7 +90,8 @@ func (theRE Matcher_re) Pattern() string {
 func matcher_create(pattern string) Matcher {
 	if giMatchMode == MatchMode_RegExp {
 		re := regexp.MustCompile(match_prepare(pattern))
-		return Matcher_re(re)
+		mre := Matcher_re(*re)
+		return &mre
 	}
 	sP := match_prepare(pattern)
 	sPR := Matcher_string(sP)
