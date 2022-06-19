@@ -14,8 +14,19 @@ func TestFind(t *testing.T) {
 	db_find(gDB, "fmt", FINDCMT_DUMMY, FINDPKG_DEFAULT)
 }
 
-func BenchmarkFind(b *testing.B) {
+func BenchmarkFindContains(b *testing.B) {
 	gbSortedResult = true
+	giMatchMode = MatchMode_Contains
+	time.Now().Unix()
+	for i := 0; i < b.N; i++ {
+		load_dbs()
+		db_find(gDB, "numcpu", FINDCMT_DUMMY, FINDPKG_DEFAULT)
+	}
+}
+
+func BenchmarkFindRegexp(b *testing.B) {
+	gbSortedResult = true
+	giMatchMode = MatchMode_RegExp
 	time.Now().Unix()
 	for i := 0; i < b.N; i++ {
 		load_dbs()

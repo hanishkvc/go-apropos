@@ -324,6 +324,12 @@ re-compiled.
 Compile the re in regexp match mode, this makes the re version match
 the simple contains version speed.
 
+Make the re matcher work with a ptr value to the underlying regexp.Regexp,
+rather than with a normal value to the Regexp, when using matcher methods.
+This squeezes out few msecs. More importantly However helped realise that
+the type to its supported interfaces matching during assignment doesnt do
+the equivalent of auto-adjust wrt method calling and a type or its pointer.
+
 20220616
 ==========
 
