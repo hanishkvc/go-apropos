@@ -52,7 +52,7 @@ type MatcherString struct {
 	patternStr string
 	config     MatcherConfig
 }
-type Matcher_re struct {
+type MatcherRE struct {
 	patternRE *regexp.Regexp
 	config    MatcherConfig
 }
@@ -67,7 +67,7 @@ func (m *MatcherString) Utype() string {
 }
 
 func (m *MatcherString) Matchok(theStr string) bool {
-	//fmt.Printf("%v:INFO:MatcherString: is [%v] in [%v]\n", PRG_TAG, subStr, theStr)
+	//fmt.Printf("%v:INFO:MatcherString: is [%v] in [%v]\n", PRG_TAG, m.Pattern(), theStr)
 	theStr = match_prepare(theStr, m.config.caseSensitive)
 	return strings.Contains(theStr, m.patternStr)
 }
@@ -76,18 +76,18 @@ func (m *MatcherString) Pattern() string {
 	return m.patternStr
 }
 
-func (theRE *Matcher_re) Utype() string {
+func (m *MatcherRE) Utype() string {
 	return "re"
 }
 
-func (theRE *Matcher_re) Matchok(theStr string) bool {
-	//fmt.Printf("%v:INFO:MatcherRE: is [%v] in [%v]\n", PRG_TAG, theRE, theStr)
-	theStr = match_prepare(theStr)
-	return (*regexp.Regexp)(theRE).MatchString(theStr)
+func (m *MatcherRE) Matchok(theStr string) bool {
+	//fmt.Printf("%v:INFO:MatcherRE: does [%v] match [%v]\n", PRG_TAG, m.Pattern(), theStr)
+	theStr = match_prepare(theStr, m.config.caseSensitive)
+	return m.patternRE.MatchString(theStr)
 }
 
-func (theRE *Matcher_re) Pattern() string {
-	return (*regexp.Regexp)(theRE).String()
+func (m *MatcherRE) Pattern() string {
+	return m.patternRE.String()
 }
 
 // Based on current match mode either create
@@ -99,7 +99,7 @@ func (theRE *Matcher_re) Pattern() string {
 func matcher_create(pattern string, caseSensitive bool) Matcher {
 	if giMatchMode == MatchMode_RegExp {
 		re := regexp.MustCompile(match_prepare(pattern, caseSensitive))
-		mre := Matcher_re(*re)
+		mre := MatcherRE{patternRE: re, config: MatcherConfig{caseSensitive: caseSensitive}}
 		return &mre
 	}
 	// MatcherString
