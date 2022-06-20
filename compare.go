@@ -45,26 +45,35 @@ func matchmode_tostr(mode MatchMode) string {
 	return "ERROR:UNKNOWN" // program wont reach here, just to keep go tools happy
 }
 
-type Matcher_string string
-type Matcher_re regexp.Regexp
+type MatcherConfig struct {
+	caseSensitive bool
+}
+type MatcherString struct {
+	patternStr string
+	config     MatcherConfig
+}
+type Matcher_re struct {
+	patternRE *regexp.Regexp
+	config    MatcherConfig
+}
 type Matcher interface {
 	Utype() string       // get the type of the matcher
 	Matchok(string) bool // check if the given string matches the pattern registered with matcher
 	Pattern() string     // retreive the string pattern registered with the matcher
 }
 
-func (o Matcher_string) Utype() string {
+func (m *MatcherString) Utype() string {
 	return "string"
 }
 
-func (subStr Matcher_string) Matchok(theStr string) bool {
+func (m *MatcherString) Matchok(theStr string) bool {
 	//fmt.Printf("%v:INFO:MatcherString: is [%v] in [%v]\n", PRG_TAG, subStr, theStr)
-	theStr = match_prepare(theStr)
-	return strings.Contains(theStr, string(subStr))
+	theStr = match_prepare(theStr, m.config.caseSensitive)
+	return strings.Contains(theStr, m.patternStr)
 }
 
-func (subStr Matcher_string) Pattern() string {
-	return string(subStr)
+func (m *MatcherString) Pattern() string {
+	return m.patternStr
 }
 
 func (theRE *Matcher_re) Utype() string {
@@ -87,20 +96,21 @@ func (theRE *Matcher_re) Pattern() string {
 // The matcher takes care of case sensitivity wrt matching.
 //		if case insensitive match is requested, currently it uses a simple to upper case conversion
 //		irrespective of the type of matcher used
-func matcher_create(pattern string) Matcher {
+func matcher_create(pattern string, caseSensitive bool) Matcher {
 	if giMatchMode == MatchMode_RegExp {
-		re := regexp.MustCompile(match_prepare(pattern))
+		re := regexp.MustCompile(match_prepare(pattern, caseSensitive))
 		mre := Matcher_re(*re)
 		return &mre
 	}
-	sP := match_prepare(pattern)
-	sPR := Matcher_string(sP)
-	return sPR
+	// MatcherString
+	sP := match_prepare(pattern, caseSensitive)
+	ms := MatcherString{patternStr: sP, config: MatcherConfig{caseSensitive: caseSensitive}}
+	return &ms
 }
 
 // Prepare a token / string for use by match_ok logic
-func match_prepare(sToken string) string {
-	if gbCaseSensitive {
+func match_prepare(sToken string, bCaseSensitive bool) string {
+	if bCaseSensitive {
 		return sToken
 	}
 	return strings.ToUpper(sToken)
