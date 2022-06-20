@@ -15,17 +15,19 @@ func TestMatcher(t *testing.T) {
 		expect  bool
 	}{{"st", "testme", true}, {"dial", "dialup", true}, {"dial", "testme", false}}
 
-	for _, m := range []MatchMode{MatchMode_Contains, MatchMode_RegExp} {
-		giMatchMode = m
-		sMatchMode := matchmode_tostr(giMatchMode)
-		for i := range testData {
-			test := testData[i]
-			matcher := matcher_create(test.pattern)
-			ok := matcher.Matchok(test.check)
-			if ok != test.expect {
-				t.Errorf("ERRR:MatchOk: Mode:%v[%v] Pattern:%v Check:%v Expected:%v Got:%v\n", sMatchMode, matcher.Utype(), test.pattern, test.check, test.expect, ok)
-			} else {
-				t.Logf("FINE:MatchOk: Mode:%v[%v] Pattern:%v Check:%v Expected:%v Got:%v\n", sMatchMode, matcher.Utype(), test.pattern, test.check, test.expect, ok)
+	for _, caseSensitive := range []bool{true, false} {
+		for _, m := range []MatchMode{MatchMode_Contains, MatchMode_RegExp} {
+			giMatchMode = m
+			sMatchMode := matchmode_tostr(giMatchMode)
+			for i := range testData {
+				test := testData[i]
+				matcher := matcher_create(test.pattern, caseSensitive)
+				ok := matcher.Matchok(test.check)
+				if ok != test.expect {
+					t.Errorf("ERRR:MatchOk: Mode:%v[%v] Pattern:%v Check:%v Expected:%v Got:%v\n", sMatchMode, matcher.Utype(), test.pattern, test.check, test.expect, ok)
+				} else {
+					t.Logf("FINE:MatchOk: Mode:%v[%v] Pattern:%v Check:%v Expected:%v Got:%v\n", sMatchMode, matcher.Utype(), test.pattern, test.check, test.expect, ok)
+				}
 			}
 		}
 	}
