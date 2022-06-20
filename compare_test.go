@@ -24,9 +24,9 @@ func TestMatcher(t *testing.T) {
 				matcher := matcher_create(test.pattern, caseSensitive)
 				ok := matcher.Matchok(test.check)
 				if ok != test.expect {
-					t.Errorf("ERRR:MatchOk: Mode:%v[%v] Pattern:%v Check:%v Expected:%v Got:%v\n", sMatchMode, matcher.Utype(), test.pattern, test.check, test.expect, ok)
+					t.Errorf("ERRR:MatchOk: Mode:%v[%v] Pattern:%v[%v] Check:%v Expected:%v Got:%v\n", sMatchMode, matcher.MType(), test.pattern, matcher.Pattern(), test.check, test.expect, ok)
 				} else {
-					t.Logf("FINE:MatchOk: Mode:%v[%v] Pattern:%v Check:%v Expected:%v Got:%v\n", sMatchMode, matcher.Utype(), test.pattern, test.check, test.expect, ok)
+					t.Logf("FINE:MatchOk: Mode:%v[%v] Pattern:%v[%v] Check:%v Expected:%v Got:%v\n", sMatchMode, matcher.MType(), test.pattern, matcher.Pattern(), test.check, test.expect, ok)
 				}
 			}
 		}

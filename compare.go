@@ -57,13 +57,13 @@ type MatcherRE struct {
 	config    MatcherConfig
 }
 type Matcher interface {
-	Utype() string       // get the type of the matcher
+	MType() string       // get the type of the matcher
 	Matchok(string) bool // check if the given string matches the pattern registered with matcher
 	Pattern() string     // retreive the string pattern registered with the matcher
 }
 
-func (m *MatcherString) Utype() string {
-	return "string"
+func (m *MatcherString) MType() string {
+	return MATCHMODE_CONTAINS
 }
 
 func (m *MatcherString) Matchok(theStr string) bool {
@@ -76,8 +76,8 @@ func (m *MatcherString) Pattern() string {
 	return m.patternStr
 }
 
-func (m *MatcherRE) Utype() string {
-	return "re"
+func (m *MatcherRE) MType() string {
+	return MATCHMODE_REGEXP
 }
 
 func (m *MatcherRE) Matchok(theStr string) bool {
