@@ -21,7 +21,7 @@ func TestMatcher(t *testing.T) {
 			sMatchMode := matchmode_tostr(giMatchMode)
 			for i := range testData {
 				test := testData[i]
-				matcher := matcher_create(test.pattern, caseSensitive)
+				matcher := New_Matcher(test.pattern, caseSensitive)
 				ok := matcher.Matchok(test.check)
 				if ok != test.expect {
 					t.Errorf("ERRR:MatchOk: Mode:%v[%v] Pattern:%v[%v] Check:%v Expected:%v Got:%v\n", sMatchMode, matcher.MType(), test.pattern, matcher.Pattern(), test.check, test.expect, ok)
