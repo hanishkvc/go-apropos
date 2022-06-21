@@ -97,15 +97,17 @@ func (m *MatcherRE) Pattern() string {
 //		if case insensitive match is requested, currently it uses a simple to upper case conversion
 //		irrespective of the type of matcher used
 func New_Matcher(matchMode MatchMode, pattern string, caseSensitive bool) Matcher {
-	if matchMode == MatchMode_RegExp {
+	switch matchMode {
+	case MatchMode_RegExp:
 		re := regexp.MustCompile(match_prepare(pattern, caseSensitive))
 		mre := MatcherRE{patternRE: re, config: MatcherConfig{caseSensitive: caseSensitive}}
 		return &mre
+	case MatchMode_Contains:
+		sP := match_prepare(pattern, caseSensitive)
+		ms := MatcherString{patternStr: sP, config: MatcherConfig{caseSensitive: caseSensitive}}
+		return &ms
 	}
-	// MatcherString
-	sP := match_prepare(pattern, caseSensitive)
-	ms := MatcherString{patternStr: sP, config: MatcherConfig{caseSensitive: caseSensitive}}
-	return &ms
+	panic(fmt.Errorf("ERRR:NewMatcher: Unknown MatchMode: %v, pattern:%v", matchMode, pattern))
 }
 
 // Prepare a token / string for use by match_ok logic

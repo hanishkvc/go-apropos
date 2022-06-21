@@ -9,11 +9,12 @@ import (
 
 func TestFind(t *testing.T) {
 	gbSortedResult = true
+	sFind := "Fmt"
 	load_dbs()
 	for _, mm := range []MatchMode{MatchMode_Contains, MatchMode_RegExp} {
 		for _, cs := range []bool{true, false} {
-			t.Logf("MatchMode:%v CaseSensitive:%v\n", matchmode_tostr(mm), cs)
-			db_find(gDB, "fmt", FINDCMT_DUMMY, FINDPKG_DEFAULT, mm, cs)
+			t.Logf("Find: %v MatchMode:%v CaseSensitive:%v\n", sFind, matchmode_tostr(mm), cs)
+			db_find(gDB, sFind, FINDCMT_DUMMY, FINDPKG_DEFAULT, mm, cs)
 		}
 	}
 }
