@@ -306,6 +306,16 @@ Changelog
 
 Rather major changes
 
+20220620+
+==========
+
+Cleanup compare a bit, built around structs embedding MatcherConfig and
+MatcherType specific members.
+
+Less dependency on globals and more on passed around args wrt Matcher
+and db.
+
+
 20220617+
 ==========
 

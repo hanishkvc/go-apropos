@@ -96,8 +96,8 @@ func (m *MatcherRE) Pattern() string {
 // The matcher takes care of case sensitivity wrt matching.
 //		if case insensitive match is requested, currently it uses a simple to upper case conversion
 //		irrespective of the type of matcher used
-func New_Matcher(pattern string, caseSensitive bool) Matcher {
-	if giMatchMode == MatchMode_RegExp {
+func New_Matcher(matchMode MatchMode, pattern string, caseSensitive bool) Matcher {
+	if matchMode == MatchMode_RegExp {
 		re := regexp.MustCompile(match_prepare(pattern, caseSensitive))
 		mre := MatcherRE{patternRE: re, config: MatcherConfig{caseSensitive: caseSensitive}}
 		return &mre

@@ -57,9 +57,9 @@ func db_add(theDB TheDB, pkgName string, pathS []string, cmtS []string, idents D
 	theDB[pkgName] = aPkg
 }
 
-func dbfilter_pkgs(theDB TheDB, matchPkgName string) (TheDB, error) {
+func dbfilter_pkgs(theDB TheDB, matchPkgName string, matchMode MatchMode, caseSensitive bool) (TheDB, error) {
 	newDB := TheDB{}
-	pkgNameMatcher := New_Matcher(matchPkgName, gbCaseSensitive)
+	pkgNameMatcher := New_Matcher(matchMode, matchPkgName, caseSensitive)
 	for pkgName, pkgInfo := range theDB {
 		if !pkgNameMatcher.Matchok(pkgName) {
 			continue
@@ -124,14 +124,14 @@ func dbprint_symbols(theDB TheDB, sNamePrefix, sNameSuffix, sSymPrefix, sSymSuff
 	}
 }
 
-func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string) {
+func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string, matchMode MatchMode, caseSensitive bool) {
 	if giDEBUG > 0 {
 		fmt.Printf("\n%v:INFO: Possible matches for [%v] at [%v]\n", PRG_TAG, gFind, gBasePath)
 	}
 	matchingPkgs := make(TheDB)
-	sFindP := New_Matcher(sFind, gbCaseSensitive)
-	sFindCmtP := New_Matcher(sFindCmt, gbCaseSensitive)
-	sFindPkgP := New_Matcher(sFindPkg, gbCaseSensitive)
+	sFindP := New_Matcher(matchMode, sFind, caseSensitive)
+	sFindCmtP := New_Matcher(matchMode, sFindCmt, caseSensitive)
+	sFindPkgP := New_Matcher(matchMode, sFindPkg, caseSensitive)
 	for pkgName, pkgData := range theDB {
 		matchingSymbols := make(DBSymbols)
 		// Honor any findpkg based package filtering

@@ -17,11 +17,10 @@ func TestMatcher(t *testing.T) {
 
 	for _, caseSensitive := range []bool{true, false} {
 		for _, m := range []MatchMode{MatchMode_Contains, MatchMode_RegExp} {
-			giMatchMode = m
-			sMatchMode := matchmode_tostr(giMatchMode)
+			sMatchMode := matchmode_tostr(m)
 			for i := range testData {
 				test := testData[i]
-				matcher := New_Matcher(test.pattern, caseSensitive)
+				matcher := New_Matcher(m, test.pattern, caseSensitive)
 				ok := matcher.Matchok(test.check)
 				if ok != test.expect {
 					t.Errorf("ERRR:MatchOk: Mode:%v[%v] Pattern:%v[%v] Check:%v Expected:%v Got:%v\n", sMatchMode, matcher.MType(), test.pattern, matcher.Pattern(), test.check, test.expect, ok)

@@ -127,7 +127,7 @@ func handle_args() {
 		os.Exit(1)
 	}
 	giMatchMode = matchmode_fromstr(gsMatchMode)
-	gFindPkgP = New_Matcher(gFindPkg, gbCaseSensitive)
+	gFindPkgP = New_Matcher(giMatchMode, gFindPkg, gbCaseSensitive)
 	if giDEBUG > 1 {
 		fmt.Printf("%v:INFO:ARG: gFind: %v\n", PRG_TAG, gFind)
 		fmt.Printf("%v:INFO:ARG: gFindPkg: %v\n", PRG_TAG, gFindPkg)
@@ -172,5 +172,5 @@ func main() {
 	if giDEBUG > 3 {
 		dbprint_all(gDB, "Package:", "\n", "\t", "\n", "\n")
 	}
-	db_find(gDB, gFind, gFindCmt, gFindPkg)
+	db_find(gDB, gFind, gFindCmt, gFindPkg, giMatchMode, gbCaseSensitive)
 }
