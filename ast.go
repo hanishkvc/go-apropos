@@ -158,16 +158,13 @@ func gosrc_info(sFile string) (string, string, DBSymbols) {
 		fmt.Printf("%v:DBUG:AST: GoFile:%v:%v:%v\n", PRG_TAG, sFile, gIdentyStats, gIdentyStats.delta_summary())
 	}
 	if gbPrependPkgBasePath {
-		re := regexp.MustCompile(fmt.Sprintf("%v(.*?)/%v.*", gBasePath, pkgName))
+		re := regexp.MustCompile(fmt.Sprintf("%v/(.*?)/%v.*", gBasePath, pkgName))
 		sMatchs := re.FindStringSubmatch(sFile)
-		if giDEBUG > 5 {
-			fmt.Printf("%v:%v:%v:%v:%v\n", PRG_TAG, re.String(), sFile, pkgName, sMatchs)
+		if giDEBUG > 1 {
+			fmt.Printf("%v:DBUG:AST:%v:%v:%v:%v\n", PRG_TAG, re.String(), sFile, pkgName, sMatchs)
 		}
 		if len(sMatchs) > 1 {
 			sPkgPrefix := sMatchs[1]
-			if (len(sPkgPrefix) > 0) && (sPkgPrefix[0] == '/') {
-				sPkgPrefix = sPkgPrefix[1:]
-			}
 			if len(sPkgPrefix) > 0 {
 				pkgName = sPkgPrefix + "/" + pkgName
 			}
