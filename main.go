@@ -13,17 +13,19 @@ import (
 
 const PRG_TAG = "GOAPRO"
 const PRG_NAME = "GoApropos"
-const PRG_VERSION = "v08-20220620IST0057"
+const PRG_VERSION = "v08-20220622IST1539"
 
 const FIND_DUMMY = "__FIND_DUMMY__"
 const FINDPKG_DEFAULT = ""
 const FINDCMT_DUMMY = FIND_DUMMY
 
+const BASEPATH_DEFAULT = "/usr/share/go-dummy/"
+
 var gFind string = FIND_DUMMY
 var gFindPkg string = FINDPKG_DEFAULT
 var gFindPkgP Matcher
 var gFindCmt string = FINDCMT_DUMMY
-var gBasePath string = "/usr/share/go-dummy/"
+var gBasePath string = BASEPATH_DEFAULT
 var giDEBUG int = 0
 var gbTEST bool = false
 var gbAllSymbols bool = false
@@ -86,12 +88,11 @@ func set_gbasepath() {
 			continue
 		}
 		if giDEBUG > 0 {
-			fmt.Printf("%v:INFO:SetGBasePath: %v, %v\n", PRG_TAG, srcPath, fInfo)
+			fmt.Printf("%v:INFO:SetGBasePath: %v [N:%v, D:%v, M:%v, T:%v, S:%v]\n", PRG_TAG, srcPath, fInfo.Name(), fInfo.IsDir(), fInfo.Mode(), fInfo.ModTime(), fInfo.Size())
 		}
 		gBasePath = srcPath
 		return
 	}
-	panic(fmt.Errorf("%v:ERRR:SetGBasePath: No valid Go src path found, please specify using --basepath", PRG_TAG))
 }
 
 var sAdditional string = `
@@ -133,6 +134,10 @@ func handle_args() {
 	flag.BoolVar(&gbIndentJSON, "indentjson", gbIndentJSON, "Create pretty indented json cache files")
 	flag.BoolVar(&gbSortedResult, "sortedresult", gbSortedResult, "Show results as found or sorted at the end")
 	flag.Parse()
+	if gBasePath == BASEPATH_DEFAULT {
+		fmt.Fprintf(flag.CommandLine.Output(), "%v:ERRR:SetGBasePath: No valid Go src path found, please specify using --basepath", PRG_TAG)
+		os.Exit(1)
+	}
 	cache_maya()
 	if len(flag.Args()) > 0 {
 		if gFind != FIND_DUMMY {
