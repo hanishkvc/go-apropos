@@ -260,6 +260,8 @@ performance, bcas rather availability of multiple go routines for working
 with multiple files parallely, seems to be bypassing from this contention
 becoming the hot path.]
 
+Maintain Packages with path info wrt base dir for the package.
+
 
 Note
 ######

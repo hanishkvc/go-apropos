@@ -124,7 +124,7 @@ func dbprint_symbols(theDB TheDB, sNamePrefix, sNameSuffix, sSymPrefix, sSymSuff
 	}
 }
 
-func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string, matchMode MatchMode, caseSensitive bool) {
+func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string, matchMode MatchMode, caseSensitive bool, sortedResult bool) {
 	if giDEBUG > 0 {
 		fmt.Printf("\n%v:INFO: Possible matches for [%v] at [%v]\n", PRG_TAG, gFind, gBasePath)
 	}
@@ -139,7 +139,7 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string, matchM
 			if !sFindPkgP.Matchok(pkgName) {
 				continue
 			}
-			if gbSortedResult {
+			if sortedResult {
 				db_add(matchingPkgs, pkgName, pkgData.Paths, pkgData.Cmts, DBSymbols{})
 			} else {
 				fmt.Printf("Package:%v\n", pkgName)
@@ -167,7 +167,7 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string, matchM
 			}
 		}
 		if bFoundInPackage {
-			if gbSortedResult {
+			if sortedResult {
 				db_add(matchingPkgs, pkgName, []string{}, []string{}, matchingSymbols)
 			} else {
 				fmt.Printf("Package:%v\n", pkgName)
@@ -175,7 +175,7 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string, matchM
 			}
 		}
 	}
-	if gbSortedResult {
+	if sortedResult {
 		dbprint_all(matchingPkgs, "Package:", "\n", "\t", "\n", "\n")
 	}
 }
