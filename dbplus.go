@@ -72,7 +72,7 @@ func gr_hf_stop() {
 			if gTrackHFs[i].todo == gTrackHFs[i].done {
 				gTrackHFs[i].bOver = true
 			}
-			if giDEBUG > 1 {
+			if giDEBUG > 2 {
 				fmt.Printf("%v:INFO:GRHF:%v: Walk over, waiting for data:%v\n", PRG_TAG, i, gTrackHFs[i])
 			}
 		}
