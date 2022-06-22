@@ -7,7 +7,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"strings"
+	"path/filepath"
+	"runtime"
 )
 
 const PRG_TAG = "GOAPRO"
@@ -55,7 +56,7 @@ func find_srcpaths(basePath string, srcPaths []string) []string {
 		if !string_hasprefix_anysubstring(sDirName, namePrefixs) {
 			continue
 		}
-		sPath := strings.Join([]string{basePath, sDirName, srcDir}, string(os.PathSeparator))
+		sPath := filepath.Join(basePath, sDirName, srcDir)
 		srcPaths = append(srcPaths, sPath)
 	}
 	if giDEBUG > 0 { // Needs to be enabled by setting giDEBUG in source
@@ -64,14 +65,33 @@ func find_srcpaths(basePath string, srcPaths []string) []string {
 	return srcPaths
 }
 
+// As the path at which the go src files are stored can change btw
+// systems, so build a list of possible directories based on GOROOT
+// and some builtin predefined possibilities and then select the
+// 1st path which seems to exist.
+//
+// This should potentially allow the logic to work across atleast few
+// different OSs and Distros with their own path wrt go installation.
 func set_gbasepath() {
-	srcPaths := []string{}
+	srcPaths := []string{filepath.Join(runtime.GOROOT(), "src")}
 	for _, lookAt := range []string{"/usr/share", "/usr/local/share", "/usr/lib"} {
 		srcPaths = find_srcpaths(lookAt, srcPaths)
 	}
-	if len(srcPaths) > 0 {
-		gBasePath = srcPaths[0]
+	for _, srcPath := range srcPaths {
+		fInfo, err := os.Stat(srcPath)
+		if err != nil {
+			if giDEBUG > 0 {
+				fmt.Printf("%v:WARN:SetGBasePath: %v, %v\n", PRG_TAG, srcPath, err)
+			}
+			continue
+		}
+		if giDEBUG > 0 {
+			fmt.Printf("%v:INFO:SetGBasePath: %v, %v\n", PRG_TAG, srcPath, fInfo)
+		}
+		gBasePath = srcPath
+		return
 	}
+	panic(fmt.Errorf("%v:ERRR:SetGBasePath: No valid Go src path found, please specify using --basepath", PRG_TAG))
 }
 
 var sAdditional string = `
@@ -97,7 +117,7 @@ func handle_args() {
 	flag.StringVar(&gFind, "find", gFind, "Specify the token/substring to match wrt symbols. The token to match can also be specified as a standalone arg on its own")
 	flag.StringVar(&gFindPkg, "findpkg", gFindPkg, "Specify the token/substring to match wrt package name")
 	flag.StringVar(&gFindCmt, "findcmt", gFindCmt, "Specify the token/substring to match wrt comments in package source")
-	flag.StringVar(&gBasePath, "basepath", gBasePath, "Specify the dir containing files to search")
+	flag.StringVar(&gBasePath, "basepath", gBasePath, "Specify the dir containing go src files to search")
 	flag.IntVar(&giDEBUG, "debug", 0, "Set debug level to control debug prints")
 	flag.BoolVar(&gbTEST, "test", gbTEST, "Enable test logics")
 	flag.BoolVar(&gbAllSymbols, "allsymbols", gbAllSymbols, "Match all symbols and not just exported")

@@ -317,6 +317,8 @@ MatcherType specific members.
 Less dependency on globals and more on passed around args wrt Matcher
 and db.
 
+The hunt for go src files starts with GOROOT
+
 
 20220617+
 ==========
