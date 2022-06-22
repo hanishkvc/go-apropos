@@ -40,6 +40,8 @@ directory, then the cache file will be freshly created.
 However one can force the program into a non cache mode, if required, by
 passing the following args
 
+	goapropos --autocache=false searchtoken
+
 	goapropos --autocache=false --usecache=false searchtoken
 
 in which case it will parse through the system / specified go source dir.
@@ -88,9 +90,12 @@ in the cmdline ie.
 By default it tries to find matching exported symbols only from available
 packages. However If one wants the logic to use both internal and exported
 symbols of the packages when trying to find a match, one needs to specify
-the cmdline argument --allsymbols.
+the cmdline argument --allsymbols. This needs to be used either when creating
+a cache of the symbols and or when doing a noncache based search ie
 
-	goapropos --allsymbols search_token
+	goapropos --autocache=false --createcache --allsymbols
+
+	goapropos --autocache=false --allsymbols search_token
 
 By default it tries to search through all the packages in the identified
 go source directory. However if required one can filter the packages that
@@ -102,11 +107,15 @@ findpkg argument will be used to filter the package names for a match.
 If one wants to get a list of package names, which match a given token, one
 can run goapropos with only the findpkg argument and no find argument.
 
-	goapropos --findpkg packagename_token
+	goapropos --findpkg packagename_search_token
 
 To get all the exported symbols of all the packages, use
 
 	goapropos --find ""
+
+To get all the exported symbols of a specific package, use
+
+	goapropos --findpkg "^packagename$" --find ""
 
 If one wants to find symbols based on their comments if any, then they can
 use --findcmt to specify a match token wrt comment. Any symbols which contain
@@ -116,45 +125,44 @@ NOTE: If the comment being searched for is found at a generic file level,
 rather than wrt a specific symbol within it, then the package name of the
 file is shown.
 
-	goapropos --findcmt a_search_token
+	goapropos --findcmt cmt_search_token
 	ex: goapropos --findcmt "device"
 
 The tokens specified are used to match package name or the symbols or their
 comments as the case maybe by using a case insensitive search, by default.
 If one wants to use case sensitive matching, pass --casesensitive.
 
-By default if the package name or symbol or comment contains the given token,
-as a substring within itself, it will be treated as a match. This is called
-the contains matchmode. However if required one can use regular expression
-based matching by specifying --matchmode regexp. If the specified mode is
-unknown, then contains matchmode will be used as the fallback.
+By default the search token provided (be it wrt package names or symbols or
+comments) is treated as a regular expression. However if required one can
+change from regular expression to a simple if-string-contains-substring logic
+by specifying --matchmode contains
 
-	goapropos matchtoken_substring
+	goapropos search_token_regexp
 	ex: goapropos fmt
 
-	goapropos --matchmode contains matchtoken_substring
+	goapropos --matchmode contains search_token_substring
 	ex: goapropos --matchmode contains fmt
 
-	goapropos --matchmode regexp matchtoken_regexp
+	goapropos --matchmode regexp search_token_regexp
 	ex: goapropos --matchmode regexp "fm.*t"
 	ex: goapropos --matchmode regexp "fm+t"
 
-NOTE: by default the match tokens as well as the pkg names/symbols/comments
+NOTE: by default the search tokens as well as the pkg names/symbols/comments
 will be converted to upper case if casesensitive search is disabled (which
 is the default). Any implications of this wrt regexp if any needs to be
-kept in mind. Inturn enablign casesensitive searching will disable this
-automatic upper case conversion and inturn will leave the match token,
+kept in mind. Inturn enabling casesensitive searching will disable this
+automatic upper case conversion and inturn will leave the search token,
 as well as the pkg names and symbols and comments as it is.
 
 
 Go Source directory
 ======================
 
-When looking for go source directory, by default it uses 1st directory under
-/usr/share or /usr/local/share or /usr/lib which matchs the pattern "go-*" or
-"golang*" as the go source directory wrt packages to search for and or as the
-source for meta data saved into cache. If required one can explicitly set
-the go source directory by using the cmdline arg
+When looking for go source directory, by default it uses src directory under
+GOROOT (or else /usr/share or /usr/local/share or /usr/lib which matchs the
+pattern "go-*" or "golang*") as the go source directory wrt packages to search
+for and or as the source for meta data saved into cache. If required one can
+explicitly set the go source directory by using the cmdline arg --basepath
 
 	goapropos --basepath <base_path> search_token
 
@@ -186,7 +194,7 @@ However If one wants the cache to contain these files, but at same time, if one
 wants to temporarily skip certain paths / files and search, then one will have
 to request the program to avoid using the cache and then search ie
 
-	goapropos --autocache=false --usecache=false --skipfiles "path/to/skip" search_token
+	goapropos --autocache=false --skipfiles "path/to/skip" search_token
 
 NOTE: disabling autocache above is critical, because otherwise for any reason
 if autocache logic decides to udpate the cache, when one has passed skipfiles
@@ -318,6 +326,8 @@ Less dependency on globals and more on passed around args wrt Matcher
 and db.
 
 The hunt for go src files starts with GOROOT
+
+Switch to regexp as the default matchmode
 
 
 20220617+

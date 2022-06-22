@@ -13,13 +13,13 @@ import (
 
 const PRG_TAG = "GOAPRO"
 const PRG_NAME = "GoApropos"
-const PRG_VERSION = "v08-20220622IST1539"
+const PRG_VERSION = "v08-20220622IST2154"
 
 const FIND_DUMMY = "__FIND_DUMMY__"
 const FINDPKG_DEFAULT = ""
 const FINDCMT_DUMMY = FIND_DUMMY
 
-const BASEPATH_DEFAULT = "/usr/share/go-dummy/"
+const BASEPATH_DEFAULT = "/usr/share/go-dummy/src"
 
 var gFind string = FIND_DUMMY
 var gFindPkg string = FINDPKG_DEFAULT
@@ -37,8 +37,8 @@ var gbIndentJSON bool = false
 var gbSortedResult bool = false
 var gbAutoCache bool = true
 
-var giMatchMode = MatchMode_Contains
-var gsMatchMode string = "contains"
+var giMatchMode = MatchMode_RegExp
+var gsMatchMode string = MATCHMODE_REGEXP
 
 func find_srcpaths(basePath string, srcPaths []string) []string {
 	namePrefixs := []string{"go-", "golang"}
@@ -97,13 +97,29 @@ func set_gbasepath() {
 
 var sAdditional string = `
 Sample usage:
+
 	goapropos searchToken
 	goapropos --find searchToken
+		The above two are equivalent and search for a matching symbol across all the packages
+
 	goapropos --findcmt searchToken
+		This searchs thro the comments wrt all the packages and their symbols for a match.
+
 	goapropos --findpkg searchToken
-	goapropos --matchmode regexp searchToken
-	goapropos --createcache
-	goapropos --usecache --matchmode regexp --findcmt searchToken
+		Find packages whose name match the given search token
+
+	goapropos --findpkg pkgNameSearchToken --find symbolSearchToken
+		Find symbols which match the symbolSearchToken, from across all packages whose name match pkgNameSearchToken
+
+	goapropos --matchmode contains searchToken
+		Use contains-substring matching logic, instead of the regexp based default logic.
+
+	goapropos --autocache=false --createcache
+		Force the recreation of the program's internal cache.
+
+	goapropos --autocache=false --findpkg pkgNameSearchToken symbolSearchToken
+		This disables internal cache and parses through all go source files to find any matching stuff.
+
 Look at the README for more info about the program and its usage`
 
 func handle_args() {
@@ -115,19 +131,19 @@ func handle_args() {
 	}
 
 	set_gbasepath()
-	flag.StringVar(&gFind, "find", gFind, "Specify the token/substring to match wrt symbols. The token to match can also be specified as a standalone arg on its own")
-	flag.StringVar(&gFindPkg, "findpkg", gFindPkg, "Specify the token/substring to match wrt package name")
-	flag.StringVar(&gFindCmt, "findcmt", gFindCmt, "Specify the token/substring to match wrt comments in package source")
-	flag.StringVar(&gBasePath, "basepath", gBasePath, "Specify the dir containing go src files to search")
+	flag.StringVar(&gFind, "find", gFind, "Specify the pattern/substring to match wrt symbols. The pattern to match can also be specified as a standalone arg on its own")
+	flag.StringVar(&gFindPkg, "findpkg", gFindPkg, "Specify the pattern/substring to match wrt package name")
+	flag.StringVar(&gFindCmt, "findcmt", gFindCmt, "Specify the pattern/substring to match wrt comments in package source")
+	flag.StringVar(&gBasePath, "basepath", gBasePath, "Specify the go src dir containing src files to search")
 	flag.IntVar(&giDEBUG, "debug", 0, "Set debug level to control debug prints")
 	flag.BoolVar(&gbTEST, "test", gbTEST, "Enable test logics")
-	flag.BoolVar(&gbAllSymbols, "allsymbols", gbAllSymbols, "Match all symbols and not just exported")
-	flag.Func("skipfiles", "Specify token to match wrt package path+filename for skipping package files. More than one can be specified", func(s string) error {
+	flag.BoolVar(&gbAllSymbols, "allsymbols", gbAllSymbols, "Match all symbols and not just exported. [NEEDs:createcache OR autocache=false]")
+	flag.Func("skipfiles", "Specify pattern to match wrt package path+filename for skipping package files. More than one can be specified. [NEEDs: createcache OR autocache=False]", func(s string) error {
 		gSkipFiles = append(gSkipFiles, s)
 		return nil
 	})
 	flag.BoolVar(&gbCaseSensitive, "casesensitive", gbCaseSensitive, "Whether pkg name and symbol matching is case sensitive or not")
-	flag.StringVar(&gsMatchMode, "matchmode", gsMatchMode, "Specify the strategy used for matching wrt pkg names and symbols. Supported modes contains regexp")
+	flag.StringVar(&gsMatchMode, "matchmode", gsMatchMode, "Specify the strategy used for matching. Supported modes are contains regexp")
 	flag.BoolVar(&gbAutoCache, "autocache", gbAutoCache, "Create and use the cache automatically. This manipulates usecache and createcache flags automatically")
 	flag.BoolVar(&gbCreateCache, "createcache", gbCreateCache, "Create a cache of the package symbols, paths and comments")
 	flag.BoolVar(&gbUseCache, "usecache", gbUseCache, "Use cache of the package symbols, paths and comments, instead of parsing the go sources")
