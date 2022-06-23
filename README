@@ -272,7 +272,7 @@ performance, bcas rather availability of multiple go routines for working
 with multiple files parallely, seems to be bypassing from this contention
 becoming the hot path.]
 
-Maintain Packages with path info wrt base dir for the package.
+DONE: Maintain Packages with path info wrt base dir for the package.
 
 
 Note
@@ -314,6 +314,19 @@ The matcher interface added to support both strings.Contains and re.MatchString
 in a seemless manner, adds a tiny pico bit of overhead compared to direct use
 of strings.Contains.
 
+Duplicate Symbol Names
+========================
+
+Potentially the same symbol name could represent different things within a package.
+For now the type and comments wrt such duplicated symbol name is collated togehter
+into the same entry in the database. Inturn type tag within the type field is not
+duplicated.
+
+So also when printing the symbols, it may contain more than one type tag associated
+with it and the comment wrt it will be from across all the duplicates.
+
+May handle this situation differently in future.
+
 
 Changelog
 ############
@@ -328,6 +341,9 @@ having the same package name. Try keep the logic os agnostic, be it wrt path
 seps, as well as how the pkg's basepath is stored and shown (to always inc
 '/').
 
+Print part of comments wrt symbols.
+
+Handle situation of duplicate symbol names in a package in a crude way for now.
 
 20220620+
 ==========

@@ -36,8 +36,11 @@ func dbsymbols_update(dbSymbols DBSymbols, identName string, identData DBSymbolI
 				if identDataCur.Type == "" {
 					identDataCur.Type = identData.Type
 				} else {
-					if !strings.Contains(identDataCur.Type, identData.Type) {
-						identDataCur.Type += identData.Type
+					for _, c := range identData.Type {
+						s := string(c)
+						if !strings.Contains(identDataCur.Type, s) {
+							identDataCur.Type += s
+						}
 					}
 					fmt.Printf("%v:WARN:DBSymbolsUpdate: Mismatch in types [%v != %v] for %v\n", PRG_TAG, identDataCur.Type, identData.Type, identName)
 				}
