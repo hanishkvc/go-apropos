@@ -96,3 +96,10 @@ func BenchmarkPkgBasePathPost(b *testing.B) {
 		pkg_basepath_postslash("pkg", "/root/srcpath/xbasepath/abc/other.go", "/root/srcpath", true)
 	}
 }
+
+func BenchmarkPkgBasePath(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		pkgname_with_basepath("pkg", "/root/srcpath/xbasepath/pkg/pkg.go", "/root/srcpath", true)
+		pkgname_with_basepath("pkg", "/root/srcpath/xbasepath/abc/other.go", "/root/srcpath", true)
+	}
+}
