@@ -42,7 +42,9 @@ func dbsymbols_update(dbSymbols DBSymbols, identName string, identData DBSymbolI
 							identDataCur.Type += s
 						}
 					}
-					fmt.Printf("%v:WARN:DBSymbolsUpdate: Mismatch in types [%v != %v] for %v\n", PRG_TAG, identDataCur.Type, identData.Type, identName)
+					if giDEBUG > 1 {
+						fmt.Printf("%v:WARN:DBSymbolsUpdate: Mismatch in types [%v != %v] for %v\n", PRG_TAG, identDataCur.Type, identData.Type, identName)
+					}
 				}
 			}
 			identDataCur.Cmt += ("\n" + identData.Cmt)

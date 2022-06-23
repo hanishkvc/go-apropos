@@ -16,7 +16,7 @@ var gCacheBase = "~/.cache"
 const gDBAllCacheFile = "goapropos.dball"
 const gsFNCacheVersion = "goapropos.ver"
 
-const CACHE_FILEFORMAT_VER = PRG_TAG + ":01:"
+const CACHE_FILEFORMAT_VER = PRG_TAG + ":02:"
 
 func cache_filename(cacheFile string) (string, error) {
 	sCacheBase, err := adjust_path(gCacheBase)

@@ -345,6 +345,11 @@ Print part of comments wrt symbols.
 
 Handle situation of duplicate symbol names in a package in a crude way for now.
 
+Add Program tag name and a cache file format version to the cache version file.
+The version number ensures that if there is a change to logic, which changes
+the cache file format, then the program can automatically recreate the cache
+file.
+
 20220620+
 ==========
 
