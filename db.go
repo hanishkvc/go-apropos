@@ -6,6 +6,7 @@ package main
 import (
 	"fmt"
 	"sort"
+	"strings"
 )
 
 type DBSymbolInfo struct {
@@ -109,7 +110,10 @@ func dbprint_pkgsymbols(pkgSymbols DBSymbols, sPrefix, sSuffix string) {
 	sort.Strings(syms)
 	for _, sym := range syms {
 		symInfo := pkgSymbols[sym]
-		symPrint := fmt.Sprintf("%v:%16s:%40s", symInfo.Type, sym, symInfo.Cmt)
+		sCmt := symInfo.Cmt
+		sCmt = strings.TrimSpace(sCmt)
+		sCmt = strings.ReplaceAll(sCmt, "\n", " ")
+		symPrint := fmt.Sprintf("%v:%-16s:%.80s", symInfo.Type, sym, sCmt)
 		fmt.Printf("%v%v%v", sPrefix, symPrint, sSuffix)
 	}
 }
