@@ -69,3 +69,17 @@ func TestPkgBasePath(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkPkgBasePathPre(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		pkg_basepath_preslash("pkg", "/root/srcpath/xbasepath/pkg/pkg.go", "/root/srcpath", true)
+		pkg_basepath_preslash("pkg", "/root/srcpath/xbasepath/abc/other.go", "/root/srcpath", true)
+	}
+}
+
+func BenchmarkPkgBasePathPost(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		pkg_basepath_postslash("pkg", "/root/srcpath/xbasepath/pkg/pkg.go", "/root/srcpath", true)
+		pkg_basepath_postslash("pkg", "/root/srcpath/xbasepath/abc/other.go", "/root/srcpath", true)
+	}
+}
