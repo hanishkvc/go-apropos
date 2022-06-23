@@ -100,7 +100,7 @@ func dbprint_all(theDB TheDB, sNamePrefix, sNameSuffix, sInfoPrefix, sInfoSuffix
 		pkgInfo := theDB[pkgName]
 		//fmt.Println(pkgName, pkgData)
 		fmt.Printf("%v%v%v", sNamePrefix, pkgName, sNameSuffix)
-		dbprint_pkgpaths(pkgInfo.Paths, sInfoPrefix+"path:", sInfoSuffix)
+		dbprint_pkgpaths(pkgInfo.Paths, sInfoPrefix+spacedPkgName+"path:", sInfoSuffix)
 		dbprint_pkgsymbols(pkgInfo.Symbols, sInfoPrefix+spacedPkgName, sInfoSuffix)
 		fmt.Printf("%v", sEnd)
 	}
@@ -157,6 +157,7 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string, matchM
 	sFindCmtP := New_Matcher(matchMode, sFindCmt, caseSensitive)
 	sFindPkgP := New_Matcher(matchMode, sFindPkg, caseSensitive)
 	for pkgName, pkgData := range theDB {
+		spacedPkgName := _dbprint_pkgname(pkgName)
 		matchingSymbols := make(DBSymbols)
 		// Honor any findpkg based package filtering
 		if gFindPkg != FINDPKG_DEFAULT {
@@ -167,7 +168,7 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string, matchM
 				db_add(matchingPkgs, pkgName, pkgData.Paths, pkgData.Cmts, DBSymbols{})
 			} else {
 				fmt.Printf("Package:%v\n", pkgName)
-				dbprint_pkgpaths(theDB[pkgName].Paths, "\tpath:", "\n")
+				dbprint_pkgpaths(theDB[pkgName].Paths, spacedPkgName+"path:", "\n")
 			}
 		}
 		bFoundInPackage := false
@@ -195,7 +196,6 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string, matchM
 				db_add(matchingPkgs, pkgName, []string{}, []string{}, matchingSymbols)
 			} else {
 				fmt.Printf("Package:%v\n", pkgName)
-				spacedPkgName := _dbprint_pkgname(pkgName)
 				dbprint_pkgsymbols(matchingSymbols, spacedPkgName, "\n")
 			}
 		}
