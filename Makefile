@@ -21,6 +21,12 @@ gotest:
 	go test
 	go test -test.run Ma -test.v
 
+gotestpkgbasepath:
+	./goapropos --autocache=false --createcache
+	go test -test.run Pkg
+	go test -test.run NONE -test.bench Pkg
+	./goapropos --findpkg fmt print
+
 gobenchmark:
 	go test -test.run NONE -test.bench .
 
