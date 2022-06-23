@@ -31,10 +31,8 @@ func dbsymbols_update(dbSymbols DBSymbols, identName string, identData DBSymbolI
 		if !ok {
 			dbSymbols[identName] = identData
 		} else {
-			identDataCur.Cmt += ("; " + identData.Cmt)
-			if identData.Type == "" {
-				identDataCur.Cmt += ("; " + identData.Cmt)
-			}
+			identDataCur.Type += identData.Type
+			identDataCur.Cmt += ("\n" + identData.Cmt)
 			dbSymbols[identName] = identDataCur
 		}
 	}
