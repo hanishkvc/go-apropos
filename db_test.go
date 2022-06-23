@@ -54,28 +54,31 @@ func TestPkgBasePath(t *testing.T) {
 		{"pkg", filepath.Join(srcBPath, "xbasepath", "pkg-other.go"), "xbasepath/pkg"},
 		{"pkg", filepath.Join(srcBPath, "xbasepath", "other-pkg.go"), "xbasepath/pkg"},
 	}
-	for _, c := range aTests {
-		sPreGot := pkg_basepath_preslash(c.pkgName, c.sFile, srcBPath, true)
-		if sPreGot == c.expect {
-			t.Logf("INFO:PRE :%v: %v:%v [%v = %v]", srcBPath, c.pkgName, c.sFile, sPreGot, c.expect)
-		} else {
-			t.Errorf("ERRR:PRE :%v: %v:%v [%v != %v]", srcBPath, c.pkgName, c.sFile, sPreGot, c.expect)
+
+	for _, srcBPath := range []string{srcBPath, srcBPath + "/"} {
+		for _, c := range aTests {
+			sPreGot := pkg_basepath_preslash(c.pkgName, c.sFile, srcBPath, true)
+			if sPreGot == c.expect {
+				t.Logf("INFO:PRE :%v: %v:%v [%v = %v]", srcBPath, c.pkgName, c.sFile, sPreGot, c.expect)
+			} else {
+				t.Errorf("ERRR:PRE :%v: %v:%v [%v != %v]", srcBPath, c.pkgName, c.sFile, sPreGot, c.expect)
+			}
 		}
-	}
-	for _, c := range aTests {
-		sPostGot := pkg_basepath_postslash(c.pkgName, c.sFile, srcBPath, true)
-		if sPostGot == c.expect {
-			t.Logf("INFO:POST:%v: %v:%v [%v = %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
-		} else {
-			t.Errorf("ERRR:POST:%v: %v:%v [%v != %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
+		for _, c := range aTests {
+			sPostGot := pkg_basepath_postslash(c.pkgName, c.sFile, srcBPath, true)
+			if sPostGot == c.expect {
+				t.Logf("INFO:POST:%v: %v:%v [%v = %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
+			} else {
+				t.Errorf("ERRR:POST:%v: %v:%v [%v != %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
+			}
 		}
-	}
-	for _, c := range aTests {
-		sPostGot := pkg_basepath(c.pkgName, c.sFile, srcBPath, true)
-		if sPostGot == c.expect {
-			t.Logf("INFO:PLUS:%v: %v:%v [%v = %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
-		} else {
-			t.Errorf("ERRR:PLUS:%v: %v:%v [%v != %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
+		for _, c := range aTests {
+			sPostGot := pkg_basepath(c.pkgName, c.sFile, srcBPath, true)
+			if sPostGot == c.expect {
+				t.Logf("INFO:PLUS:%v: %v:%v [%v = %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
+			} else {
+				t.Errorf("ERRR:PLUS:%v: %v:%v [%v != %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
+			}
 		}
 	}
 }

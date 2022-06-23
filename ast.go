@@ -8,6 +8,7 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"os"
 	"path/filepath"
 	"reflect"
 	"regexp"
@@ -86,28 +87,27 @@ func pkg_basepath(pkgName string, sFile string, srcBasePath string, bPrependPkgB
 	if !bPrependPkgBasePath {
 		return pkgName
 	}
+	sbpLen := len(srcBasePath)
+	if sbpLen > 0 {
+		lastChar := srcBasePath[sbpLen-1]
+		if lastChar == os.PathSeparator {
+			srcBasePath = srcBasePath[:sbpLen-1]
+		}
+	}
 	sTheFile := sFile[len(srcBasePath):]
 	re := regexp.MustCompile(fmt.Sprintf("(.*?)/%v.*", pkgName))
 	sMatchs := re.FindStringSubmatch(sTheFile)
-	if giDEBUG > 1 {
-		fmt.Printf("%v:DBUG:AST:%v:%v:%v:%v\n", PRG_TAG, re.String(), sFile, pkgName, sMatchs)
-	}
 	if len(sMatchs) > 1 {
 		sPkgPrefix := sMatchs[1]
-		/*
-			if (len(sPkgPrefix) > 0) && (sPkgPrefix[0] == '/') {
-				sPkgPrefix = sPkgPrefix[1:]
-			}
-			if len(sPkgPrefix) > 0 {
-				pkgName = sPkgPrefix + "/" + pkgName
-			}
-		*/
 		pkgName = filepath.Join(sPkgPrefix, pkgName)
 	} else {
 		sDir, _ := filepath.Split(sTheFile)
 		if len(sDir) > 0 {
 			pkgName = filepath.Join(sDir, pkgName)
 		}
+	}
+	if (len(pkgName) > 1) && (pkgName[0] == '/') {
+		pkgName = pkgName[1:]
 	}
 	return pkgName
 }
