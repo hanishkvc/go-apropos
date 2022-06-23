@@ -16,6 +16,8 @@ var gCacheBase = "~/.cache"
 const gDBAllCacheFile = "goapropos.dball"
 const gsFNCacheVersion = "goapropos.ver"
 
+const CACHE_FILEFORMAT_VER = PRG_TAG + ":01:"
+
 func cache_filename(cacheFile string) (string, error) {
 	sCacheBase, err := adjust_path(gCacheBase)
 	if err != nil {
@@ -31,7 +33,7 @@ func cache_version() string {
 		fmt.Printf("%v:ERRR:Cache: Version:%v\n", PRG_TAG, err)
 		os.Exit(10)
 	}
-	return fi.ModTime().String()
+	return CACHE_FILEFORMAT_VER + fi.ModTime().String()
 }
 
 func cache_force_fresh() {
