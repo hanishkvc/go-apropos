@@ -70,6 +70,14 @@ func TestPkgBasePath(t *testing.T) {
 			t.Errorf("ERRR:POST:%v: %v:%v [%v != %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
 		}
 	}
+	for _, c := range aTests {
+		sPostGot := pkg_basepath(c.pkgName, c.sFile, srcBPath, true)
+		if sPostGot == c.expect {
+			t.Logf("INFO:PLUS:%v: %v:%v [%v = %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
+		} else {
+			t.Errorf("ERRR:PLUS:%v: %v:%v [%v != %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
+		}
+	}
 }
 
 func BenchmarkPkgBasePathPre(b *testing.B) {
