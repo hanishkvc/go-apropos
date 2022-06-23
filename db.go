@@ -159,6 +159,7 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string, matchM
 	for pkgName, pkgData := range theDB {
 		spacedPkgName := _dbprint_pkgname(pkgName)
 		matchingSymbols := make(DBSymbols)
+		bPkgNamePrinted := false
 		// Honor any findpkg based package filtering
 		if gFindPkg != FINDPKG_DEFAULT {
 			if !sFindPkgP.Matchok(pkgName) {
@@ -167,7 +168,8 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string, matchM
 			if sortedResult {
 				db_add(matchingPkgs, pkgName, pkgData.Paths, pkgData.Cmts, DBSymbols{})
 			} else {
-				fmt.Printf("Package:%v\n", pkgName)
+				bPkgNamePrinted = true
+				fmt.Printf("\nPackage:%v\n", pkgName)
 				dbprint_pkgpaths(theDB[pkgName].Paths, spacedPkgName+"path:", "\n")
 			}
 		}
@@ -195,7 +197,9 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string, matchM
 			if sortedResult {
 				db_add(matchingPkgs, pkgName, []string{}, []string{}, matchingSymbols)
 			} else {
-				fmt.Printf("Package:%v\n", pkgName)
+				if !bPkgNamePrinted {
+					fmt.Printf("\nPackage:%v\n", pkgName)
+				}
 				dbprint_pkgsymbols(matchingSymbols, spacedPkgName, "\n")
 			}
 		}

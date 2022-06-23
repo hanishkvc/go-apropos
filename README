@@ -353,6 +353,12 @@ The version number ensures that if there is a change to logic, which changes
 the cache file format, then the program can automatically recreate the cache
 file.
 
+Print pkgname on same line as pkg file paths and pkg symbols, along with spacing
+around to hopefully make it cleaner and easier to read.
+
+Make sorted and non sorted result prints match and be the cleaner version.
+
+
 20220620+
 ==========
 

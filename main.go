@@ -13,7 +13,7 @@ import (
 
 const PRG_TAG = "GOAPRO"
 const PRG_NAME = "GoApropos"
-const PRG_VERSION = "v09-20220623IST2201"
+const PRG_VERSION = "v09-20220624IST0232"
 
 const FIND_DUMMY = "__FIND_DUMMY__"
 const FINDPKG_DEFAULT = ""
