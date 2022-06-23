@@ -4,6 +4,7 @@
 package main
 
 import (
+	"path/filepath"
 	"testing"
 )
 
@@ -34,5 +35,22 @@ func BenchmarkFindRegexp(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		load_dbs()
 		db_find(gDB, "numcpu", FINDCMT_DUMMY, FINDPKG_DEFAULT, MatchMode_RegExp, caseSensitive, sortedResult)
+	}
+}
+
+func TestPkgBasePath(t *testing.T) {
+	srcBPath := filepath.Join("root", "srcbpath")
+	aTests := []struct {
+		pkgName string
+		sFile   string
+	}{
+		{"pkg", filepath.Join(srcBPath, "pkg", "pkg.go")},
+		{"pkg", filepath.Join(srcBPath, "pkg", "other.go")},
+		{"pkg", filepath.Join(srcBPath, "xbasepath", "pkg.go")},
+		{"pkg", filepath.Join(srcBPath, "xbasepath", "other.go")},
+		{"pkg", filepath.Join(srcBPath, "xbasepath", "pkg-other.go")},
+	}
+	for _, c := range aTests {
+		t.Logf("%v: %v:%v [%v]", srcBPath, c.pkgName, c.sFile, pkg_basepath(c.pkgName, c.sFile, srcBPath, true))
 	}
 }

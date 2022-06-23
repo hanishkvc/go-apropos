@@ -42,6 +42,24 @@ func (is *IdentyStats) delta_summary() int {
 	return (int(is.identCnt - (is.funcCnt + is.typeCnt + is.valueCnt)))
 }
 
+func pkg_basepath(pkgName string, sFile string, srcBasePath string, bPrependPkgBasePath bool) string {
+	if !bPrependPkgBasePath {
+		return pkgName
+	}
+	re := regexp.MustCompile(fmt.Sprintf("%v/(.*?)%v.*", srcBasePath, pkgName))
+	sMatchs := re.FindStringSubmatch(sFile)
+	if giDEBUG > 1 {
+		fmt.Printf("%v:DBUG:AST:%v:%v:%v:%v\n", PRG_TAG, re.String(), sFile, pkgName, sMatchs)
+	}
+	if len(sMatchs) > 1 {
+		sPkgPrefix := sMatchs[1]
+		if len(sPkgPrefix) > 0 {
+			pkgName = sPkgPrefix + "/" + pkgName
+		}
+	}
+	return pkgName
+}
+
 // Retreive info about the go source file specified
 // It returns
 //		the package name to which the file belongs
@@ -157,18 +175,6 @@ func gosrc_info(sFile string) (string, string, DBSymbols) {
 	if giDEBUG > 20 {
 		fmt.Printf("%v:DBUG:AST: GoFile:%v:%v:%v\n", PRG_TAG, sFile, gIdentyStats, gIdentyStats.delta_summary())
 	}
-	if gbPrependPkgBasePath {
-		re := regexp.MustCompile(fmt.Sprintf("%v/(.*?)%v.*", gBasePath, pkgName))
-		sMatchs := re.FindStringSubmatch(sFile)
-		if giDEBUG > 1 {
-			fmt.Printf("%v:DBUG:AST:%v:%v:%v:%v\n", PRG_TAG, re.String(), sFile, pkgName, sMatchs)
-		}
-		if len(sMatchs) > 1 {
-			sPkgPrefix := sMatchs[1]
-			if len(sPkgPrefix) > 0 {
-				pkgName = sPkgPrefix + "/" + pkgName
-			}
-		}
-	}
+	pkgName = pkg_basepath(pkgName, sFile, gBasePath, gbPrependPkgBasePath)
 	return pkgName, fileCmts, theIdents
 }
