@@ -5,6 +5,7 @@ package main
 
 import (
 	"fmt"
+	"path/filepath"
 	"sort"
 	"strings"
 )
@@ -82,6 +83,12 @@ func dbfilter_pkgs(theDB TheDB, matchPkgName string, matchMode MatchMode, caseSe
 	return newDB, nil
 }
 
+func _dbprint_pkgname(pkgNamePlus string) string {
+	_, pkgName := filepath.Split(pkgNamePlus)
+	sPkgName := fmt.Sprintf("%-16s:", pkgName)
+	return sPkgName
+}
+
 func dbprint_all(theDB TheDB, sNamePrefix, sNameSuffix, sInfoPrefix, sInfoSuffix, sEnd string) {
 	pkgNames := []string{}
 	for pkgName := range theDB {
@@ -89,11 +96,12 @@ func dbprint_all(theDB TheDB, sNamePrefix, sNameSuffix, sInfoPrefix, sInfoSuffix
 	}
 	sort.Strings(pkgNames)
 	for _, pkgName := range pkgNames {
+		spacedPkgName := _dbprint_pkgname(pkgName)
 		pkgInfo := theDB[pkgName]
 		//fmt.Println(pkgName, pkgData)
 		fmt.Printf("%v%v%v", sNamePrefix, pkgName, sNameSuffix)
 		dbprint_pkgpaths(pkgInfo.Paths, sInfoPrefix+"path:", sInfoSuffix)
-		dbprint_pkgsymbols(pkgInfo.Symbols, sInfoPrefix+"sym:", sInfoSuffix)
+		dbprint_pkgsymbols(pkgInfo.Symbols, sInfoPrefix+spacedPkgName, sInfoSuffix)
 		fmt.Printf("%v", sEnd)
 	}
 }
@@ -187,12 +195,13 @@ func db_find(theDB TheDB, sFind string, sFindCmt string, sFindPkg string, matchM
 				db_add(matchingPkgs, pkgName, []string{}, []string{}, matchingSymbols)
 			} else {
 				fmt.Printf("Package:%v\n", pkgName)
-				dbprint_pkgsymbols(matchingSymbols, "\tsym:", "\n")
+				spacedPkgName := _dbprint_pkgname(pkgName)
+				dbprint_pkgsymbols(matchingSymbols, spacedPkgName, "\n")
 			}
 		}
 	}
 	if sortedResult {
-		dbprint_all(matchingPkgs, "Package:", "\n", "\t", "\n", "\n")
+		dbprint_all(matchingPkgs, "Package:", "\n", "", "\n", "\n")
 	}
 }
 
