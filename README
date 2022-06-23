@@ -318,6 +318,9 @@ Duplicate Symbol Names
 ========================
 
 Potentially the same symbol name could represent different things within a package.
+For example one could have a type and a method associated with the same or different
+type, to have the same symbol name.
+
 For now the type and comments wrt such duplicated symbol name is collated togehter
 into the same entry in the database. Inturn type tag within the type field is not
 duplicated.
