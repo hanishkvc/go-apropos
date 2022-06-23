@@ -109,7 +109,7 @@ func dbprint_pkgsymbols(pkgSymbols DBSymbols, sPrefix, sSuffix string) {
 	sort.Strings(syms)
 	for _, sym := range syms {
 		symInfo := pkgSymbols[sym]
-		symPrint := symInfo.Type + ":" + sym
+		symPrint := fmt.Sprintf("%v:%16s:%40s", symInfo.Type, sym, symInfo.Cmt)
 		fmt.Printf("%v%v%v", sPrefix, symPrint, sSuffix)
 	}
 }
