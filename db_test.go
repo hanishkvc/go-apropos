@@ -57,43 +57,13 @@ func TestPkgBasePath(t *testing.T) {
 	//giDEBUG = 2
 	for _, srcBPath := range []string{srcBPath, srcBPath + "/"} {
 		for _, c := range aTests {
-			sPreGot := pkg_basepath_preslash(c.pkgName, c.sFile, srcBPath, true)
-			if sPreGot == c.expect {
-				t.Logf("INFO:PRE :%v: %v:%v [%v = %v]", srcBPath, c.pkgName, c.sFile, sPreGot, c.expect)
-			} else {
-				t.Errorf("ERRR:PRE :%v: %v:%v [%v != %v]", srcBPath, c.pkgName, c.sFile, sPreGot, c.expect)
-			}
-		}
-		for _, c := range aTests {
-			sPostGot := pkg_basepath_postslash(c.pkgName, c.sFile, srcBPath, true)
-			if sPostGot == c.expect {
-				t.Logf("INFO:POST:%v: %v:%v [%v = %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
-			} else {
-				t.Errorf("ERRR:POST:%v: %v:%v [%v != %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
-			}
-		}
-		for _, c := range aTests {
 			sPostGot := pkgname_with_basepath(c.pkgName, c.sFile, srcBPath, true)
 			if sPostGot == c.expect {
-				t.Logf("INFO:PLUS:%v: %v:%v [%v = %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
+				t.Logf("INFO:%v: %v:%v [%v = %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
 			} else {
-				t.Errorf("ERRR:PLUS:%v: %v:%v [%v != %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
+				t.Errorf("ERRR:%v: %v:%v [%v != %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
 			}
 		}
-	}
-}
-
-func BenchmarkPkgBasePathPre(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		pkg_basepath_preslash("pkg", "/root/srcpath/xbasepath/pkg/pkg.go", "/root/srcpath", true)
-		pkg_basepath_preslash("pkg", "/root/srcpath/xbasepath/abc/other.go", "/root/srcpath", true)
-	}
-}
-
-func BenchmarkPkgBasePathPost(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		pkg_basepath_postslash("pkg", "/root/srcpath/xbasepath/pkg/pkg.go", "/root/srcpath", true)
-		pkg_basepath_postslash("pkg", "/root/srcpath/xbasepath/abc/other.go", "/root/srcpath", true)
 	}
 }
 

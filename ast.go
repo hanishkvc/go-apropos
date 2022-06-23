@@ -44,45 +44,6 @@ func (is *IdentyStats) delta_summary() int {
 	return (int(is.identCnt - (is.funcCnt + is.typeCnt + is.valueCnt)))
 }
 
-func pkg_basepath_preslash(pkgName string, sFile string, srcBasePath string, bPrependPkgBasePath bool) string {
-	if !bPrependPkgBasePath {
-		return pkgName
-	}
-	re := regexp.MustCompile(fmt.Sprintf("%v/(.*?)%v.*", srcBasePath, pkgName))
-	sMatchs := re.FindStringSubmatch(sFile)
-	if giDEBUG > 1 {
-		fmt.Printf("%v:DBUG:AST:%v:%v:%v:%v\n", PRG_TAG, re.String(), sFile, pkgName, sMatchs)
-	}
-	if len(sMatchs) > 1 {
-		sPkgPrefix := sMatchs[1]
-		if len(sPkgPrefix) > 0 {
-			pkgName = sPkgPrefix + "/" + pkgName
-		}
-	}
-	return pkgName
-}
-
-func pkg_basepath_postslash(pkgName string, sFile string, srcBasePath string, bPrependPkgBasePath bool) string {
-	if !bPrependPkgBasePath {
-		return pkgName
-	}
-	re := regexp.MustCompile(fmt.Sprintf("%v(.*?)/%v.*", srcBasePath, pkgName))
-	sMatchs := re.FindStringSubmatch(sFile)
-	if giDEBUG > 1 {
-		fmt.Printf("%v:DBUG:AST:%v:%v:%v:%v\n", PRG_TAG, re.String(), sFile, pkgName, sMatchs)
-	}
-	if len(sMatchs) > 1 {
-		sPkgPrefix := sMatchs[1]
-		if (len(sPkgPrefix) > 0) && (sPkgPrefix[0] == '/') {
-			sPkgPrefix = sPkgPrefix[1:]
-		}
-		if len(sPkgPrefix) > 0 {
-			pkgName = sPkgPrefix + "/" + pkgName
-		}
-	}
-	return pkgName
-}
-
 func pkgname_with_basepath(pkgName string, sFile string, srcBasePath string, bPrependPkgBasePath bool) string {
 	if !bPrependPkgBasePath {
 		return pkgName
