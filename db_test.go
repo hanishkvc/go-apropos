@@ -54,7 +54,7 @@ func TestPkgBasePath(t *testing.T) {
 		{"pkg", filepath.Join(srcBPath, "xbasepath", "pkg-other.go"), "xbasepath/pkg"},
 		{"pkg", filepath.Join(srcBPath, "xbasepath", "other-pkg.go"), "xbasepath/pkg"},
 	}
-
+	//giDEBUG = 2
 	for _, srcBPath := range []string{srcBPath, srcBPath + "/"} {
 		for _, c := range aTests {
 			sPreGot := pkg_basepath_preslash(c.pkgName, c.sFile, srcBPath, true)
@@ -73,7 +73,7 @@ func TestPkgBasePath(t *testing.T) {
 			}
 		}
 		for _, c := range aTests {
-			sPostGot := pkg_basepath(c.pkgName, c.sFile, srcBPath, true)
+			sPostGot := pkgname_with_basepath(c.pkgName, c.sFile, srcBPath, true)
 			if sPostGot == c.expect {
 				t.Logf("INFO:PLUS:%v: %v:%v [%v = %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
 			} else {

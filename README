@@ -324,7 +324,9 @@ Rather major changes
 ==========
 
 Add basepath wrt package names, to help differentiate btw different packages
-having the same package name.
+having the same package name. Try keep the logic os agnostic, be it wrt path
+seps, as well as how the pkg's basepath is stored and shown (to always inc
+'/').
 
 
 20220620+
