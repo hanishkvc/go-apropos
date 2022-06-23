@@ -43,16 +43,29 @@ func TestPkgBasePath(t *testing.T) {
 	aTests := []struct {
 		pkgName string
 		sFile   string
+		expect  string
 	}{
-		{"pkg", filepath.Join(srcBPath, "pkg", "pkg.go")},
-		{"pkg", filepath.Join(srcBPath, "pkg", "other.go")},
-		{"pkg", filepath.Join(srcBPath, "xbasepath", "pkg.go")},
-		{"pkg", filepath.Join(srcBPath, "xbasepath", "other.go")},
-		{"pkg", filepath.Join(srcBPath, "xbasepath", "pkg-other.go")},
-		{"pkg", filepath.Join(srcBPath, "xbasepath", "other-pkg.go")},
+		{"pkg", filepath.Join(srcBPath, "pkg", "pkg.go"), "pkg"},
+		{"pkg", filepath.Join(srcBPath, "pkg", "other.go"), "pkg"},
+		{"pkg", filepath.Join(srcBPath, "xbasepath", "pkg.go"), "xbasepath/pkg"},
+		{"pkg", filepath.Join(srcBPath, "xbasepath", "other.go"), "xbasepath/pkg"},
+		{"pkg", filepath.Join(srcBPath, "xbasepath", "pkg", "pkg.go"), "xbasepath/pkg"},
+		{"pkg", filepath.Join(srcBPath, "xbasepath", "pkg", "other.go"), "xbasepath/pkg"},
+		{"pkg", filepath.Join(srcBPath, "xbasepath", "pkg-other.go"), "xbasepath/pkg"},
+		{"pkg", filepath.Join(srcBPath, "xbasepath", "other-pkg.go"), "xbasepath/pkg"},
 	}
 	for _, c := range aTests {
-		t.Logf("PRE :%v: %v:%v [%v]", srcBPath, c.pkgName, c.sFile, pkg_basepath_preslash(c.pkgName, c.sFile, srcBPath, true))
-		t.Logf("POST:%v: %v:%v [%v]", srcBPath, c.pkgName, c.sFile, pkg_basepath_postslash(c.pkgName, c.sFile, srcBPath, true))
+		sPreGot := pkg_basepath_preslash(c.pkgName, c.sFile, srcBPath, true)
+		if sPreGot == c.expect {
+			t.Logf("INFO:PRE :%v: %v:%v [%v = %v]", srcBPath, c.pkgName, c.sFile, sPreGot, c.expect)
+		} else {
+			t.Errorf("ERRR:PRE :%v: %v:%v [%v != %v]", srcBPath, c.pkgName, c.sFile, sPreGot, c.expect)
+		}
+		sPostGot := pkg_basepath_postslash(c.pkgName, c.sFile, srcBPath, true)
+		if sPostGot == c.expect {
+			t.Logf("INFO:POST:%v: %v:%v [%v = %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
+		} else {
+			t.Errorf("ERRR:POST:%v: %v:%v [%v != %v]", srcBPath, c.pkgName, c.sFile, sPostGot, c.expect)
+		}
 	}
 }
