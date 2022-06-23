@@ -32,7 +32,13 @@ func dbsymbols_update(dbSymbols DBSymbols, identName string, identData DBSymbolI
 		if !ok {
 			dbSymbols[identName] = identData
 		} else {
-			identDataCur.Type += identData.Type
+			if identDataCur.Type != identData.Type {
+				if identDataCur.Type == "" {
+					identDataCur.Type = identData.Type
+				} else {
+					fmt.Printf("%v:WARN:DBSymbolsUpdate: Mismatch in types [%v != %v] for %v\n", PRG_TAG, identDataCur.Type, identData.Type, identName)
+				}
+			}
 			identDataCur.Cmt += ("\n" + identData.Cmt)
 			dbSymbols[identName] = identDataCur
 		}
