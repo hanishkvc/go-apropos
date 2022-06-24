@@ -31,6 +31,7 @@ func dbsymbols_update(dbSymbols DBSymbols, identName string, identData DBSymbolI
 	if identIsExported || gbAllSymbols {
 		identDataCur, ok := dbSymbols[identName]
 		if !ok {
+			identData.Cmt = strings.TrimSpace(identData.Cmt)
 			dbSymbols[identName] = identData
 		} else {
 			if identDataCur.Type != identData.Type {
@@ -48,7 +49,10 @@ func dbsymbols_update(dbSymbols DBSymbols, identName string, identData DBSymbolI
 					}
 				}
 			}
-			identDataCur.Cmt += ("\n" + identData.Cmt)
+			sTrimmedCmt := strings.TrimSpace(identData.Cmt)
+			if len(sTrimmedCmt) > 0 {
+				identDataCur.Cmt += ("\n" + sTrimmedCmt)
+			}
 			dbSymbols[identName] = identDataCur
 		}
 	}

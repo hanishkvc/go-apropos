@@ -342,6 +342,10 @@ Rather major changes
 fullcomments flag and logic to print comments wrt the symbols in a indented
 manner.
 
+Add trimmed comments wrt symbols into db and inturn cache. So also update
+the cache version, so that any existing old caches will be overwritten with
+newer cache with these trimmed comments.
+
 20220622+
 ==========
 
