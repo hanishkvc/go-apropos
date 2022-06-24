@@ -111,6 +111,8 @@ Sample usage:
 
 	goapropos --findpkg pkgNameSearchToken --find symbolSearchToken
 		Find symbols which match the symbolSearchToken, from across all packages whose name match pkgNameSearchToken
+		Ex: goapropos --findpkg fmt$ print //#// Get info about symbols containing print in their name, within fmt pkg
+		Ex: goapropos --findpkg runtime$ . //#// Will show all symbols from runtime package.
 
 	goapropos --matchmode contains searchToken
 		Use contains-substring matching logic, instead of the regexp based default logic.
@@ -146,9 +148,9 @@ func handle_args() {
 	flag.BoolVar(&gbCaseSensitive, "casesensitive", gbCaseSensitive, "Whether pkg name and symbol matching is case sensitive or not")
 	flag.StringVar(&gsMatchMode, "matchmode", gsMatchMode, "Specify the strategy used for matching. Supported modes are contains regexp")
 	flag.BoolVar(&gbAutoCache, "autocache", gbAutoCache, "Create and use the cache automatically. This manipulates usecache and createcache flags automatically")
-	flag.BoolVar(&gbCreateCache, "createcache", gbCreateCache, "Create a cache of the package symbols, paths and comments")
+	flag.BoolVar(&gbCreateCache, "createcache", gbCreateCache, "Create a cache of the package symbols, paths and comments. [NEEDs: autocache=false]")
 	flag.BoolVar(&gbUseCache, "usecache", gbUseCache, "Use cache of the package symbols, paths and comments, instead of parsing the go sources")
-	flag.BoolVar(&gbIndentJSON, "indentjson", gbIndentJSON, "Create pretty indented json cache files")
+	flag.BoolVar(&gbIndentJSON, "indentjson", gbIndentJSON, "Create pretty indented json cache files. [NOTE: useful only when creating cache]")
 	flag.BoolVar(&gbSortedResult, "sortedresult", gbSortedResult, "Show results as found or sorted at the end")
 	flag.BoolVar(&gbFullComments, "fullcomments", gbFullComments, "Show full comments wrt the symbols")
 	flag.Parse()

@@ -119,7 +119,7 @@ To get all the exported symbols of all the packages, use
 
 To get all the exported symbols of a specific package, use
 
-	goapropos --findpkg "^packagename$" --find ""
+	goapropos --findpkg "packagename$" --find ""
 
 If one wants to find symbols based on their comments if any, then they can
 use --findcmt to specify a match token wrt comment. Any symbols which contain
