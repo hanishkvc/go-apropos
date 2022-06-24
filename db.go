@@ -156,7 +156,9 @@ func dbprint_pkgsymbols(pkgSymbols DBSymbols, sPrefix, sSuffix string) {
 		sCmt = strings.ReplaceAll(sCmt, "\n", " ")
 		symPrint := fmt.Sprintf("%v:%-16s:%.80s", symInfo.Type, sym, sCmt)
 		fmt.Printf("%v%v%v", sPrefix, symPrint, sSuffix)
-		_dprint_comments(symInfo.Cmt)
+		if gbFullComments {
+			_dprint_comments(symInfo.Cmt)
+		}
 	}
 }
 

@@ -336,6 +336,12 @@ Changelog
 
 Rather major changes
 
+20220624
+=========
+
+fullcomments flag and logic to print comments wrt the symbols in a indented
+manner.
+
 20220622+
 ==========
 

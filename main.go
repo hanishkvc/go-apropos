@@ -36,6 +36,7 @@ var gbCreateCache bool = false
 var gbIndentJSON bool = false
 var gbSortedResult bool = false
 var gbAutoCache bool = true
+var gbFullComments bool = false
 
 var giMatchMode = MatchMode_RegExp
 var gsMatchMode string = MATCHMODE_REGEXP
@@ -149,6 +150,7 @@ func handle_args() {
 	flag.BoolVar(&gbUseCache, "usecache", gbUseCache, "Use cache of the package symbols, paths and comments, instead of parsing the go sources")
 	flag.BoolVar(&gbIndentJSON, "indentjson", gbIndentJSON, "Create pretty indented json cache files")
 	flag.BoolVar(&gbSortedResult, "sortedresult", gbSortedResult, "Show results as found or sorted at the end")
+	flag.BoolVar(&gbFullComments, "fullcomments", gbFullComments, "Show full comments wrt the symbols")
 	flag.Parse()
 	if gBasePath == BASEPATH_DEFAULT {
 		fmt.Fprintf(flag.CommandLine.Output(), "%v:ERRR:SetGBasePath: No valid Go src path found, please specify using --basepath", PRG_TAG)
