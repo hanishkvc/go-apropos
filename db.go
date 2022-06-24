@@ -124,6 +124,25 @@ func dbprint_paths(theDB TheDB, sNamePrefix, sNameSuffix, sPathPrefix, sPathSuff
 	}
 }
 
+const gbForcedCommentsSplit = false
+
+func _dprint_comments(sCmts string) {
+	for _, curFS := range strings.Split(sCmts, "\n") {
+		if !gbForcedCommentsSplit {
+			fmt.Printf("\t%v\n", curFS)
+			continue
+		}
+		for iS := 0; iS < len(curFS); iS += 70 {
+			iE := iS + 70
+			if iE > len(curFS) {
+				iE = len(curFS)
+			}
+			fmt.Printf("\t%v\n", curFS[iS:iE])
+		}
+	}
+	fmt.Println()
+}
+
 func dbprint_pkgsymbols(pkgSymbols DBSymbols, sPrefix, sSuffix string) {
 	syms := []string{}
 	for sym := range pkgSymbols {
@@ -137,6 +156,7 @@ func dbprint_pkgsymbols(pkgSymbols DBSymbols, sPrefix, sSuffix string) {
 		sCmt = strings.ReplaceAll(sCmt, "\n", " ")
 		symPrint := fmt.Sprintf("%v:%-16s:%.80s", symInfo.Type, sym, sCmt)
 		fmt.Printf("%v%v%v", sPrefix, symPrint, sSuffix)
+		_dprint_comments(symInfo.Cmt)
 	}
 }
 
